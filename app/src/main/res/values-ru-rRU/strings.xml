@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Humblr</string>
+    <string name="skip">Пропустить</string>
+    <string name="onboard_title_1">Добро пожаловать в Humblr</string>
+    <string name="onboard_message_1">Здесь собраны сообщества по всевозможным интересам</string>
+    <string name="onboard_title_2">SubHumblr</string>
+    <string name="onboard_message_2">Ты можешь найти новые сабы по интересам и посмотреть сабы, на которые подписан</string>
+    <string name="onboard_title_3">Делись и сохраняй</string>
+    <string name="onboard_message_3">Вкладка избранное хранит закладки с комментариями и сабами. В профиле ты найдёшь информацию о себе.</string>
+    <string name="login">Войти</string>
+    <string name="tagline">Найди единомышленников с Humblr</string>
+</resources>
