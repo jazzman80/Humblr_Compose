@@ -96,6 +96,7 @@ fun FeedScreen(
             }
 
             subs.refresh()
+            focusManager.clearFocus()
         }
 
         ListSubreddit(
