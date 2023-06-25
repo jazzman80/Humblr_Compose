@@ -24,6 +24,7 @@ import androidx.navigation.compose.rememberNavController
 import com.skillbox.humblr.R
 import com.skillbox.humblr.main.favorites.FavoritesScreen
 import com.skillbox.humblr.main.feed.FeedScreen
+import com.skillbox.humblr.main.posts.PostsScreen
 import com.skillbox.humblr.main.profile.ProfileScreen
 import com.skillbox.humblr.main.search.SearchScreen
 import com.skillbox.humblr.theme.AppTheme
@@ -37,6 +38,7 @@ fun MainScreen() {
     val favoritesRoute = "favorites"
     val profileRoute = "profile"
     val searchRoute = "search"
+    val postsRoute = "posts"
 
     ConstraintLayout(
         modifier = Modifier.fillMaxSize()
@@ -70,6 +72,9 @@ fun MainScreen() {
                 FeedScreen(
                     navigateToSearch = { searchQuery ->
                         navController.navigate("$searchRoute/$searchQuery")
+                    },
+                    navigateToPosts = { subTitle ->
+                        navController.navigate("$postsRoute/$subTitle")
                     }
                 )
             }
@@ -81,10 +86,18 @@ fun MainScreen() {
             }
             composable("$searchRoute/{searchQuery}") {
                 val searchQuery = it.arguments?.getString("searchQuery")!!
-//                val viewModel: SearchViewModel = hiltViewModel()
-//                viewModel.setQuery(searchQuery)
                 SearchScreen(
                     searchQuery = searchQuery,
+                    onBack = { navController.popBackStack() },
+                    navigateToPosts = { subTitle ->
+                        navController.navigate("$postsRoute/$subTitle")
+                    }
+                )
+            }
+            composable("$postsRoute/{subTitle}") {
+                val subTitle = it.arguments?.getString("subTitle")!!
+                PostsScreen(
+                    title = subTitle,
                     onBack = { navController.popBackStack() }
                 )
             }

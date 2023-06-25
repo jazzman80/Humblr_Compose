@@ -25,7 +25,8 @@ import com.skillbox.humblr.theme.AppTheme
 @Composable
 fun FeedScreen(
     viewModel: FeedViewModel = hiltViewModel(),
-    navigateToSearch: (String) -> Unit
+    navigateToSearch: (String) -> Unit,
+    navigateToPosts: (String) -> Unit
 ) {
     ConstraintLayout(
         modifier = Modifier
@@ -116,9 +117,11 @@ fun FeedScreen(
             },
             onSubscribe = { isSubscribed, name ->
                 viewModel.subscribe(isSubscribed, name)
+            },
+            onItemClick = { subTitle ->
+                navigateToPosts(subTitle)
             }
         )
-
     }
 }
 

@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -17,15 +18,18 @@ import com.skillbox.humblr.entity.Subreddit
 import com.skillbox.humblr.theme.AppTheme
 import com.skillbox.humblr.theme.labelLarge
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ItemSubreddit(
     item: Subreddit,
-    onSubscribe: (Boolean) -> Unit
+    onSubscribe: (Boolean) -> Unit,
+    onClick: () -> Unit
 ) {
     Card(
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.surface
-        )
+        ),
+        onClick = { onClick() }
     ) {
         ConstraintLayout(
             modifier = Modifier.fillMaxSize()

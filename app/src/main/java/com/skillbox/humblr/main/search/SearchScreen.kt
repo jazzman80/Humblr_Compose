@@ -24,7 +24,8 @@ import com.skillbox.humblr.theme.AppTheme
 fun SearchScreen(
     searchQuery: String,
     onBack: () -> Unit,
-    viewModel: SearchViewModel = hiltViewModel()
+    viewModel: SearchViewModel = hiltViewModel(),
+    navigateToPosts: (String) -> Unit
 ) {
 
     ConstraintLayout(
@@ -73,8 +74,10 @@ fun SearchScreen(
             },
             onSubscribe = { isSubscribed, name ->
                 viewModel.subscribe(isSubscribed, name)
+            },
+            onItemClick = { subTitle ->
+                navigateToPosts(subTitle)
             }
-
         )
 
     }

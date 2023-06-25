@@ -26,7 +26,8 @@ fun ListSubreddit(
     modifier: Modifier,
     pagingItems: LazyPagingItems<Subreddit>,
     onRefreshButton: () -> Unit,
-    onSubscribe: (Boolean, String) -> Unit
+    onSubscribe: (Boolean, String) -> Unit,
+    onItemClick: (String) -> Unit
 ) {
 
     val listState = rememberLazyListState()
@@ -60,7 +61,8 @@ fun ListSubreddit(
                         item = pagingItems[it]!!,
                         onSubscribe = { isSubscribed ->
                             onSubscribe(isSubscribed, pagingItems[it]!!.data.name)
-                        }
+                        },
+                        onClick = { onItemClick(pagingItems[it]!!.data.title) }
                     )
                 } else {
                     //ItemSubredditPlaceholder()
