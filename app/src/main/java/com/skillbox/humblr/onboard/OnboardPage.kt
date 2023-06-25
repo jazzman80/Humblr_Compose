@@ -17,7 +17,7 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import com.skillbox.humblr.R
 import com.skillbox.humblr.theme.AppTheme
 import com.skillbox.humblr.theme.bodySmall
-import com.skillbox.humblr.theme.titleMedium
+import com.skillbox.humblr.theme.titleLarge
 
 
 @Composable
@@ -62,7 +62,7 @@ fun OnboardPage(index: Int) {
                     end.linkTo(parent.end)
                 },
             color = MaterialTheme.colorScheme.onBackground,
-            style = titleMedium
+            style = titleLarge
         )
 
         Text(

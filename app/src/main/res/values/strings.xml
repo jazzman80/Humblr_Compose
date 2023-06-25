@@ -1,12 +1,24 @@
 <resources>
     <string name="app_name">Humblr</string>
-    <string name="skip">Skip</string>
     <string name="onboard_title_1">Welcome to Humblr</string>
     <string name="onboard_message_1">Communities of all kinds of interests are gathered here</string>
     <string name="onboard_title_2">SubHumblr</string>
     <string name="onboard_message_2">You can find new subs by interests and see the subs you are subscribed to</string>
     <string name="onboard_title_3">Share and save</string>
     <string name="onboard_message_3">The favorites tab stores bookmarks with comments and subs. In the profile you will find information about yourself.</string>
+    <string name="skip">Skip</string>
+    <string name="done">Done</string>
     <string name="login">Login</string>
     <string name="tagline">Find friends with Humblr</string>
+    <string name="auth_error">An error occurred during authorization. Try logging in later</string>
+    <string name="network_error">Network error. Try again later</string>
+    <string name="profile" translatable="false">profile</string>
+    <string name="favorites" translatable="false">favorites</string>
+    <string name="feed" translatable="false">feed</string>
+    <string name="search">Search</string>
+    <string name="new_feeds">New</string>
+    <string name="popular">Popular</string>
+    <string name="search_for">Search for </string>
+    <string name="refresh">Refresh</string>
+    <string name="nothing_found">Nothing found</string>
 </resources>

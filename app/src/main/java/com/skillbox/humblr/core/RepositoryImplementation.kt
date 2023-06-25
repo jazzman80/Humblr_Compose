@@ -43,12 +43,6 @@ class RepositoryImplementation @Inject constructor(
         get() = _accessToken
     private val auth = "Bearer $_accessToken"
 
-    private suspend fun validateAccessToken() {
-        if (Instant.now().epochSecond >= expiresIn) {
-            refreshToken()
-        }
-    }
-
     private var refreshToken = ""
     private var expiresIn = 0L
 
@@ -109,15 +103,32 @@ class RepositoryImplementation @Inject constructor(
         if (response.isSuccessful) {
             _accessToken = response.body()!!.accessToken
             refreshToken = response.body()!!.refreshToken
-            expiresIn = response.body()!!.expiresIn
+            expiresIn = response.body()!!.expiresIn + Instant.now().epochSecond
 
             save()
         }
         return response
     }
 
+    override suspend fun refreshToken() {
+        if (Instant.now().epochSecond >= expiresIn) {
+            val response = apiService.refreshToken(
+                tokenUri,
+                "Basic $authString",
+                "refresh_token",
+                refreshToken
+            ).awaitResponse()
+
+            if (response.isSuccessful) {
+                _accessToken = response.body()!!.accessToken
+                expiresIn = response.body()!!.expiresIn + Instant.now().epochSecond
+
+                save()
+            }
+        }
+    }
+
     override fun getNewSubs(): Pager<String, Subreddit> {
-        //validateAccessToken()
         return Pager(
             PagingConfig(pageSize)
         ) {
@@ -142,24 +153,6 @@ class RepositoryImplementation @Inject constructor(
         }
     }
 
-
-    override suspend fun refreshToken() {
-        if (Instant.now().epochSecond >= expiresIn) {
-            val response = apiService.refreshToken(
-                tokenUri,
-                "Basic $authString",
-                "refresh_token",
-                refreshToken
-            ).awaitResponse()
-
-            if (response.isSuccessful) {
-                _accessToken = response.body()!!.accessToken
-                expiresIn = response.body()!!.expiresIn
-
-                save()
-            }
-        }
-    }
 
     override suspend fun unsubscribe(fullName: String?): Response<SubscribeResponse> {
         return apiService.subscribe(

@@ -1,7 +1,7 @@
 package com.skillbox.humblr.theme
 import androidx.compose.ui.graphics.Color
 
-val md_theme_light_primary = Color(0xFF633BE1)
+val md_theme_light_primary = Color(0xFF5222D0)
 val md_theme_light_onPrimary = Color(0xFFFFFFFF)
 val md_theme_light_primaryContainer = Color(0xFFE7DEFF)
 val md_theme_light_onPrimaryContainer = Color(0xFF1E0061)
@@ -17,9 +17,9 @@ val md_theme_light_error = Color(0xFFBA1A1A)
 val md_theme_light_errorContainer = Color(0xFFFFDAD6)
 val md_theme_light_onError = Color(0xFFFFFFFF)
 val md_theme_light_onErrorContainer = Color(0xFF410002)
-val md_theme_light_background = Color(0xFFF8FDFF)
+val md_theme_light_background = Color(0xFFFF8F6FD)
 val md_theme_light_onBackground = Color(0xFF001F25)
-val md_theme_light_surface = Color(0xFFF8FDFF)
+val md_theme_light_surface = Color(0xFFFFFFFF)
 val md_theme_light_onSurface = Color(0xFF001F25)
 val md_theme_light_surfaceVariant = Color(0xFFE6E0EC)
 val md_theme_light_onSurfaceVariant = Color(0xFF48454E)

@@ -40,6 +40,9 @@
                     android:scheme="com.skillboxpractice.humblr" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".main.MainActivity"
+            android:exported="true" />
     </application>
 
 </manifest>
