@@ -34,7 +34,6 @@ fun FeedScreen(
             .background(MaterialTheme.colorScheme.background)
     ) {
 
-
         val newSubs = viewModel.newSubsFlow.collectAsLazyPagingItems()
         val popularSubs = viewModel.popularSubsFlow.collectAsLazyPagingItems()
 

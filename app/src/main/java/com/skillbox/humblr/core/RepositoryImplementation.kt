@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import com.skillbox.humblr.entity.Access
+import com.skillbox.humblr.entity.Post
 import com.skillbox.humblr.entity.Subreddit
 import com.skillbox.humblr.entity.SubscribeResponse
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -150,6 +151,14 @@ class RepositoryImplementation @Inject constructor(
             PagingConfig(pageSize)
         ) {
             SearchSubsPagingSource("Bearer $_accessToken", apiService, pageSize, query)
+        }
+    }
+
+    override fun getPosts(title: String): Pager<String, Post> {
+        return Pager(
+            PagingConfig(pageSize)
+        ) {
+            PostPagingSource("Bearer $_accessToken", apiService, pageSize, title)
         }
     }
 

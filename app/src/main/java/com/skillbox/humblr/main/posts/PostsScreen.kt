@@ -9,6 +9,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.paging.compose.collectAsLazyPagingItems
 import com.skillbox.humblr.main.core.TopBar
 import com.skillbox.humblr.theme.AppTheme
 
@@ -17,6 +19,8 @@ fun PostsScreen(
     title: String,
     onBack: () -> Unit
 ) {
+    val viewModel: PostsViewModel = hiltViewModel()
+    val posts = viewModel.repository.getPosts(title).flow.collectAsLazyPagingItems()
 
     ConstraintLayout(
         modifier = Modifier
@@ -24,7 +28,9 @@ fun PostsScreen(
             .background(MaterialTheme.colorScheme.background)
     ) {
 
-        val (topBar) = createRefs()
+        val (topBar, list) = createRefs()
+        val startGuide = createGuidelineFromStart(0.08F)
+        val endGuide = createGuidelineFromEnd(0.08F)
 
         TopBar(
             onNavIcon = { onBack() },
@@ -36,6 +42,21 @@ fun PostsScreen(
                     end.linkTo(parent.end)
                     width = Dimension.fillToConstraints
                 }
+        )
+
+        PostList(
+            modifier = Modifier
+                .constrainAs(list) {
+                    top.linkTo(topBar.bottom)
+                    start.linkTo(startGuide)
+                    end.linkTo(endGuide)
+                    bottom.linkTo(parent.bottom)
+                    width = Dimension.fillToConstraints
+                    height = Dimension.fillToConstraints
+                },
+            pagingItems = posts,
+            onRefreshButton = { /*TODO*/ },
+            onItemClick = { /*TODO*/ }
         )
 
     }
