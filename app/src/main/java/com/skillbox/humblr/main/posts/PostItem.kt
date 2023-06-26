@@ -66,7 +66,7 @@ fun PostItem(
         //            )
 
         Text(
-            text = "author",
+            text = item.data.author,
             style = bodySmall,
             color = MaterialTheme.colorScheme.primary,
             modifier = Modifier
@@ -92,7 +92,11 @@ fun PreviewPostItem() {
     AppTheme {
         PostItem(
             item = Post(
-                PostData(id = "t5_dbhbsdj", title = "Title")
+                PostData(
+                    id = "t5_dbhbsdj",
+                    title = "Title",
+                    author = "Author"
+                )
             ),
             onClick = {}
         )
