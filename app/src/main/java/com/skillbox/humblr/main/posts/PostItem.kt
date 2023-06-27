@@ -13,11 +13,15 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
+import coil.compose.AsyncImage
+import coil.request.ImageRequest
 import com.skillbox.humblr.R
 import com.skillbox.humblr.entity.Post
 import com.skillbox.humblr.entity.PostData
@@ -50,7 +54,8 @@ fun PostItem(
                 subscribeButton,
                 author,
                 comments,
-                commentsIcon
+                commentsIcon,
+                thumbnail
             ) = createRefs()
             val startGuide = createGuidelineFromStart(12.dp)
             val endGuide = createGuidelineFromEnd(12.dp)
@@ -66,6 +71,21 @@ fun PostItem(
                     },
                 style = labelLarge,
                 color = MaterialTheme.colorScheme.onSurface
+            )
+
+            AsyncImage(
+                model = ImageRequest.Builder(context = LocalContext.current)
+                    .data(item.data.thumbnail)
+                    .crossfade(true)
+                    .build(),
+                contentDescription = null,
+                contentScale = ContentScale.Crop,
+                modifier = Modifier
+                    .constrainAs(thumbnail) {
+                        top.linkTo(title.bottom, margin = 20.dp)
+                        start.linkTo(startGuide)
+                        width = Dimension.value(100.dp)
+                    }
             )
 
             //            SubscribeButton(
@@ -88,7 +108,7 @@ fun PostItem(
                 color = MaterialTheme.colorScheme.primary,
                 modifier = Modifier
                     .constrainAs(author) {
-                        top.linkTo(title.bottom, margin = 20.dp)
+                        top.linkTo(thumbnail.bottom, margin = 20.dp)
                         start.linkTo(startGuide)
                         end.linkTo(comments.start, margin = 20.dp)
                         width = Dimension.fillToConstraints
@@ -138,7 +158,8 @@ fun PreviewPostItem() {
                     id = "t5_dbhbsdj",
                     title = "Title",
                     author = "Author",
-                    numComments = 225
+                    numComments = 225,
+                    thumbnail = "self"
                 )
             ),
             onClick = {}

@@ -8,5 +8,7 @@ data class PostData(
     val author: String,
 
     @SerializedName("num_comments")
-    val numComments: Int
+    val numComments: Int,
+
+    val thumbnail: String
 )
