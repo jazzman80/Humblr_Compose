@@ -20,7 +20,7 @@ fun PostsScreen(
     onBack: () -> Unit
 ) {
     val viewModel: PostsViewModel = hiltViewModel()
-    val posts = viewModel.repository.getPosts(title).flow.collectAsLazyPagingItems()
+    val posts = viewModel.postFlow(title).collectAsLazyPagingItems()
 
     ConstraintLayout(
         modifier = Modifier

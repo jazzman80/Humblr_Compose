@@ -24,6 +24,13 @@ val labelLarge = TextStyle(
     letterSpacing = 0.1.sp
 )
 
+val labelMedium = TextStyle(
+    fontSize = 12.sp,
+    lineHeight = 16.sp,
+    fontWeight = FontWeight.Medium,
+    letterSpacing = 0.5.sp
+)
+
 val bodyMedium = TextStyle(
     fontSize = 14.sp,
     lineHeight = 20.sp,
