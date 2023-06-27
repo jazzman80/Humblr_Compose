@@ -11,16 +11,23 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
-import coil.compose.AsyncImage
+import androidx.constraintlayout.compose.Visibility.Companion.Gone
+import androidx.constraintlayout.compose.Visibility.Companion.Visible
+import coil.compose.SubcomposeAsyncImage
 import coil.request.ImageRequest
 import com.skillbox.humblr.R
 import com.skillbox.humblr.entity.Post
@@ -35,6 +42,11 @@ fun PostItem(
     item: Post,
     onClick: () -> Unit
 ) {
+
+    var imageVisibility by remember {
+        mutableStateOf(Visible)
+    }
+
     Box(
         modifier = Modifier.clip(MaterialTheme.shapes.medium)
     ) {
@@ -55,7 +67,8 @@ fun PostItem(
                 author,
                 comments,
                 commentsIcon,
-                thumbnail
+                thumbnail,
+                description
             ) = createRefs()
             val startGuide = createGuidelineFromStart(12.dp)
             val endGuide = createGuidelineFromEnd(12.dp)
@@ -73,7 +86,7 @@ fun PostItem(
                 color = MaterialTheme.colorScheme.onSurface
             )
 
-            AsyncImage(
+            SubcomposeAsyncImage(
                 model = ImageRequest.Builder(context = LocalContext.current)
                     .data(item.data.thumbnail)
                     .crossfade(true)
@@ -84,9 +97,29 @@ fun PostItem(
                     .constrainAs(thumbnail) {
                         top.linkTo(title.bottom, margin = 20.dp)
                         start.linkTo(startGuide)
+                        visibility = imageVisibility
                         width = Dimension.value(100.dp)
+                        height = Dimension.value(100.dp)
+                    },
+                onError = { imageVisibility = Gone }
+            )
+
+            Text(
+                text = item.data.selftext,
+                style = bodySmall,
+                color = MaterialTheme.colorScheme.onSurface,
+                maxLines = 8,
+                overflow = TextOverflow.Ellipsis,
+                modifier = Modifier
+                    .constrainAs(description) {
+                        top.linkTo(title.bottom, margin = 16.dp)
+                        start.linkTo(thumbnail.end, margin = 10.dp)
+                        end.linkTo(endGuide)
+                        width = Dimension.fillToConstraints
                     }
             )
+
+            val bottomBarrier = createBottomBarrier(thumbnail, description)
 
             //            SubscribeButton(
             //                modifier = Modifier
@@ -108,7 +141,7 @@ fun PostItem(
                 color = MaterialTheme.colorScheme.primary,
                 modifier = Modifier
                     .constrainAs(author) {
-                        top.linkTo(thumbnail.bottom, margin = 20.dp)
+                        top.linkTo(bottomBarrier, margin = 10.dp)
                         start.linkTo(startGuide)
                         end.linkTo(comments.start, margin = 20.dp)
                         width = Dimension.fillToConstraints
@@ -159,7 +192,8 @@ fun PreviewPostItem() {
                     title = "Title",
                     author = "Author",
                     numComments = 225,
-                    thumbnail = "self"
+                    thumbnail = "self",
+                    selftext = "description"
                 )
             ),
             onClick = {}

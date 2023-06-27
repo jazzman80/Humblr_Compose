@@ -10,5 +10,6 @@ data class PostData(
     @SerializedName("num_comments")
     val numComments: Int,
 
-    val thumbnail: String
+    val thumbnail: String,
+    val selftext: String
 )
