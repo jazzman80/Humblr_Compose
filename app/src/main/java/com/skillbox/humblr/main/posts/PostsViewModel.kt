@@ -30,4 +30,14 @@ class PostsViewModel @Inject constructor(
         }
     }
 
+    fun save(isSaved: Boolean, name: String) {
+        viewModelScope.launch {
+            if (isSaved) {
+                repository.unsave(name)
+            } else {
+                repository.save(name)
+            }
+        }
+    }
+
 }

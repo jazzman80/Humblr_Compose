@@ -22,5 +22,8 @@ interface Repository {
     suspend fun refreshToken()
     suspend fun unsubscribe(fullName: String?): Response<SubscribeResponse>
     suspend fun subscribe(fullName: String?): Response<SubscribeResponse>
+    suspend fun unsave(name: String): Response<SubscribeResponse>
+    suspend fun save(name: String): Response<SubscribeResponse>
+
 
 }

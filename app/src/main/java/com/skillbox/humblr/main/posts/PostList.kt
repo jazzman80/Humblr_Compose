@@ -23,7 +23,8 @@ fun PostList(
     modifier: Modifier,
     pagingItems: LazyPagingItems<Post>,
     onRefreshButton: () -> Unit,
-    onItemClick: (String) -> Unit
+    onItemClick: (String) -> Unit,
+    onSave: (Boolean, String) -> Unit
 ) {
 
     val listState = rememberLazyListState()
@@ -55,7 +56,10 @@ fun PostList(
                 if (pagingItems[it] != null) {
                     PostItem(
                         item = pagingItems[it]!!,
-                        onClick = { onItemClick(pagingItems[it]!!.data.title) }
+                        onClick = { onItemClick(pagingItems[it]!!.data.title) },
+                        onSave = { isSaved ->
+                            onSave(isSaved, pagingItems[it]!!.data.name)
+                        }
                     )
                 } else {
                     //ItemSubredditPlaceholder()

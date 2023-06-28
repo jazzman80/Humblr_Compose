@@ -68,4 +68,16 @@ interface ApiService {
         @Query("after") after: String?,
         @Query("limit") limit: Int
     ): Call<PostListing>
+
+    @POST("api/save")
+    fun save(
+        @Header("Authorization") auth: String,
+        @Query("id") id: String
+    ): Call<SubscribeResponse>
+
+    @POST("api/unsave")
+    fun unsave(
+        @Header("Authorization") auth: String,
+        @Query("id") id: String
+    ): Call<SubscribeResponse>
 }

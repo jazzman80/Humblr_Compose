@@ -36,7 +36,7 @@ class RepositoryImplementation @Inject constructor(
     private var state = "state"
     private val redirectUri = "com.skillboxpractice.humblr://humblr"
     private val duration = "permanent"
-    private val scope = "read subscribe"
+    private val scope = "read subscribe save"
     private val authString = Base64.getEncoder().encodeToString("$clientId:".toByteArray())
 
     private var _accessToken = ""
@@ -176,6 +176,20 @@ class RepositoryImplementation @Inject constructor(
             "Bearer $_accessToken",
             "sub",
             fullName
+        ).awaitResponse()
+    }
+
+    override suspend fun unsave(name: String): Response<SubscribeResponse> {
+        return apiService.unsave(
+            "Bearer $_accessToken",
+            name
+        ).awaitResponse()
+    }
+
+    override suspend fun save(name: String): Response<SubscribeResponse> {
+        return apiService.save(
+            "Bearer $_accessToken",
+            name
         ).awaitResponse()
     }
 

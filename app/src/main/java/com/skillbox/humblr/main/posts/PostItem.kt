@@ -32,6 +32,7 @@ import coil.request.ImageRequest
 import com.skillbox.humblr.R
 import com.skillbox.humblr.entity.Post
 import com.skillbox.humblr.entity.PostData
+import com.skillbox.humblr.main.core.list_subreddit.SubscribeButton
 import com.skillbox.humblr.theme.AppTheme
 import com.skillbox.humblr.theme.bodySmall
 import com.skillbox.humblr.theme.labelLarge
@@ -40,7 +41,8 @@ import com.skillbox.humblr.theme.labelMedium
 @Composable
 fun PostItem(
     item: Post,
-    onClick: () -> Unit
+    onClick: () -> Unit,
+    onSave: (Boolean) -> Unit
 ) {
 
     var imageVisibility by remember {
@@ -79,11 +81,21 @@ fun PostItem(
                     .constrainAs(title) {
                         top.linkTo(parent.top, margin = 12.dp)
                         start.linkTo(startGuide)
-                        end.linkTo(endGuide)
+                        end.linkTo(subscribeButton.start)
                         width = Dimension.fillToConstraints
                     },
                 style = labelLarge,
                 color = MaterialTheme.colorScheme.onSurface
+            )
+
+            SubscribeButton(
+                modifier = Modifier
+                    .constrainAs(subscribeButton) {
+                        top.linkTo(parent.top)
+                        end.linkTo(parent.end)
+                    },
+                onSubscribe = { onSave(it) },
+                initSubscribe = item.data.saved
             )
 
             SubcomposeAsyncImage(
@@ -120,20 +132,6 @@ fun PostItem(
             )
 
             val bottomBarrier = createBottomBarrier(thumbnail, description)
-
-            //            SubscribeButton(
-            //                modifier = Modifier
-            //                    .constrainAs(subscribeButton) {
-            //                        top.linkTo(parent.top)
-            //                        end.linkTo(parent.end)
-            //                        bottom.linkTo(parent.bottom)
-            //                    }
-            //                    .padding(top = 12.dp, end = 12.dp, bottom = 12.dp),
-            //                onSubscribe = { isSubscribed ->
-            //                    onSubscribe(isSubscribed)
-            //                },
-            //                initSubscribe = item.data.userIsSubscriber
-            //            )
 
             Text(
                 text = item.data.author,
@@ -193,10 +191,13 @@ fun PreviewPostItem() {
                     author = "Author",
                     numComments = 225,
                     thumbnail = "self",
-                    selftext = "description"
+                    selftext = "description",
+                    saved = false,
+                    name = "sdjcnkdckw"
                 )
             ),
-            onClick = {}
+            onClick = {},
+            onSave = {}
         )
     }
 }

@@ -11,5 +11,7 @@ data class PostData(
     val numComments: Int,
 
     val thumbnail: String,
-    val selftext: String
+    val selftext: String,
+    val saved: Boolean,
+    val name: String
 )

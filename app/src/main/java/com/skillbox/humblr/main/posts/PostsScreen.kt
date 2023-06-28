@@ -55,8 +55,14 @@ fun PostsScreen(
                     height = Dimension.fillToConstraints
                 },
             pagingItems = posts,
-            onRefreshButton = { /*TODO*/ },
-            onItemClick = { /*TODO*/ }
+            onRefreshButton = {
+                viewModel.refreshToken()
+                posts.refresh()
+            },
+            onItemClick = { /*TODO*/ },
+            onSave = { isSaved, name ->
+                viewModel.save(isSaved, name)
+            }
         )
 
     }
