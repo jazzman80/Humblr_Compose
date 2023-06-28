@@ -42,7 +42,6 @@ class RepositoryImplementation @Inject constructor(
     private var _accessToken = ""
     override val accessToken: String
         get() = _accessToken
-    private val auth = "Bearer $_accessToken"
 
     private var refreshToken = ""
     private var expiresIn = 0L
@@ -106,7 +105,7 @@ class RepositoryImplementation @Inject constructor(
             refreshToken = response.body()!!.refreshToken
             expiresIn = response.body()!!.expiresIn + Instant.now().epochSecond
 
-            save()
+            saveToken()
         }
         return response
     }
@@ -124,7 +123,7 @@ class RepositoryImplementation @Inject constructor(
                 _accessToken = response.body()!!.accessToken
                 expiresIn = response.body()!!.expiresIn + Instant.now().epochSecond
 
-                save()
+                saveToken()
             }
         }
     }
@@ -193,7 +192,7 @@ class RepositoryImplementation @Inject constructor(
         ).awaitResponse()
     }
 
-    private fun save() {
+    private fun saveToken() {
         // Сохраняем токены
         val edit =
             appContext.getSharedPreferences(
