@@ -57,8 +57,7 @@ fun PostItem(
                 .fillMaxWidth()
                 .wrapContentHeight()
                 .background(
-                    color = MaterialTheme.colorScheme.surface,
-                    // shape = MaterialTheme.shapes.medium
+                    color = MaterialTheme.colorScheme.surface
                 )
                 .clickable { onClick() },
 
