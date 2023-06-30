@@ -16,6 +16,7 @@ import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import coil.compose.SubcomposeAsyncImage
+import com.skillbox.humblr.entity.PostData
 import com.skillbox.humblr.main.core.LikeButton
 import com.skillbox.humblr.main.core.list_subreddit.SubscribeButton
 import com.skillbox.humblr.theme.AppTheme
@@ -24,7 +25,8 @@ import com.skillbox.humblr.theme.labelLarge
 
 @Composable
 fun SinglePostCard(
-    modifier: Modifier
+    modifier: Modifier,
+    item: PostData
 ) {
     ConstraintLayout(
         modifier = modifier
@@ -50,7 +52,7 @@ fun SinglePostCard(
         val endGuide = createGuidelineFromEnd(14.dp)
 
         Text(
-            text = "Жабы сбежали из болота в соседнем Марьино",
+            text = item.title,
             color = MaterialTheme.colorScheme.onSurface,
             style = labelLarge,
             modifier = Modifier
@@ -73,7 +75,7 @@ fun SinglePostCard(
         )
 
         Text(
-            text = "КисКисХ2",
+            text = item.author,
             color = MaterialTheme.colorScheme.primary,
             style = labelLarge,
             modifier = Modifier
@@ -112,7 +114,7 @@ fun SinglePostCard(
         )
 
         Text(
-            text = "Все случилось настолько стремительно, что UX/UI-дизайнеры не успели сделать интерфейс.",
+            text = item.selftext,
             color = MaterialTheme.colorScheme.onSurface,
             style = bodySmall,
             modifier = Modifier
@@ -145,7 +147,6 @@ fun SinglePostCard(
                     top.linkTo(description.bottom)
                 }
         )
-
 
         TextButton(
             onClick = { /*TODO*/ },
@@ -190,7 +191,14 @@ fun PreviewSinglePostCard() {
                         start.linkTo(parent.start, margin = 8.dp)
                         end.linkTo(parent.end, margin = 8.dp)
                         width = Dimension.fillToConstraints
-                    }
+                    },
+                item = PostData(
+                    title = "Жабы сбежали из болота в соседнем Марьино",
+                    author = "КисКисХ2",
+                    numComments = 0,
+                    selftext = "Все случилось настолько стремительно, что UX/UI-дизайнеры не успели сделать интерфейс.",
+                    saved = false
+                )
             )
         }
 
