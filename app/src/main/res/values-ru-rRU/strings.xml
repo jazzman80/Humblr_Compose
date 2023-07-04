@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <string name="app_name">Humblr</string>
     <string name="onboard_title_1">Добро пожаловать в Humblr</string>
     <string name="onboard_message_1">Здесь собраны сообщества по всевозможным интересам</string>
@@ -19,6 +19,7 @@
     <string name="search_for">Поиск </string>
     <string name="refresh">Обновить</string>
     <string name="nothing_found">Ничего не найдено</string>
+    <string name="published">опубликовано</string>
     <string name="now">сейчас</string>
     <plurals name="minutesAgo">
         <item quantity="one">%d минуту назад</item>
@@ -45,4 +46,10 @@
         <item quantity="few">%d года назад</item>
         <item quantity="many">%d лет назад</item>
     </plurals>
+    <plurals name="comments" tools:ignore="ImpliedQuantity">
+        <item quantity="one"> комментарий</item>
+        <item quantity="few"> комментария</item>
+        <item quantity="many"> комментариев</item>
+    </plurals>
+    <string name="share">Поделиться</string>
 </resources>

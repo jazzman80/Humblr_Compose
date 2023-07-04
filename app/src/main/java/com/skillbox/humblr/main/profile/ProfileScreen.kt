@@ -1,23 +1,38 @@
 package com.skillbox.humblr.main.profile
 
+import android.content.res.Configuration
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
-import androidx.hilt.navigation.compose.hiltViewModel
-import com.skillbox.humblr.main.favorites.SharedModel
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
+import cafe.adriel.voyager.androidx.AndroidScreen
+import com.skillbox.humblr.theme.AppTheme
 
-@Composable
-fun ProfileScreen(
-    viewModel: SharedModel = hiltViewModel()
-) {
+class ProfileScreen : AndroidScreen() {
 
-    val countState by viewModel.count.observeAsState()
+    @Composable
+    override fun Content() {
+        Text(
+            text = "Profile Screen",
+            modifier = Modifier.fillMaxSize(),
+            textAlign = TextAlign.Center
+        )
+    }
 
-    Text(
-        text = "$countState",
-        modifier = Modifier.fillMaxSize()
+    @Preview(
+        name = "Light Mode", showBackground = true
     )
+    @Preview(
+        uiMode = Configuration.UI_MODE_NIGHT_YES, showBackground = true, name = "Dark Mode"
+    )
+    @Composable
+    fun Preview() {
+        AppTheme {
+            Content()
+        }
+    }
+
+
 }

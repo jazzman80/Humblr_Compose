@@ -13,74 +13,80 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.paging.compose.collectAsLazyPagingItems
+import cafe.adriel.voyager.androidx.AndroidScreen
+import cafe.adriel.voyager.hilt.getViewModel
+import cafe.adriel.voyager.navigator.LocalNavigator
+import cafe.adriel.voyager.navigator.currentOrThrow
 import com.skillbox.humblr.R
 import com.skillbox.humblr.main.core.TopBar
 import com.skillbox.humblr.main.core.list_subreddit.ListSubreddit
 import com.skillbox.humblr.theme.AppTheme
 
-@Composable
-fun SearchScreen(
-    searchQuery: String,
-    onBack: () -> Unit,
-    viewModel: SearchViewModel = hiltViewModel(),
-    navigateToPosts: (String) -> Unit
-) {
 
-    ConstraintLayout(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(MaterialTheme.colorScheme.background)
-    ) {
+data class SearchScreen(var searchQuery: String) : AndroidScreen() {
 
-        val query by rememberSaveable {
-            mutableStateOf(searchQuery)
-        }
+    @Composable
+    override fun Content() {
 
-        val subs = viewModel.repository.searchSubs(query).flow.collectAsLazyPagingItems()
+        val viewModel = getViewModel<SearchViewModel>()
+        val navigator = LocalNavigator.currentOrThrow
 
-        val (topBar, list) = createRefs()
-
-        val startGuide = createGuidelineFromStart(0.08F)
-        val endGuide = createGuidelineFromEnd(0.08F)
-
-        TopBar(
-            onNavIcon = { onBack() },
-            titleText = stringResource(id = R.string.search_for) + " " + query,
+        ConstraintLayout(
             modifier = Modifier
-                .constrainAs(topBar) {
-                    start.linkTo(parent.start)
-                    end.linkTo(parent.end)
-                    top.linkTo(parent.top)
-                    width = Dimension.fillToConstraints
-                }
-        )
+                .fillMaxSize()
+                .background(MaterialTheme.colorScheme.background)
+        ) {
 
-        ListSubreddit(
-            modifier = Modifier
-                .constrainAs(list) {
-                    top.linkTo(topBar.bottom)
-                    start.linkTo(startGuide)
-                    end.linkTo(endGuide)
-                    bottom.linkTo(parent.bottom)
-                    width = Dimension.fillToConstraints
-                    height = Dimension.fillToConstraints
-                },
-            pagingItems = subs,
-            onRefreshButton = {
-                viewModel.refreshToken()
-                subs.refresh()
-            },
-            onSubscribe = { isSubscribed, name ->
-                viewModel.subscribe(isSubscribed, name)
-            },
-            onItemClick = { subTitle ->
-                navigateToPosts(subTitle)
+            val query by rememberSaveable {
+                mutableStateOf(searchQuery)
             }
-        )
 
+            val subs = viewModel.repository.searchSubs(query).flow.collectAsLazyPagingItems()
+
+            val (topBar, list) = createRefs()
+
+            val startGuide = createGuidelineFromStart(0.08F)
+            val endGuide = createGuidelineFromEnd(0.08F)
+
+            TopBar(
+                onNavIcon = { navigator.pop() },
+                titleText = stringResource(id = R.string.search_for) + " " + query,
+                modifier = Modifier
+                    .constrainAs(topBar) {
+                        start.linkTo(parent.start)
+                        end.linkTo(parent.end)
+                        top.linkTo(parent.top)
+                        width = Dimension.fillToConstraints
+                    }
+            )
+
+            ListSubreddit(
+                modifier = Modifier
+                    .constrainAs(list) {
+                        top.linkTo(topBar.bottom)
+                        start.linkTo(startGuide)
+                        end.linkTo(endGuide)
+                        bottom.linkTo(parent.bottom)
+                        width = Dimension.fillToConstraints
+                        height = Dimension.fillToConstraints
+                    },
+                pagingItems = subs,
+                onRefreshButton = {
+                    viewModel.refreshToken()
+                    subs.refresh()
+                },
+                onSubscribe = { isSubscribed, name ->
+                    viewModel.subscribe(isSubscribed, name)
+                },
+                onItemClick = { subTitle ->
+                    //navigateToPosts(subTitle)
+                }
+            )
+
+        }
     }
+
 }
 
 @Preview(
@@ -92,6 +98,6 @@ fun SearchScreen(
 @Composable
 fun PreviewSearchScreen() {
     AppTheme {
-        //SearchScreen("Иди", {})
+        SearchScreen("Fuck you").Content()
     }
 }

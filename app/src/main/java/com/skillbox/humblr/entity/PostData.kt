@@ -13,5 +13,6 @@ data class PostData(
     val thumbnail: String = "",
     val selftext: String = "",
     val saved: Boolean = false,
-    val name: String = ""
+    val name: String = "",
+    val created: Long = 0L
 )

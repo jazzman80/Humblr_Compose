@@ -19,7 +19,10 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
+import cafe.adriel.voyager.navigator.LocalNavigator
+import cafe.adriel.voyager.navigator.currentOrThrow
 import com.skillbox.humblr.R
+import com.skillbox.humblr.main.search.SearchScreen
 import com.skillbox.humblr.theme.AppTheme
 import com.skillbox.humblr.theme.bodyMedium
 import com.skillbox.humblr.theme.hintStyle
@@ -27,9 +30,10 @@ import com.skillbox.humblr.theme.hintStyle
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun FeedSearchField(
-    modifier: Modifier,
-    onSearch: (String) -> Unit
+    modifier: Modifier
 ) {
+
+    val navigator = LocalNavigator.currentOrThrow
 
     var searchText by rememberSaveable {
         mutableStateOf("")
@@ -57,7 +61,7 @@ fun FeedSearchField(
                 modifier = Modifier
                     .clickable {
                         if (searchText.isNotEmpty()) {
-                            onSearch(searchText)
+                            navigator.push(SearchScreen(searchText))
                         }
                     }
             )
@@ -75,6 +79,6 @@ fun FeedSearchField(
 @Composable
 fun PreviewFeedSearchField() {
     AppTheme {
-        FeedSearchField(Modifier, {})
+        FeedSearchField(Modifier)
     }
 }

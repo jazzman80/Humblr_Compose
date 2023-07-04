@@ -17,7 +17,8 @@ import com.skillbox.humblr.theme.AppTheme
 @Composable
 fun PostsScreen(
     title: String,
-    onBack: () -> Unit
+    onBack: () -> Unit,
+    navigateToPost: (String) -> Unit
 ) {
     val viewModel: PostsViewModel = hiltViewModel()
     val posts = viewModel.postFlow(title).collectAsLazyPagingItems()
@@ -59,7 +60,7 @@ fun PostsScreen(
                 viewModel.refreshToken()
                 posts.refresh()
             },
-            onItemClick = { /*TODO*/ },
+            onItemClick = { navigateToPost(title) },
             onSave = { isSaved, name ->
                 viewModel.save(isSaved, name)
             }
@@ -77,6 +78,6 @@ fun PostsScreen(
 @Composable
 fun PreviewPostsScreen() {
     AppTheme {
-        PostsScreen("Posts Screen", {})
+        PostsScreen("Posts Screen", {}, {})
     }
 }

@@ -11,17 +11,23 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.pluralStringResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import coil.compose.SubcomposeAsyncImage
+import com.skillbox.humblr.R
 import com.skillbox.humblr.entity.PostData
+import com.skillbox.humblr.main.core.Counter
 import com.skillbox.humblr.main.core.LikeButton
+import com.skillbox.humblr.main.core.PublishedText
 import com.skillbox.humblr.main.core.list_subreddit.SubscribeButton
 import com.skillbox.humblr.theme.AppTheme
 import com.skillbox.humblr.theme.bodySmall
 import com.skillbox.humblr.theme.labelLarge
+import java.time.Instant
 
 @Composable
 fun SinglePostCard(
@@ -40,10 +46,12 @@ fun SinglePostCard(
             title,
             subscribeButton,
             author,
+            publicationTime,
             publication,
             image,
             description,
             comments,
+            commentsText,
             share,
             likeButton
         ) = createRefs()
@@ -86,14 +94,23 @@ fun SinglePostCard(
                 }
         )
 
+        PublishedText(
+            publishTime = item.created,
+            modifier = Modifier
+                .constrainAs(publicationTime) {
+                    baseline.linkTo(author.baseline)
+                    end.linkTo(endGuide)
+                }
+        )
+
         Text(
-            text = "опубликовано 3 часа назад",
+            text = stringResource(id = R.string.published) + " ",
             color = MaterialTheme.colorScheme.outline,
             style = bodySmall,
             modifier = Modifier
                 .constrainAs(publication) {
                     baseline.linkTo(author.baseline)
-                    end.linkTo(endGuide)
+                    end.linkTo(publicationTime.start)
                 }
         )
 
@@ -126,9 +143,8 @@ fun SinglePostCard(
                 }
         )
 
-        Text(
-            text = "22 комментария",
-            color = MaterialTheme.colorScheme.outline,
+        Counter(
+            value = item.numComments,
             style = bodySmall,
             modifier = Modifier
                 .constrainAs(comments) {
@@ -138,9 +154,23 @@ fun SinglePostCard(
                 }
         )
 
+        Text(
+            text = " " + pluralStringResource(
+                id = R.plurals.comments,
+                count = if (item.numComments < 1000) item.numComments else 1000
+            ),
+            color = MaterialTheme.colorScheme.outline,
+            style = bodySmall,
+            modifier = Modifier
+                .constrainAs(commentsText) {
+                    start.linkTo(comments.end)
+                    top.linkTo(likeButton.top)
+                    bottom.linkTo(likeButton.bottom)
+                }
+        )
+
         LikeButton(
-            initState = false,
-            initLikes = 100,
+            initState = item.saved,
             modifier = Modifier
                 .constrainAs(likeButton) {
                     end.linkTo(endGuide)
@@ -157,7 +187,7 @@ fun SinglePostCard(
                 }
         ) {
             Text(
-                text = "Share",
+                text = stringResource(id = R.string.share),
                 color = MaterialTheme.colorScheme.outline,
                 style = bodySmall,
             )
@@ -195,9 +225,10 @@ fun PreviewSinglePostCard() {
                 item = PostData(
                     title = "Жабы сбежали из болота в соседнем Марьино",
                     author = "КисКисХ2",
-                    numComments = 0,
+                    numComments = 123,
                     selftext = "Все случилось настолько стремительно, что UX/UI-дизайнеры не успели сделать интерфейс.",
-                    saved = false
+                    saved = false,
+                    created = Instant.now().epochSecond - 23154
                 )
             )
         }

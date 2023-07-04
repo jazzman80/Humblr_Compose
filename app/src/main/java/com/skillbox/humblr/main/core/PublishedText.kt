@@ -19,7 +19,8 @@ import java.time.Instant
 
 @Composable
 fun PublishedText(
-    publishTime: Long
+    publishTime: Long,
+    modifier: Modifier = Modifier
 ) {
 
     val diff = Instant.now().epochSecond - publishTime
@@ -68,7 +69,8 @@ fun PublishedText(
     Text(
         text = text,
         color = MaterialTheme.colorScheme.outline,
-        style = bodySmall
+        style = bodySmall,
+        modifier = modifier
     )
 }
 

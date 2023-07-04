@@ -21,6 +21,7 @@
     <string name="search_for">Search for </string>
     <string name="refresh">Refresh</string>
     <string name="nothing_found">Nothing found</string>
+    <string name="published">published</string>
     <string name="now">now</string>
     <plurals name="minutesAgo">
         <item quantity="one">%d minute ago</item>
@@ -42,4 +43,9 @@
         <item quantity="one">%d year ago</item>
         <item quantity="other">%d years ago</item>
     </plurals>
+    <plurals name="comments">
+        <item quantity="one"> comment</item>
+        <item quantity="other"> comments</item>
+    </plurals>
+    <string name="share">Share</string>
 </resources>
