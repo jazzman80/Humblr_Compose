@@ -14,7 +14,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
+import cafe.adriel.voyager.navigator.LocalNavigator
+import cafe.adriel.voyager.navigator.currentOrThrow
 import com.skillbox.humblr.entity.Subreddit
+import com.skillbox.humblr.main.posts.PostsScreen
 import com.skillbox.humblr.theme.AppTheme
 import com.skillbox.humblr.theme.labelLarge
 
@@ -22,14 +25,16 @@ import com.skillbox.humblr.theme.labelLarge
 @Composable
 fun ItemSubreddit(
     item: Subreddit,
-    onSubscribe: (Boolean) -> Unit,
-    onClick: () -> Unit
+    onSubscribe: (Boolean) -> Unit
 ) {
+
+    val navigator = LocalNavigator.currentOrThrow
+
     Card(
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.surface
         ),
-        onClick = { onClick() }
+        onClick = { navigator.push(PostsScreen(item.data.title)) }
     ) {
         ConstraintLayout(
             modifier = Modifier.fillMaxSize()

@@ -27,12 +27,15 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import androidx.constraintlayout.compose.Visibility.Companion.Gone
 import androidx.constraintlayout.compose.Visibility.Companion.Visible
+import cafe.adriel.voyager.navigator.LocalNavigator
+import cafe.adriel.voyager.navigator.currentOrThrow
 import coil.compose.SubcomposeAsyncImage
 import coil.request.ImageRequest
 import com.skillbox.humblr.R
 import com.skillbox.humblr.entity.Post
 import com.skillbox.humblr.entity.PostData
 import com.skillbox.humblr.main.core.list_subreddit.SubscribeButton
+import com.skillbox.humblr.main.single_post.SinglePostScreen
 import com.skillbox.humblr.theme.AppTheme
 import com.skillbox.humblr.theme.bodySmall
 import com.skillbox.humblr.theme.labelLarge
@@ -41,13 +44,14 @@ import com.skillbox.humblr.theme.labelMedium
 @Composable
 fun PostItem(
     item: Post,
-    onClick: () -> Unit,
     onSave: (Boolean) -> Unit
 ) {
 
     var imageVisibility by remember {
         mutableStateOf(Visible)
     }
+
+    val navigator = LocalNavigator.currentOrThrow
 
     Box(
         modifier = Modifier.clip(MaterialTheme.shapes.medium)
@@ -59,7 +63,7 @@ fun PostItem(
                 .background(
                     color = MaterialTheme.colorScheme.surface
                 )
-                .clickable { onClick() },
+                .clickable { navigator.push(SinglePostScreen(item.data)) },
 
             ) {
             val (
@@ -195,7 +199,6 @@ fun PreviewPostItem() {
                     name = "sdjcnkdckw"
                 )
             ),
-            onClick = {},
             onSave = {}
         )
     }

@@ -15,16 +15,19 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
+import cafe.adriel.voyager.navigator.LocalNavigator
+import cafe.adriel.voyager.navigator.currentOrThrow
 import com.skillbox.humblr.R
 import com.skillbox.humblr.theme.AppTheme
 import com.skillbox.humblr.theme.titleMedium
 
 @Composable
 fun TopBar(
-    onNavIcon: () -> Unit,
     titleText: String,
     modifier: Modifier
 ) {
+    val navigator = LocalNavigator.currentOrThrow
+
     ConstraintLayout(
         modifier = modifier
             .background(MaterialTheme.colorScheme.primary)
@@ -33,7 +36,7 @@ fun TopBar(
         val (navIcon, title) = createRefs()
 
         IconButton(
-            onClick = { onNavIcon() },
+            onClick = { navigator.pop() },
             modifier = Modifier
                 .constrainAs(navIcon) {
                     top.linkTo(parent.top)
@@ -77,6 +80,6 @@ fun TopBar(
 @Composable
 fun PreviewTopBar() {
     AppTheme {
-        TopBar({}, "fvdfg", Modifier.fillMaxWidth())
+        TopBar("fvdfg", Modifier.fillMaxWidth())
     }
 }

@@ -10,51 +10,52 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
+import cafe.adriel.voyager.androidx.AndroidScreen
 import com.skillbox.humblr.entity.PostData
 import com.skillbox.humblr.main.core.TopBar
 import com.skillbox.humblr.theme.AppTheme
 import java.time.Instant
 
-@Composable
-fun SinglePostScreen(
-    item: PostData,
-    onBack: () -> Unit,
-    titleText: String
-) {
-    ConstraintLayout(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(
-                color = MaterialTheme.colorScheme.background
+data class SinglePostScreen(
+    val item: PostData
+) : AndroidScreen() {
+
+    @Composable
+    override fun Content() {
+        ConstraintLayout(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(
+                    color = MaterialTheme.colorScheme.background
+                )
+        ) {
+
+            val (topBar, postCard) = createRefs()
+            val startGuide = createGuidelineFromStart(12.dp)
+            val endGuide = createGuidelineFromEnd(12.dp)
+
+            TopBar(
+                titleText = item.subreddit,
+                modifier = Modifier
+                    .constrainAs(topBar) {
+                        top.linkTo(parent.top)
+                        start.linkTo(parent.start)
+                        end.linkTo(parent.end)
+                        width = Dimension.fillToConstraints
+                    }
             )
-    ) {
 
-        val (topBar, postCard) = createRefs()
-        val startGuide = createGuidelineFromStart(12.dp)
-        val endGuide = createGuidelineFromEnd(12.dp)
-
-        TopBar(
-            onNavIcon = { onBack() },
-            titleText = titleText,
-            modifier = Modifier
-                .constrainAs(topBar) {
-                    top.linkTo(parent.top)
-                    start.linkTo(parent.start)
-                    end.linkTo(parent.end)
-                    width = Dimension.fillToConstraints
-                }
-        )
-
-        SinglePostCard(
-            modifier = Modifier
-                .constrainAs(postCard) {
-                    top.linkTo(topBar.bottom)
-                    start.linkTo(startGuide)
-                    end.linkTo(endGuide)
-                    width = Dimension.fillToConstraints
-                },
-            item = item
-        )
+            SinglePostCard(
+                modifier = Modifier
+                    .constrainAs(postCard) {
+                        top.linkTo(topBar.bottom)
+                        start.linkTo(startGuide)
+                        end.linkTo(endGuide)
+                        width = Dimension.fillToConstraints
+                    },
+                item = item
+            )
+        }
     }
 }
 
@@ -75,9 +76,7 @@ fun PreviewSinglePostScreen() {
                 selftext = "Все случилось настолько стремительно, что UX/UI-дизайнеры не успели сделать интерфейс.",
                 saved = false,
                 created = Instant.now().epochSecond - 23154
-            ),
-            onBack = {},
-            titleText = "Subreddit"
+            )
         )
     }
 }

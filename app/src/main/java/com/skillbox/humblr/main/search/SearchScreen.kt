@@ -16,8 +16,6 @@ import androidx.constraintlayout.compose.Dimension
 import androidx.paging.compose.collectAsLazyPagingItems
 import cafe.adriel.voyager.androidx.AndroidScreen
 import cafe.adriel.voyager.hilt.getViewModel
-import cafe.adriel.voyager.navigator.LocalNavigator
-import cafe.adriel.voyager.navigator.currentOrThrow
 import com.skillbox.humblr.R
 import com.skillbox.humblr.main.core.TopBar
 import com.skillbox.humblr.main.core.list_subreddit.ListSubreddit
@@ -30,7 +28,6 @@ data class SearchScreen(var searchQuery: String) : AndroidScreen() {
     override fun Content() {
 
         val viewModel = getViewModel<SearchViewModel>()
-        val navigator = LocalNavigator.currentOrThrow
 
         ConstraintLayout(
             modifier = Modifier
@@ -50,7 +47,6 @@ data class SearchScreen(var searchQuery: String) : AndroidScreen() {
             val endGuide = createGuidelineFromEnd(0.08F)
 
             TopBar(
-                onNavIcon = { navigator.pop() },
                 titleText = stringResource(id = R.string.search_for) + " " + query,
                 modifier = Modifier
                     .constrainAs(topBar) {
@@ -78,9 +74,6 @@ data class SearchScreen(var searchQuery: String) : AndroidScreen() {
                 },
                 onSubscribe = { isSubscribed, name ->
                     viewModel.subscribe(isSubscribed, name)
-                },
-                onItemClick = { subTitle ->
-                    //navigateToPosts(subTitle)
                 }
             )
 

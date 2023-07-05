@@ -23,7 +23,6 @@ fun PostList(
     modifier: Modifier,
     pagingItems: LazyPagingItems<Post>,
     onRefreshButton: () -> Unit,
-    onItemClick: (String) -> Unit,
     onSave: (Boolean, String) -> Unit
 ) {
 
@@ -56,7 +55,6 @@ fun PostList(
                 if (pagingItems[it] != null) {
                     PostItem(
                         item = pagingItems[it]!!,
-                        onClick = { onItemClick(pagingItems[it]!!.data.title) },
                         onSave = { isSaved ->
                             onSave(isSaved, pagingItems[it]!!.data.name)
                         }

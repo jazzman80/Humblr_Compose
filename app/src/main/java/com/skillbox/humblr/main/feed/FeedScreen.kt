@@ -117,9 +117,6 @@ class FeedScreen : AndroidScreen() {
                 },
                 onSubscribe = { isSubscribed, name ->
                     viewModel.subscribe(isSubscribed, name)
-                },
-                onItemClick = { subTitle ->
-                    //navigateToPosts(subTitle)
                 }
             )
         }

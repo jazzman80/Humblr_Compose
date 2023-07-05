@@ -14,5 +14,6 @@ data class PostData(
     val selftext: String = "",
     val saved: Boolean = false,
     val name: String = "",
-    val created: Long = 0L
+    val created: Long = 0L,
+    val subreddit: String = ""
 )
