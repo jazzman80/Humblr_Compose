@@ -1,6 +1,5 @@
 package com.skillbox.humblr.main.posts
 
-import android.content.res.Configuration
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -21,37 +20,34 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import androidx.constraintlayout.compose.Visibility.Companion.Gone
 import androidx.constraintlayout.compose.Visibility.Companion.Visible
-import cafe.adriel.voyager.navigator.LocalNavigator
-import cafe.adriel.voyager.navigator.currentOrThrow
 import coil.compose.SubcomposeAsyncImage
 import coil.request.ImageRequest
 import com.skillbox.humblr.R
-import com.skillbox.humblr.entity.Post
 import com.skillbox.humblr.entity.PostData
+import com.skillbox.humblr.entity.PostDataPreviewProvider
+import com.skillbox.humblr.main.core.Counter
 import com.skillbox.humblr.main.core.list_subreddit.SubscribeButton
-import com.skillbox.humblr.main.single_post.SinglePostScreen
+import com.skillbox.humblr.preview.ElementPreview
 import com.skillbox.humblr.theme.AppTheme
 import com.skillbox.humblr.theme.bodySmall
 import com.skillbox.humblr.theme.labelLarge
-import com.skillbox.humblr.theme.labelMedium
 
 @Composable
 fun PostItem(
-    item: Post,
-    onSave: (Boolean) -> Unit
+    item: PostData,
+    onSave: (Boolean) -> Unit,
+    navigateToPost: () -> Unit
 ) {
 
     var imageVisibility by remember {
         mutableStateOf(Visible)
     }
-
-    val navigator = LocalNavigator.currentOrThrow
 
     Box(
         modifier = Modifier.clip(MaterialTheme.shapes.medium)
@@ -63,7 +59,7 @@ fun PostItem(
                 .background(
                     color = MaterialTheme.colorScheme.surface
                 )
-                .clickable { navigator.push(SinglePostScreen(item.data)) },
+                .clickable { navigateToPost() },
 
             ) {
             val (
@@ -79,7 +75,7 @@ fun PostItem(
             val endGuide = createGuidelineFromEnd(12.dp)
 
             Text(
-                text = item.data.title,
+                text = item.title,
                 modifier = Modifier
                     .constrainAs(title) {
                         top.linkTo(parent.top, margin = 12.dp)
@@ -98,12 +94,13 @@ fun PostItem(
                         end.linkTo(parent.end)
                     },
                 onSubscribe = { onSave(it) },
-                initSubscribe = item.data.saved
+                initSubscribe = item.saved
             )
 
             SubcomposeAsyncImage(
                 model = ImageRequest.Builder(context = LocalContext.current)
-                    .data(item.data.thumbnail)
+                    .data(item.thumbnail)
+                    .placeholder(R.drawable.image_placeholder)
                     .crossfade(true)
                     .build(),
                 contentDescription = null,
@@ -120,7 +117,7 @@ fun PostItem(
             )
 
             Text(
-                text = item.data.selftext,
+                text = item.selftext,
                 style = bodySmall,
                 color = MaterialTheme.colorScheme.onSurface,
                 maxLines = 8,
@@ -137,8 +134,10 @@ fun PostItem(
             val bottomBarrier = createBottomBarrier(thumbnail, description)
 
             Text(
-                text = item.data.author,
+                text = item.author,
                 style = bodySmall,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
                 color = MaterialTheme.colorScheme.primary,
                 modifier = Modifier
                     .constrainAs(author) {
@@ -150,15 +149,14 @@ fun PostItem(
                     .padding(bottom = 12.dp)
             )
 
-            Text(
-                text = item.data.numComments.toString(),
-                style = labelMedium,
-                color = MaterialTheme.colorScheme.primary,
+            Counter(
+                value = item.numComments,
                 modifier = Modifier
                     .constrainAs(comments) {
                         baseline.linkTo(author.baseline)
                         end.linkTo(commentsIcon.start, margin = 3.dp)
-                    }
+                    },
+                color = MaterialTheme.colorScheme.primary
             )
 
             Icon(
@@ -167,39 +165,26 @@ fun PostItem(
                 tint = MaterialTheme.colorScheme.primary,
                 modifier = Modifier
                     .constrainAs(commentsIcon) {
-                        top.linkTo(comments.top, margin = 2.dp)
+                        top.linkTo(comments.top, margin = 3.dp)
+                        bottom.linkTo(comments.bottom)
                         end.linkTo(endGuide)
                     }
             )
 
         }
     }
-
 }
 
-@Preview(
-    name = "Light Mode", showBackground = true
-)
-@Preview(
-    uiMode = Configuration.UI_MODE_NIGHT_YES, showBackground = true, name = "Dark Mode"
-)
+@ElementPreview
 @Composable
-fun PreviewPostItem() {
+fun PreviewPostItem(
+    @PreviewParameter(PostDataPreviewProvider::class) postData: PostData
+) {
     AppTheme {
         PostItem(
-            item = Post(
-                PostData(
-                    id = "t5_dbhbsdj",
-                    title = "Title",
-                    author = "Author",
-                    numComments = 225,
-                    thumbnail = "self",
-                    selftext = "description",
-                    saved = false,
-                    name = "sdjcnkdckw"
-                )
-            ),
-            onSave = {}
+            item = postData,
+            onSave = {},
+            navigateToPost = {}
         )
     }
 }

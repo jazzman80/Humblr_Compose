@@ -13,14 +13,14 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
 import com.skillbox.humblr.theme.AppTheme
-import com.skillbox.humblr.theme.bodyMedium
+import com.skillbox.humblr.theme.bodySmall
 
 @Composable
 fun Counter(
     value: Int,
     modifier: Modifier = Modifier,
     color: Color = MaterialTheme.colorScheme.outline,
-    style: TextStyle = bodyMedium
+    style: TextStyle = bodySmall
 ) {
 
     val textValue: String = if (value < 1000) {
@@ -61,7 +61,7 @@ fun PreviewCounter() {
         )
         {
             Counter(
-                value = 471
+                value = 4710
             )
         }
     }

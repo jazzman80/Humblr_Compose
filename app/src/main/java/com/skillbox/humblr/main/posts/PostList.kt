@@ -54,10 +54,11 @@ fun PostList(
             ) {
                 if (pagingItems[it] != null) {
                     PostItem(
-                        item = pagingItems[it]!!,
+                        item = pagingItems[it]!!.data,
                         onSave = { isSaved ->
                             onSave(isSaved, pagingItems[it]!!.data.name)
-                        }
+                        },
+                        navigateToPost = {}
                     )
                 } else {
                     //ItemSubredditPlaceholder()
