@@ -54,7 +54,8 @@ data class SearchScreen(var searchQuery: String) : AndroidScreen() {
                         end.linkTo(parent.end)
                         top.linkTo(parent.top)
                         width = Dimension.fillToConstraints
-                    }
+                    },
+                onBack = {}
             )
 
             ListSubreddit(

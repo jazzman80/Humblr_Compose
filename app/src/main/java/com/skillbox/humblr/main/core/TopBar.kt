@@ -1,6 +1,5 @@
 package com.skillbox.humblr.main.core
 
-import android.content.res.Configuration
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -11,22 +10,20 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
-import cafe.adriel.voyager.navigator.LocalNavigator
-import cafe.adriel.voyager.navigator.currentOrThrow
 import com.skillbox.humblr.R
+import com.skillbox.humblr.preview.ElementPreview
 import com.skillbox.humblr.theme.AppTheme
 import com.skillbox.humblr.theme.titleMedium
 
 @Composable
 fun TopBar(
     titleText: String,
-    modifier: Modifier
+    modifier: Modifier,
+    onBack: () -> Unit
 ) {
-    val navigator = LocalNavigator.currentOrThrow
 
     ConstraintLayout(
         modifier = modifier
@@ -36,7 +33,7 @@ fun TopBar(
         val (navIcon, title) = createRefs()
 
         IconButton(
-            onClick = { navigator.pop() },
+            onClick = { onBack() },
             modifier = Modifier
                 .constrainAs(navIcon) {
                     top.linkTo(parent.top)
@@ -71,15 +68,10 @@ fun TopBar(
     }
 }
 
-@Preview(
-    name = "Light Mode", showBackground = true
-)
-@Preview(
-    uiMode = Configuration.UI_MODE_NIGHT_YES, showBackground = true, name = "Dark Mode"
-)
+@ElementPreview
 @Composable
 fun PreviewTopBar() {
     AppTheme {
-        TopBar("fvdfg", Modifier.fillMaxWidth())
+        TopBar("Длинные посты", Modifier.fillMaxWidth(), {})
     }
 }

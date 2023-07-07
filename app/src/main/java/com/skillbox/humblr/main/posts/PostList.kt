@@ -1,6 +1,7 @@
 package com.skillbox.humblr.main.posts
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.Button
@@ -10,13 +11,20 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import androidx.paging.LoadState
+import androidx.paging.PagingData
 import androidx.paging.compose.LazyPagingItems
+import androidx.paging.compose.collectAsLazyPagingItems
 import com.skillbox.humblr.R
 import com.skillbox.humblr.entity.Post
+import com.skillbox.humblr.entity.PostListPreviewProvider
+import com.skillbox.humblr.preview.ElementPreview
+import com.skillbox.humblr.theme.AppTheme
+import kotlinx.coroutines.flow.MutableStateFlow
 
 @Composable
 fun PostList(
@@ -117,5 +125,24 @@ fun PostList(
                 Text(text = stringResource(id = R.string.refresh))
             }
         }
+    }
+}
+
+@ElementPreview
+@Composable
+fun PostListPreview(
+    @PreviewParameter(PostListPreviewProvider::class) postList: List<Post>
+) {
+
+    val flow = MutableStateFlow(PagingData.from(postList))
+    val lazyPagingItems = flow.collectAsLazyPagingItems()
+
+    AppTheme {
+        PostList(
+            modifier = Modifier.fillMaxSize(),
+            pagingItems = lazyPagingItems,
+            onRefreshButton = { },
+            onSave = { b: Boolean, s: String -> }
+        )
     }
 }

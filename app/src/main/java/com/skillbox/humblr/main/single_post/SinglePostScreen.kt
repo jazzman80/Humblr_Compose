@@ -42,7 +42,8 @@ data class SinglePostScreen(
                         start.linkTo(parent.start)
                         end.linkTo(parent.end)
                         width = Dimension.fillToConstraints
-                    }
+                    },
+                onBack = {}
             )
 
             SinglePostCard(
