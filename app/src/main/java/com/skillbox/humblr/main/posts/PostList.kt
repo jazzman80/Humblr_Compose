@@ -61,7 +61,7 @@ fun PostList(
                 }
             ) {
                 if (pagingItems[it] != null) {
-                    PostItem(
+                    ItemPost(
                         item = pagingItems[it]!!.data,
                         onSave = { isSaved ->
                             onSave(isSaved, pagingItems[it]!!.data.name)

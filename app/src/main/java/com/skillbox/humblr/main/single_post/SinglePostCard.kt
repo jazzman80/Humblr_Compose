@@ -73,11 +73,6 @@ fun SinglePostCard(
         )
 
         SubscribeButton(
-            modifier = Modifier
-                .constrainAs(subscribeButton) {
-                    top.linkTo(title.bottom)
-                    start.linkTo(parent.start)
-                },
             onSubscribe = {},
             initSubscribe = false
         )

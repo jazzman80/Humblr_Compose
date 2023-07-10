@@ -39,7 +39,7 @@ import com.skillbox.humblr.theme.bodySmall
 import com.skillbox.humblr.theme.labelLarge
 
 @Composable
-fun PostItem(
+fun ItemPost(
     item: PostData,
     onSave: (Boolean) -> Unit,
     navigateToPost: () -> Unit
@@ -88,11 +88,6 @@ fun PostItem(
             )
 
             SubscribeButton(
-                modifier = Modifier
-                    .constrainAs(subscribeButton) {
-                        top.linkTo(parent.top)
-                        end.linkTo(parent.end)
-                    },
                 onSubscribe = { onSave(it) },
                 initSubscribe = item.saved
             )
@@ -177,11 +172,11 @@ fun PostItem(
 
 @ElementPreview
 @Composable
-fun PreviewPostItem(
+fun PreviewItemPost(
     @PreviewParameter(PostDataPreviewProvider::class) postData: PostData
 ) {
     AppTheme {
-        PostItem(
+        ItemPost(
             item = postData,
             onSave = {},
             navigateToPost = {}

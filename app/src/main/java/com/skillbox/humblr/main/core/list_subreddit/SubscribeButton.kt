@@ -1,6 +1,7 @@
 package com.skillbox.humblr.main.core.list_subreddit
 
-import android.content.res.Configuration
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Row
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -11,13 +12,13 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.tooling.preview.Preview
 import com.skillbox.humblr.R
+import com.skillbox.humblr.preview.ElementPreview
 import com.skillbox.humblr.theme.AppTheme
 
 @Composable
 fun SubscribeButton(
-    modifier: Modifier,
+    modifier: Modifier = Modifier,
     onSubscribe: (Boolean) -> Unit,
     initSubscribe: Boolean
 ) {
@@ -27,11 +28,11 @@ fun SubscribeButton(
     }
 
     IconButton(
+        modifier = modifier,
         onClick = {
             onSubscribe(isSubscribed)
             isSubscribed = !isSubscribed
-        },
-        modifier = modifier
+        }
     ) {
         Icon(
             painter = painterResource(
@@ -45,15 +46,21 @@ fun SubscribeButton(
     }
 }
 
-@Preview(
-    name = "Light Mode", showBackground = true
-)
-@Preview(
-    uiMode = Configuration.UI_MODE_NIGHT_YES, showBackground = true, name = "Dark Mode"
-)
+@ElementPreview
 @Composable
 fun PreviewSubscribeButton() {
     AppTheme {
-        SubscribeButton(Modifier, {}, false)
+        Row(
+            modifier = Modifier.background(color = MaterialTheme.colorScheme.surface)
+        ) {
+            SubscribeButton(
+                onSubscribe = {},
+                initSubscribe = false
+            )
+            SubscribeButton(
+                onSubscribe = {},
+                initSubscribe = false
+            )
+        }
     }
 }

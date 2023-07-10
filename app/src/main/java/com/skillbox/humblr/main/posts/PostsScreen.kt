@@ -1,8 +1,7 @@
 package com.skillbox.humblr.main.posts
 
-import androidx.compose.foundation.background
+import MainScreen
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.PreviewParameter
@@ -16,7 +15,8 @@ import cafe.adriel.voyager.hilt.getViewModel
 import com.skillbox.humblr.entity.Post
 import com.skillbox.humblr.entity.PostListPreviewProvider
 import com.skillbox.humblr.main.core.TopBar
-import com.skillbox.humblr.preview.ScreenPreview
+import com.skillbox.humblr.preview.ElementPreview
+import com.skillbox.humblr.preview.SystemUI
 import com.skillbox.humblr.theme.AppTheme
 import kotlinx.coroutines.flow.MutableStateFlow
 
@@ -51,7 +51,6 @@ fun PostsScreenContent(
     ConstraintLayout(
         modifier = Modifier
             .fillMaxSize()
-            .background(MaterialTheme.colorScheme.background)
     ) {
 
         val (topBar, list) = createRefs()
@@ -60,13 +59,6 @@ fun PostsScreenContent(
 
         TopBar(
             titleText = title,
-            modifier = Modifier
-                .constrainAs(topBar) {
-                    top.linkTo(parent.top)
-                    start.linkTo(parent.start)
-                    end.linkTo(parent.end)
-                    width = Dimension.fillToConstraints
-                },
             onBack = {}
         )
 
@@ -91,7 +83,7 @@ fun PostsScreenContent(
     }
 }
 
-@ScreenPreview
+@ElementPreview
 @Composable
 fun PreviewPostsScreen(
     @PreviewParameter(PostListPreviewProvider::class) postList: List<Post>
@@ -101,11 +93,15 @@ fun PreviewPostsScreen(
     val lazyPagingItems = flow.collectAsLazyPagingItems()
 
     AppTheme {
-        PostsScreenContent(
-            title = "Длинные посты",
-            posts = lazyPagingItems,
-            onRefreshButton = { },
-            onSave = { _, _ -> }
-        )
+        SystemUI {
+            MainScreen {
+                PostsScreenContent(
+                    title = "Длинные посты",
+                    posts = lazyPagingItems,
+                    onRefreshButton = { },
+                    onSave = { _, _ -> }
+                )
+            }
+        }
     }
 }

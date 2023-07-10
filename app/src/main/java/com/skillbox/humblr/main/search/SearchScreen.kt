@@ -1,97 +1,76 @@
 package com.skillbox.humblr.main.search
 
-import android.content.res.Configuration
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.MaterialTheme
+import MainScreen
+import androidx.compose.foundation.layout.Column
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.constraintlayout.compose.ConstraintLayout
-import androidx.constraintlayout.compose.Dimension
+import androidx.compose.ui.tooling.preview.PreviewParameter
+import androidx.paging.PagingData
+import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import cafe.adriel.voyager.androidx.AndroidScreen
 import cafe.adriel.voyager.hilt.getViewModel
+import cafe.adriel.voyager.navigator.LocalNavigator
+import cafe.adriel.voyager.navigator.currentOrThrow
 import com.skillbox.humblr.R
+import com.skillbox.humblr.entity.Subreddit
+import com.skillbox.humblr.entity.SubredditListPreviewProvider
 import com.skillbox.humblr.main.core.TopBar
 import com.skillbox.humblr.main.core.list_subreddit.ListSubreddit
+import com.skillbox.humblr.preview.ElementPreview
+import com.skillbox.humblr.preview.SystemUI
 import com.skillbox.humblr.theme.AppTheme
+import kotlinx.coroutines.flow.MutableStateFlow
 
-
-data class SearchScreen(var searchQuery: String) : AndroidScreen() {
+data class SearchScreen(val searchQuery: String) : AndroidScreen() {
 
     @Composable
     override fun Content() {
 
         val viewModel = getViewModel<SearchViewModel>()
+        val navigator = LocalNavigator.currentOrThrow
 
-        ConstraintLayout(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(MaterialTheme.colorScheme.background)
-        ) {
-
-            val query by rememberSaveable {
-                mutableStateOf(searchQuery)
-            }
-
-            val subs = viewModel.repository.searchSubs(query).flow.collectAsLazyPagingItems()
-
-            val (topBar, list) = createRefs()
-
-            val startGuide = createGuidelineFromStart(0.08F)
-            val endGuide = createGuidelineFromEnd(0.08F)
-
-            TopBar(
-                titleText = stringResource(id = R.string.search_for) + " " + query,
-                modifier = Modifier
-                    .constrainAs(topBar) {
-                        start.linkTo(parent.start)
-                        end.linkTo(parent.end)
-                        top.linkTo(parent.top)
-                        width = Dimension.fillToConstraints
-                    },
-                onBack = {}
-            )
-
-            ListSubreddit(
-                modifier = Modifier
-                    .constrainAs(list) {
-                        top.linkTo(topBar.bottom)
-                        start.linkTo(startGuide)
-                        end.linkTo(endGuide)
-                        bottom.linkTo(parent.bottom)
-                        width = Dimension.fillToConstraints
-                        height = Dimension.fillToConstraints
-                    },
-                pagingItems = subs,
-                onRefreshButton = {
-                    viewModel.refreshToken()
-                    subs.refresh()
-                },
-                onSubscribe = { isSubscribed, name ->
-                    viewModel.subscribe(isSubscribed, name)
-                }
-            )
-
-        }
+        SearchScreenContent(
+            query = searchQuery,
+            subs = viewModel.repository.searchSubs(searchQuery).flow.collectAsLazyPagingItems(),
+            onBack = { navigator.pop() }
+        )
     }
-
 }
 
-@Preview(
-    name = "Light Mode", showBackground = true
-)
-@Preview(
-    uiMode = Configuration.UI_MODE_NIGHT_YES, showBackground = true, name = "Dark Mode"
-)
 @Composable
-fun PreviewSearchScreen() {
+fun SearchScreenContent(
+    query: String = "",
+    subs: LazyPagingItems<Subreddit>,
+    onBack: () -> Unit = {}
+) {
+    Column {
+        TopBar(
+            titleText = stringResource(id = R.string.search_for) + " " + query,
+            onBack = { onBack() }
+        )
+        ListSubreddit(
+            pagingItems = subs
+        )
+    }
+}
+
+@ElementPreview
+@Composable
+fun PreviewSearchScreen(
+    @PreviewParameter(SubredditListPreviewProvider::class) subsList: List<Subreddit>
+) {
     AppTheme {
-        SearchScreen("Fuck you").Content()
+        val flow = MutableStateFlow(PagingData.from(subsList))
+        val lazyPagingItems = flow.collectAsLazyPagingItems()
+
+        SystemUI {
+            MainScreen {
+                SearchScreenContent(
+                    query = "Длиннопост",
+                    subs = lazyPagingItems
+                )
+            }
+        }
     }
 }

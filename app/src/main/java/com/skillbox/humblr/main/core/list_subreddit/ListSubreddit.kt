@@ -1,51 +1,52 @@
 package com.skillbox.humblr.main.core.list_subreddit
 
-import android.content.res.Configuration
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
-import androidx.constraintlayout.compose.ConstraintLayout
-import androidx.constraintlayout.compose.Dimension
 import androidx.paging.LoadState
+import androidx.paging.PagingData
 import androidx.paging.compose.LazyPagingItems
+import androidx.paging.compose.collectAsLazyPagingItems
 import com.skillbox.humblr.R
 import com.skillbox.humblr.entity.Subreddit
+import com.skillbox.humblr.entity.SubredditListPreviewProvider
+import com.skillbox.humblr.preview.ElementPreview
 import com.skillbox.humblr.theme.AppTheme
+import kotlinx.coroutines.flow.MutableStateFlow
 
 @Composable
 fun ListSubreddit(
-    modifier: Modifier,
     pagingItems: LazyPagingItems<Subreddit>,
-    onRefreshButton: () -> Unit,
-    onSubscribe: (Boolean, String) -> Unit
+    onRefreshButton: () -> Unit = {},
+    onSubscribe: (Boolean, String) -> Unit = { _, _ -> }
 ) {
 
     val listState = rememberLazyListState()
 
-    ConstraintLayout(
-        modifier = modifier
+    Box(
+        modifier = Modifier
+            .padding(horizontal = 12.dp)
+            .fillMaxSize(),
+        contentAlignment = Alignment.Center
     ) {
 
-        val (list, indicator, errorMessage, refreshButton) = createRefs()
-
         LazyColumn(
+            modifier = Modifier.fillMaxSize(),
             state = listState,
-            modifier = Modifier
-                .constrainAs(list) {
-                    top.linkTo(parent.top)
-                    start.linkTo(parent.start)
-                    end.linkTo(parent.end)
-                    bottom.linkTo(parent.bottom)
-                },
             verticalArrangement = Arrangement.spacedBy(11.dp)
         ) {
 
@@ -57,10 +58,10 @@ fun ListSubreddit(
             ) {
                 if (pagingItems[it] != null) {
                     ItemSubreddit(
-                        item = pagingItems[it]!!,
-                        onSubscribe = { isSubscribed ->
-                            onSubscribe(isSubscribed, pagingItems[it]!!.data.name)
-                        }
+                        item = pagingItems[it]!!.data,
+//                        TODO onSubscribe = { isSubscribed ->
+//                            onSubscribe(isSubscribed, pagingItems[it]!!.data.name)
+//                        }
                     )
                 } else {
                     //ItemSubredditPlaceholder()
@@ -71,66 +72,47 @@ fun ListSubreddit(
         if (pagingItems.loadState.refresh is LoadState.NotLoading && pagingItems.itemCount == 0) {
             Text(
                 text = stringResource(id = R.string.nothing_found),
-                modifier = Modifier.constrainAs(errorMessage) {
-                    top.linkTo(parent.top)
-                    start.linkTo(parent.start)
-                    end.linkTo(parent.end)
-                    bottom.linkTo(parent.bottom)
-                    width = Dimension.fillToConstraints
-                },
                 textAlign = TextAlign.Center
             )
         }
 
         if (pagingItems.loadState.refresh is LoadState.Loading) {
-            CircularProgressIndicator(
-                modifier = Modifier.constrainAs(indicator) {
-                    top.linkTo(parent.top)
-                    start.linkTo(parent.start)
-                    end.linkTo(parent.end)
-                    bottom.linkTo(parent.bottom)
-                }
-            )
+            CircularProgressIndicator()
         }
 
         if (pagingItems.loadState.refresh is LoadState.Error) {
-            Text(
-                text = stringResource(id = R.string.network_error),
-                modifier = Modifier.constrainAs(errorMessage) {
-                    top.linkTo(parent.top)
-                    start.linkTo(parent.start)
-                    end.linkTo(parent.end)
-                    bottom.linkTo(parent.bottom)
-                    width = Dimension.fillToConstraints
-                },
-                textAlign = TextAlign.Center
-            )
+            Column {
+                Text(
+                    text = stringResource(id = R.string.network_error),
+                    textAlign = TextAlign.Center
+                )
 
-            Button(
-                onClick = {
-                    onRefreshButton()
-                },
-                modifier = Modifier.constrainAs(refreshButton) {
-                    top.linkTo(errorMessage.bottom, margin = 30.dp)
-                    start.linkTo(parent.start)
-                    end.linkTo(parent.end)
+                Button(
+                    onClick = {
+                        onRefreshButton()
+                    }
+                ) {
+                    Text(text = stringResource(id = R.string.refresh))
                 }
-            ) {
-                Text(text = stringResource(id = R.string.refresh))
             }
         }
     }
 }
 
-@Preview(
-    name = "Light Mode", showBackground = true
-)
-@Preview(
-    uiMode = Configuration.UI_MODE_NIGHT_YES, showBackground = true, name = "Dark Mode"
-)
+@ElementPreview
 @Composable
-fun PreviewListSubreddit() {
+fun PreviewListSubreddit(
+    @PreviewParameter(SubredditListPreviewProvider::class) subsList: List<Subreddit>
+) {
+
+    val flow = MutableStateFlow(PagingData.from(subsList))
+    val lazyPagingItems = flow.collectAsLazyPagingItems()
+
     AppTheme {
-        //ListSubreddit(Modifier, )
+        ListSubreddit(
+            pagingItems = lazyPagingItems,
+            onSubscribe = { _, _ -> },
+            onRefreshButton = {}
+        )
     }
 }

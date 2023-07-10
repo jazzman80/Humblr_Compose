@@ -2,6 +2,7 @@ package com.skillbox.humblr.preview
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -21,12 +22,12 @@ import com.skillbox.humblr.theme.bodySmall
 
 @Composable
 fun SystemUI(
-    content: @Composable (modifier: Modifier) -> Unit
+    content: @Composable () -> Unit
 ) {
     ConstraintLayout(
         modifier = Modifier.fillMaxSize()
     ) {
-        val (systemBar, content) = createRefs()
+        val (systemBar, contentRef, navBarRef) = createRefs()
 
         Row(
             modifier = Modifier
@@ -68,9 +69,9 @@ fun SystemUI(
             }
         }
 
-        content(
+        Box(
             modifier = Modifier
-                .constrainAs(content) {
+                .constrainAs(contentRef) {
                     top.linkTo(systemBar.bottom)
                     start.linkTo(parent.start)
                     end.linkTo(parent.end)
@@ -78,7 +79,9 @@ fun SystemUI(
                     width = Dimension.fillToConstraints
                     height = Dimension.fillToConstraints
                 }
-        )
+        ) {
+            content()
+        }
 
     }
 }

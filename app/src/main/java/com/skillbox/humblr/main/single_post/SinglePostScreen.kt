@@ -36,13 +36,6 @@ data class SinglePostScreen(
 
             TopBar(
                 titleText = item.subreddit,
-                modifier = Modifier
-                    .constrainAs(topBar) {
-                        top.linkTo(parent.top)
-                        start.linkTo(parent.start)
-                        end.linkTo(parent.end)
-                        width = Dimension.fillToConstraints
-                    },
                 onBack = {}
             )
 
