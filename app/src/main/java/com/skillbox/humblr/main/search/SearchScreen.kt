@@ -47,7 +47,7 @@ fun SearchScreenContent(
     Column {
         TopBar(
             titleText = stringResource(id = R.string.search_for) + " " + query,
-            onBack = { onBack() }
+            onBack = onBack
         )
         ListSubreddit(
             pagingItems = subs
