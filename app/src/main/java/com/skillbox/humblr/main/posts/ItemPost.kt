@@ -149,9 +149,7 @@ fun PreviewItemPost(
 ) {
     AppTheme {
         ItemPost(
-            item = postData,
-            onSave = {},
-            navigateToPost = {}
+            item = postData
         )
     }
 }
