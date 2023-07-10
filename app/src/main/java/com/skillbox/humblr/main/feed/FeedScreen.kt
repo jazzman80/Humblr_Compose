@@ -77,11 +77,12 @@ fun FeedScreenContent(
             if (selectedTabId == 0) {
                 ListSubreddit(
                     pagingItems = newSubs,
-                    onSubscribe = { isSubscribed, name -> onSubscribe(isSubscribed, name) }
+                    onSubscribe = onSubscribe
                 )
             } else {
                 ListSubreddit(
-                    pagingItems = popularSubs
+                    pagingItems = popularSubs,
+                    onSubscribe = onSubscribe
                 )
             }
         }

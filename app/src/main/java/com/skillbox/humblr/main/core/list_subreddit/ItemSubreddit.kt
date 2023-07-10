@@ -43,9 +43,7 @@ fun ItemSubreddit(
             )
 
             SubscribeButton(
-                onSubscribe = {
-                    onSubscribe(it)
-                },
+                onSubscribe = onSubscribe,
                 initSubscribe = item.userIsSubscriber
             )
         }
