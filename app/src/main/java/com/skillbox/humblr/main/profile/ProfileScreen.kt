@@ -1,16 +1,25 @@
 package com.skillbox.humblr.main.profile
 
-import android.content.res.Configuration
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
-import cafe.adriel.voyager.androidx.AndroidScreen
-import com.skillbox.humblr.theme.AppTheme
+import cafe.adriel.voyager.navigator.tab.Tab
+import cafe.adriel.voyager.navigator.tab.TabOptions
 
-class ProfileScreen : AndroidScreen() {
+object ProfileScreen : Tab {
+    override val options: TabOptions
+        @Composable
+        get() {
+            return remember {
+                TabOptions(
+                    index = 2u,
+                    title = ""
+                )
+            }
+        }
 
     @Composable
     override fun Content() {
@@ -20,19 +29,5 @@ class ProfileScreen : AndroidScreen() {
             textAlign = TextAlign.Center
         )
     }
-
-    @Preview(
-        name = "Light Mode", showBackground = true
-    )
-    @Preview(
-        uiMode = Configuration.UI_MODE_NIGHT_YES, showBackground = true, name = "Dark Mode"
-    )
-    @Composable
-    fun Preview() {
-        AppTheme {
-            Content()
-        }
-    }
-
 
 }

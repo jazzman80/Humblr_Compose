@@ -59,9 +59,9 @@ fun ListSubreddit(
                 if (pagingItems[it] != null) {
                     ItemSubreddit(
                         item = pagingItems[it]!!.data,
-//                        TODO onSubscribe = { isSubscribed ->
-//                            onSubscribe(isSubscribed, pagingItems[it]!!.data.name)
-//                        }
+                        onSubscribe = { isSubscribed ->
+                            onSubscribe(isSubscribed, pagingItems[it]!!.data.name)
+                        }
                     )
                 } else {
                     //ItemSubredditPlaceholder()

@@ -22,7 +22,7 @@ import com.skillbox.humblr.theme.labelLarge
 @Composable
 fun ItemSubreddit(
     item: SubredditData,
-    //onSubscribe: (Boolean) -> Unit
+    onSubscribe: (Boolean) -> Unit = {}
 ) {
 
     Column(
@@ -44,7 +44,7 @@ fun ItemSubreddit(
 
             SubscribeButton(
                 onSubscribe = {
-                    //TODO onSubscribe(isSubscribed)
+                    onSubscribe(it)
                 },
                 initSubscribe = item.userIsSubscriber
             )

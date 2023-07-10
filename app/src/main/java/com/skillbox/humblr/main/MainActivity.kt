@@ -8,10 +8,10 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
-import cafe.adriel.voyager.navigator.CurrentScreen
-import cafe.adriel.voyager.navigator.Navigator
+import cafe.adriel.voyager.navigator.tab.CurrentTab
+import cafe.adriel.voyager.navigator.tab.TabNavigator
 import com.skillbox.humblr.main.favorites.FavoritesScreen
-import com.skillbox.humblr.main.feed.FeedScreen
+import com.skillbox.humblr.main.navigation.HomeTab
 import com.skillbox.humblr.main.profile.ProfileScreen
 import com.skillbox.humblr.theme.AppTheme
 import dagger.hilt.android.AndroidEntryPoint
@@ -24,21 +24,21 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             AppTheme {
-                Navigator(screen = FeedScreen()) { navigator ->
+                TabNavigator(HomeTab) { navigator ->
 
                     var selectedTabId by rememberSaveable { mutableStateOf(0) }
 
                     when (selectedTabId) {
-                        0 -> navigator.push(FeedScreen())
-                        1 -> navigator.push(FavoritesScreen())
-                        else -> navigator.push(ProfileScreen())
+                        0 -> navigator.current = HomeTab
+                        1 -> navigator.current = FavoritesScreen
+                        else -> navigator.current = ProfileScreen
                     }
 
                     MainScreen(
                         selectedTabId = selectedTabId,
                         onTabSelect = { selectedTabId = it }
                     ) {
-                        CurrentScreen()
+                        CurrentTab()
                     }
                 }
             }

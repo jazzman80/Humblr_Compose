@@ -1,9 +1,11 @@
 package com.skillbox.humblr.main.core.list_subreddit
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -11,14 +13,15 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.unit.dp
 import com.skillbox.humblr.R
 import com.skillbox.humblr.preview.ElementPreview
 import com.skillbox.humblr.theme.AppTheme
 
 @Composable
 fun SubscribeButton(
-    modifier: Modifier = Modifier,
     onSubscribe: (Boolean) -> Unit,
     initSubscribe: Boolean
 ) {
@@ -27,23 +30,23 @@ fun SubscribeButton(
         mutableStateOf(initSubscribe)
     }
 
-    IconButton(
-        modifier = modifier,
-        onClick = {
-            onSubscribe(isSubscribed)
-            isSubscribed = !isSubscribed
-        }
-    ) {
-        Icon(
-            painter = painterResource(
-                id = if (isSubscribed) R.drawable.ic_unsubscribe
-                else R.drawable.ic_subscribe
-            ),
-            tint = if (isSubscribed) MaterialTheme.colorScheme.secondaryContainer
-            else MaterialTheme.colorScheme.primaryContainer,
-            contentDescription = "subscribe button"
-        )
-    }
+    Icon(
+        modifier = Modifier
+            .clip(CircleShape)
+            .clickable {
+                onSubscribe(isSubscribed)
+                isSubscribed = !isSubscribed
+            }
+            .padding(all = 10.dp),
+        painter = painterResource(
+            id = if (isSubscribed) R.drawable.ic_unsubscribe
+            else R.drawable.ic_subscribe
+        ),
+        tint = if (isSubscribed) MaterialTheme.colorScheme.secondaryContainer
+        else MaterialTheme.colorScheme.primaryContainer,
+        contentDescription = "subscribe button"
+    )
+
 }
 
 @ElementPreview
@@ -59,7 +62,7 @@ fun PreviewSubscribeButton() {
             )
             SubscribeButton(
                 onSubscribe = {},
-                initSubscribe = false
+                initSubscribe = true
             )
         }
     }

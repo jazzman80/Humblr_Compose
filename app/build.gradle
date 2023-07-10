@@ -86,4 +86,6 @@ dependencies {
     implementation("cafe.adriel.voyager:voyager-hilt:1.0.0-rc06")
     // Android ViewModel integration
     implementation("cafe.adriel.voyager:voyager-androidx:1.0.0-rc06")
+    implementation("cafe.adriel.voyager:voyager-tab-navigator:1.0.0-rc06")
+
 }

@@ -37,6 +37,7 @@ fun NavBar(
                 onClick = { onTabSelect(index) }
             )
         }
+
     }
 }
 

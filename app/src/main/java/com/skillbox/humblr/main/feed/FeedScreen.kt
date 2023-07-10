@@ -41,7 +41,8 @@ class FeedScreen : AndroidScreen() {
             popularSubs = viewModel.popularSubsFlow.collectAsLazyPagingItems(),
             onSearch = {
                 navigator.push(SearchScreen(it))
-            }
+            },
+            onSubscribe = { isSubscribed, name -> viewModel.subscribe(isSubscribed, name) }
         )
 
     }
@@ -51,7 +52,8 @@ class FeedScreen : AndroidScreen() {
 fun FeedScreenContent(
     newSubs: LazyPagingItems<Subreddit>,
     popularSubs: LazyPagingItems<Subreddit>,
-    onSearch: (String) -> Unit = {}
+    onSearch: (String) -> Unit = {},
+    onSubscribe: (Boolean, String) -> Unit = { _, _ -> }
 ) {
 
     var selectedTabId by rememberSaveable { mutableStateOf(0) }
@@ -60,9 +62,7 @@ fun FeedScreenContent(
         modifier = Modifier
     ) {
         FeedSearchField(
-            onSearch = {
-                onSearch(it)
-            }
+            onSearch = onSearch
         )
         FeedTabs(
             selectedTabId = selectedTabId,
@@ -76,7 +76,8 @@ fun FeedScreenContent(
         ) {
             if (selectedTabId == 0) {
                 ListSubreddit(
-                    pagingItems = newSubs
+                    pagingItems = newSubs,
+                    onSubscribe = { isSubscribed, name -> onSubscribe(isSubscribed, name) }
                 )
             } else {
                 ListSubreddit(
