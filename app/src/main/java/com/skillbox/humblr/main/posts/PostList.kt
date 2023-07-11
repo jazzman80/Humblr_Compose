@@ -1,20 +1,22 @@
 package com.skillbox.humblr.main.posts
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
-import androidx.constraintlayout.compose.ConstraintLayout
-import androidx.constraintlayout.compose.Dimension
 import androidx.paging.LoadState
 import androidx.paging.PagingData
 import androidx.paging.compose.LazyPagingItems
@@ -28,29 +30,20 @@ import kotlinx.coroutines.flow.MutableStateFlow
 
 @Composable
 fun PostList(
-    modifier: Modifier,
     pagingItems: LazyPagingItems<Post>,
-    onRefreshButton: () -> Unit,
-    onSave: (Boolean, String) -> Unit
+    onRefreshButton: () -> Unit = {},
+    onSave: (Boolean, String) -> Unit = { _, _ -> }
 ) {
 
     val listState = rememberLazyListState()
 
-    ConstraintLayout(
-        modifier = modifier
+    Box(
+        modifier = Modifier.fillMaxSize(),
+        contentAlignment = Alignment.Center
     ) {
-
-        val (list, indicator, errorMessage, refreshButton) = createRefs()
-
         LazyColumn(
+            modifier = Modifier.fillMaxSize(),
             state = listState,
-            modifier = Modifier
-                .constrainAs(list) {
-                    top.linkTo(parent.top)
-                    start.linkTo(parent.start)
-                    end.linkTo(parent.end)
-                    bottom.linkTo(parent.bottom)
-                },
             verticalArrangement = Arrangement.spacedBy(11.dp)
         ) {
 
@@ -77,52 +70,32 @@ fun PostList(
         if (pagingItems.loadState.refresh is LoadState.NotLoading && pagingItems.itemCount == 0) {
             Text(
                 text = stringResource(id = R.string.nothing_found),
-                modifier = Modifier.constrainAs(errorMessage) {
-                    top.linkTo(parent.top)
-                    start.linkTo(parent.start)
-                    end.linkTo(parent.end)
-                    bottom.linkTo(parent.bottom)
-                    width = Dimension.fillToConstraints
-                },
                 textAlign = TextAlign.Center
             )
         }
 
         if (pagingItems.loadState.refresh is LoadState.Loading) {
-            CircularProgressIndicator(
-                modifier = Modifier.constrainAs(indicator) {
-                    top.linkTo(parent.top)
-                    start.linkTo(parent.start)
-                    end.linkTo(parent.end)
-                    bottom.linkTo(parent.bottom)
-                }
-            )
+            CircularProgressIndicator()
         }
 
         if (pagingItems.loadState.refresh is LoadState.Error) {
-            Text(
-                text = stringResource(id = R.string.network_error),
-                modifier = Modifier.constrainAs(errorMessage) {
-                    top.linkTo(parent.top)
-                    start.linkTo(parent.start)
-                    end.linkTo(parent.end)
-                    bottom.linkTo(parent.bottom)
-                    width = Dimension.fillToConstraints
-                },
-                textAlign = TextAlign.Center
-            )
-
-            Button(
-                onClick = {
-                    onRefreshButton()
-                },
-                modifier = Modifier.constrainAs(refreshButton) {
-                    top.linkTo(errorMessage.bottom, margin = 30.dp)
-                    start.linkTo(parent.start)
-                    end.linkTo(parent.end)
-                }
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth(),
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Text(text = stringResource(id = R.string.refresh))
+                Text(
+                    text = stringResource(id = R.string.network_error),
+                    textAlign = TextAlign.Center
+                )
+
+                Button(
+                    onClick = {
+                        onRefreshButton()
+                    }
+                ) {
+                    Text(text = stringResource(id = R.string.refresh))
+                }
             }
         }
     }
@@ -139,10 +112,7 @@ fun PostListPreview(
 
     AppTheme {
         PostList(
-            modifier = Modifier.fillMaxSize(),
-            pagingItems = lazyPagingItems,
-            onRefreshButton = { },
-            onSave = { b: Boolean, s: String -> }
+            pagingItems = lazyPagingItems
         )
     }
 }
