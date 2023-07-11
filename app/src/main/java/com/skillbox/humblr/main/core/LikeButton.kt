@@ -11,7 +11,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import com.skillbox.humblr.R
 import com.skillbox.humblr.preview.ElementPreview
@@ -19,8 +18,7 @@ import com.skillbox.humblr.theme.AppTheme
 
 @Composable
 fun LikeButton(
-    initState: Boolean,
-    modifier: Modifier
+    initState: Boolean
 ) {
 
     var isLiked by remember { mutableStateOf(initState) }
@@ -28,8 +26,7 @@ fun LikeButton(
     IconButton(
         onClick = {
             isLiked = !isLiked
-        },
-        modifier = modifier
+        }
     ) {
 
         Icon(
@@ -54,7 +51,6 @@ fun PreviewLikeButton() {
     AppTheme {
 
         LikeButton(
-            modifier = Modifier,
             initState = false
         )
 
