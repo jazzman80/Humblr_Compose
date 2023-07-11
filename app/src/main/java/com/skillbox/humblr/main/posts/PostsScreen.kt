@@ -1,17 +1,18 @@
 package com.skillbox.humblr.main.posts
 
 import MainScreen
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.PreviewParameter
-import androidx.constraintlayout.compose.ConstraintLayout
-import androidx.constraintlayout.compose.Dimension
 import androidx.paging.PagingData
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import cafe.adriel.voyager.androidx.AndroidScreen
 import cafe.adriel.voyager.hilt.getViewModel
+import cafe.adriel.voyager.navigator.LocalNavigator
+import cafe.adriel.voyager.navigator.currentOrThrow
 import com.skillbox.humblr.entity.Post
 import com.skillbox.humblr.entity.PostListPreviewProvider
 import com.skillbox.humblr.main.core.TopBar
@@ -24,6 +25,7 @@ data class PostsScreen(val title: String) : AndroidScreen() {
 
     @Composable
     override fun Content() {
+        val navigator = LocalNavigator.currentOrThrow
         val viewModel = getViewModel<PostsViewModel>()
         val posts = viewModel.postFlow(title).collectAsLazyPagingItems()
 
@@ -36,6 +38,9 @@ data class PostsScreen(val title: String) : AndroidScreen() {
             },
             onSave = { isSaved, name ->
                 viewModel.save(isSaved, name)
+            },
+            onBack = {
+                navigator.pop()
             }
         )
     }
@@ -45,40 +50,24 @@ data class PostsScreen(val title: String) : AndroidScreen() {
 fun PostsScreenContent(
     title: String,
     posts: LazyPagingItems<Post>,
-    onRefreshButton: () -> Unit,
-    onSave: (Boolean, String) -> Unit
+    onRefreshButton: () -> Unit = {},
+    onSave: (Boolean, String) -> Unit = { _, _ -> },
+    onBack: () -> Unit = {}
 ) {
-    ConstraintLayout(
+    Column(
         modifier = Modifier
             .fillMaxSize()
     ) {
 
-        val (topBar, list) = createRefs()
-        val startGuide = createGuidelineFromStart(0.08F)
-        val endGuide = createGuidelineFromEnd(0.08F)
-
         TopBar(
             titleText = title,
-            onBack = {}
+            onBack = onBack
         )
 
         PostList(
-            modifier = Modifier
-                .constrainAs(list) {
-                    top.linkTo(topBar.bottom)
-                    start.linkTo(startGuide)
-                    end.linkTo(endGuide)
-                    bottom.linkTo(parent.bottom)
-                    width = Dimension.fillToConstraints
-                    height = Dimension.fillToConstraints
-                },
             pagingItems = posts,
-            onRefreshButton = {
-                onRefreshButton()
-            },
-            onSave = { isSaved, name ->
-                onSave(isSaved, name)
-            }
+            onRefreshButton = onRefreshButton,
+            onSave = onSave
         )
     }
 }
@@ -97,9 +86,7 @@ fun PreviewPostsScreen(
             MainScreen {
                 PostsScreenContent(
                     title = "Длинные посты",
-                    posts = lazyPagingItems,
-                    onRefreshButton = { },
-                    onSave = { _, _ -> }
+                    posts = lazyPagingItems
                 )
             }
         }
