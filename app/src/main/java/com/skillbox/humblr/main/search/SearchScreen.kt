@@ -29,11 +29,19 @@ data class SearchScreen(val searchQuery: String) : AndroidScreen() {
 
         val viewModel = getViewModel<SearchViewModel>()
         val navigator = LocalNavigator.currentOrThrow
+        val subs = viewModel.repository.searchSubs(searchQuery).flow.collectAsLazyPagingItems()
 
         SearchScreenContent(
             query = searchQuery,
-            subs = viewModel.repository.searchSubs(searchQuery).flow.collectAsLazyPagingItems(),
-            onBack = { navigator.pop() }
+            subs = subs,
+            onBack = { navigator.pop() },
+            onRefresh = {
+                viewModel.refreshToken()
+                subs.refresh()
+            },
+            onSubscribe = { isSubscribed, name ->
+                viewModel.subscribe(isSubscribed, name)
+            }
         )
     }
 }
@@ -42,7 +50,9 @@ data class SearchScreen(val searchQuery: String) : AndroidScreen() {
 fun SearchScreenContent(
     query: String = "",
     subs: LazyPagingItems<Subreddit>,
-    onBack: () -> Unit = {}
+    onBack: () -> Unit = {},
+    onRefresh: () -> Unit = {},
+    onSubscribe: (Boolean, String) -> Unit = { _, _ -> }
 ) {
     Column {
         TopBar(
@@ -50,7 +60,9 @@ fun SearchScreenContent(
             onBack = onBack
         )
         ListSubreddit(
-            pagingItems = subs
+            pagingItems = subs,
+            onRefresh = onRefresh,
+            onSubscribe = onSubscribe
         )
     }
 }

@@ -31,7 +31,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 @Composable
 fun ListSubreddit(
     pagingItems: LazyPagingItems<Subreddit>,
-    onRefreshButton: () -> Unit = {},
+    onRefresh: () -> Unit = {},
     onSubscribe: (Boolean, String) -> Unit = { _, _ -> }
 ) {
 
@@ -89,7 +89,7 @@ fun ListSubreddit(
 
                 Button(
                     onClick = {
-                        onRefreshButton()
+                        onRefresh()
                     }
                 ) {
                     Text(text = stringResource(id = R.string.refresh))
@@ -112,7 +112,7 @@ fun PreviewListSubreddit(
         ListSubreddit(
             pagingItems = lazyPagingItems,
             onSubscribe = { _, _ -> },
-            onRefreshButton = {}
+            onRefresh = {}
         )
     }
 }

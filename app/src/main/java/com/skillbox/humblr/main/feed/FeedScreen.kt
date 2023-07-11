@@ -35,14 +35,26 @@ class FeedScreen : AndroidScreen() {
 
         val navigator = LocalNavigator.currentOrThrow
         val viewModel = getViewModel<FeedViewModel>()
+        val newSubs = viewModel.newSubsFlow.collectAsLazyPagingItems()
+        val popularSubs = viewModel.popularSubsFlow.collectAsLazyPagingItems()
 
         FeedScreenContent(
-            newSubs = viewModel.newSubsFlow.collectAsLazyPagingItems(),
-            popularSubs = viewModel.popularSubsFlow.collectAsLazyPagingItems(),
+            newSubs = newSubs,
+            popularSubs = popularSubs,
             onSearch = {
                 navigator.push(SearchScreen(it))
             },
-            onSubscribe = { isSubscribed, name -> viewModel.subscribe(isSubscribed, name) }
+            onSubscribe = { isSubscribed, name ->
+                viewModel.subscribe(isSubscribed, name)
+            },
+            onNewSubsRefresh = {
+                viewModel.refreshToken()
+                newSubs.refresh()
+            },
+            onPopularSubsRefresh = {
+                viewModel.refreshToken()
+                popularSubs.refresh()
+            }
         )
 
     }
@@ -53,7 +65,9 @@ fun FeedScreenContent(
     newSubs: LazyPagingItems<Subreddit>,
     popularSubs: LazyPagingItems<Subreddit>,
     onSearch: (String) -> Unit = {},
-    onSubscribe: (Boolean, String) -> Unit = { _, _ -> }
+    onSubscribe: (Boolean, String) -> Unit = { _, _ -> },
+    onNewSubsRefresh: () -> Unit = {},
+    onPopularSubsRefresh: () -> Unit = {}
 ) {
 
     var selectedTabId by rememberSaveable { mutableStateOf(0) }
@@ -77,12 +91,14 @@ fun FeedScreenContent(
             if (selectedTabId == 0) {
                 ListSubreddit(
                     pagingItems = newSubs,
-                    onSubscribe = onSubscribe
+                    onSubscribe = onSubscribe,
+                    onRefresh = onNewSubsRefresh
                 )
             } else {
                 ListSubreddit(
                     pagingItems = popularSubs,
-                    onSubscribe = onSubscribe
+                    onSubscribe = onSubscribe,
+                    onRefresh = onPopularSubsRefresh
                 )
             }
         }
