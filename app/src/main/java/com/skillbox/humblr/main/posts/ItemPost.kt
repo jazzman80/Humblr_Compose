@@ -41,7 +41,7 @@ import com.skillbox.humblr.theme.labelLarge
 fun ItemPost(
     item: PostData,
     onSave: (Boolean) -> Unit = {},
-    navigateToPost: () -> Unit = {}
+    onNavigate: () -> Unit = {}
 ) {
 
     var isHaveThumbnail by remember {
@@ -51,7 +51,7 @@ fun ItemPost(
     Column(
         modifier = Modifier
             .clip(MaterialTheme.shapes.medium)
-            .clickable { navigateToPost() }
+            .clickable { onNavigate() }
             .background(
                 color = MaterialTheme.colorScheme.surface
             )

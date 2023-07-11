@@ -1,20 +1,22 @@
 package com.skillbox.humblr.main.single_post
 
-import android.content.res.Configuration
-import androidx.compose.foundation.background
+import MainScreen
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.MaterialTheme
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
-import androidx.constraintlayout.compose.ConstraintLayout
-import androidx.constraintlayout.compose.Dimension
+import androidx.compose.ui.tooling.preview.PreviewParameter
 import cafe.adriel.voyager.androidx.AndroidScreen
+import cafe.adriel.voyager.navigator.LocalNavigator
+import cafe.adriel.voyager.navigator.currentOrThrow
 import com.skillbox.humblr.entity.PostData
+import com.skillbox.humblr.entity.PostDataPreviewProvider
 import com.skillbox.humblr.main.core.TopBar
+import com.skillbox.humblr.preview.ElementPreview
+import com.skillbox.humblr.preview.SystemUI
 import com.skillbox.humblr.theme.AppTheme
-import java.time.Instant
 
 data class SinglePostScreen(
     val item: PostData
@@ -22,55 +24,57 @@ data class SinglePostScreen(
 
     @Composable
     override fun Content() {
-        ConstraintLayout(
+
+        val navigator = LocalNavigator.currentOrThrow
+
+        SinglePostScreenContent(
+            item = item,
+            onBack = {
+                navigator.pop()
+            }
+        )
+    }
+}
+
+@Composable
+fun SinglePostScreenContent(
+    item: PostData,
+    onBack: () -> Unit = {}
+) {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+    ) {
+
+        TopBar(
+            titleText = item.subreddit,
+            onBack = onBack
+        )
+
+        Column(
             modifier = Modifier
-                .fillMaxSize()
-                .background(
-                    color = MaterialTheme.colorScheme.background
-                )
+                .verticalScroll(rememberScrollState())
         ) {
-
-            val (topBar, postCard) = createRefs()
-            val startGuide = createGuidelineFromStart(12.dp)
-            val endGuide = createGuidelineFromEnd(12.dp)
-
-            TopBar(
-                titleText = item.subreddit,
-                onBack = {}
-            )
-
             SinglePostCard(
-                modifier = Modifier
-                    .constrainAs(postCard) {
-                        top.linkTo(topBar.bottom)
-                        start.linkTo(startGuide)
-                        end.linkTo(endGuide)
-                        width = Dimension.fillToConstraints
-                    },
                 item = item
             )
         }
     }
 }
 
-@Preview(
-    name = "Light Mode", showBackground = true
-)
-@Preview(
-    uiMode = Configuration.UI_MODE_NIGHT_YES, showBackground = true, name = "Dark Mode"
-)
+@ElementPreview
 @Composable
-fun PreviewSinglePostScreen() {
+fun PreviewSinglePostScreen(
+    @PreviewParameter(PostDataPreviewProvider::class) postData: PostData
+) {
     AppTheme {
-        SinglePostScreen(
-            item = PostData(
-                title = "Жабы сбежали из болота в соседнем Марьино",
-                author = "КисКисХ2",
-                numComments = 123,
-                selftext = "Все случилось настолько стремительно, что UX/UI-дизайнеры не успели сделать интерфейс.",
-                saved = false,
-                created = Instant.now().epochSecond - 23154
-            )
-        )
+        SystemUI {
+            MainScreen {
+                SinglePostScreenContent(
+                    item = postData
+                )
+            }
+        }
+
     }
 }

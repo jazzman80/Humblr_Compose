@@ -66,7 +66,8 @@ interface ApiService {
         @Header("Authorization") auth: String,
         @Path("title") title: String,
         @Query("after") after: String?,
-        @Query("limit") limit: Int
+        @Query("limit") limit: Int,
+        @Query("raw_json") rawJson: Int = 1
     ): Call<PostListing>
 
     @POST("api/save")

@@ -24,6 +24,7 @@ import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.skillbox.humblr.R
 import com.skillbox.humblr.entity.Post
+import com.skillbox.humblr.entity.PostData
 import com.skillbox.humblr.entity.PostListPreviewProvider
 import com.skillbox.humblr.preview.ElementPreview
 import com.skillbox.humblr.theme.AppTheme
@@ -33,7 +34,8 @@ import kotlinx.coroutines.flow.MutableStateFlow
 fun PostList(
     pagingItems: LazyPagingItems<Post>,
     onRefreshButton: () -> Unit = {},
-    onSave: (Boolean, String) -> Unit = { _, _ -> }
+    onSave: (Boolean, String) -> Unit = { _, _ -> },
+    onNavigate: (PostData) -> Unit = {}
 ) {
 
     val listState = rememberLazyListState()
@@ -62,7 +64,9 @@ fun PostList(
                         onSave = { isSaved ->
                             onSave(isSaved, pagingItems[it]!!.data.name)
                         },
-                        navigateToPost = {}
+                        onNavigate = {
+                            onNavigate(pagingItems[it]!!.data)
+                        }
                     )
                 } else {
                     //ItemSubredditPlaceholder()

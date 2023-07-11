@@ -14,8 +14,10 @@ import cafe.adriel.voyager.hilt.getViewModel
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import com.skillbox.humblr.entity.Post
+import com.skillbox.humblr.entity.PostData
 import com.skillbox.humblr.entity.PostListPreviewProvider
 import com.skillbox.humblr.main.core.TopBar
+import com.skillbox.humblr.main.single_post.SinglePostScreen
 import com.skillbox.humblr.preview.ElementPreview
 import com.skillbox.humblr.preview.SystemUI
 import com.skillbox.humblr.theme.AppTheme
@@ -41,6 +43,9 @@ data class PostsScreen(val title: String) : AndroidScreen() {
             },
             onBack = {
                 navigator.pop()
+            },
+            onNavigate = {
+                navigator.push(SinglePostScreen(it))
             }
         )
     }
@@ -52,7 +57,8 @@ fun PostsScreenContent(
     posts: LazyPagingItems<Post>,
     onRefreshButton: () -> Unit = {},
     onSave: (Boolean, String) -> Unit = { _, _ -> },
-    onBack: () -> Unit = {}
+    onBack: () -> Unit = {},
+    onNavigate: (PostData) -> Unit = {}
 ) {
     Column(
         modifier = Modifier
@@ -67,7 +73,8 @@ fun PostsScreenContent(
         PostList(
             pagingItems = posts,
             onRefreshButton = onRefreshButton,
-            onSave = onSave
+            onSave = onSave,
+            onNavigate = onNavigate
         )
     }
 }

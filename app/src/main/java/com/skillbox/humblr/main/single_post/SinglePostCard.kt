@@ -40,6 +40,7 @@ fun SinglePostCard(
 ) {
     Column(
         modifier = modifier
+            .padding(all = 12.dp)
             .clip(
                 shape = MaterialTheme.shapes.medium
             )
@@ -48,10 +49,13 @@ fun SinglePostCard(
             )
             .padding(all = 12.dp)
             .fillMaxWidth(),
-        verticalArrangement = Arrangement.spacedBy(10.dp)
+        verticalArrangement = Arrangement.spacedBy(10.dp),
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
 
         Text(
+            modifier = Modifier
+                .fillMaxWidth(),
             text = item.title,
             color = MaterialTheme.colorScheme.onSurface,
             style = labelLarge
@@ -94,7 +98,7 @@ fun SinglePostCard(
         }
 
         SubcomposeAsyncImage(
-            model = "https://animalreader.ru/wp-content/uploads/2015/12/seraja-zhaba-ili-obyknovennaja-samaja-krupnaja-sredi-evropejskih-zhab-animal-reader.ru-003.jpg",
+            model = item.preview?.images?.get(0)?.source?.url,
             contentDescription = null,
             contentScale = ContentScale.FillWidth,
             loading = {
@@ -103,6 +107,8 @@ fun SinglePostCard(
         )
 
         Text(
+            modifier = Modifier
+                .fillMaxWidth(),
             text = item.selftext,
             color = MaterialTheme.colorScheme.onSurface,
             style = bodySmall
