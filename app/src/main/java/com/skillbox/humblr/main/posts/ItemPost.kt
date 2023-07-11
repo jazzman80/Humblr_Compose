@@ -5,10 +5,9 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -26,8 +25,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
-import androidx.constraintlayout.compose.Visibility.Companion.Gone
-import androidx.constraintlayout.compose.Visibility.Companion.Visible
 import coil.compose.SubcomposeAsyncImage
 import coil.request.ImageRequest
 import com.skillbox.humblr.R
@@ -47,8 +44,8 @@ fun ItemPost(
     navigateToPost: () -> Unit = {}
 ) {
 
-    var imageVisibility by remember {
-        mutableStateOf(Visible)
+    var isHaveThumbnail by remember {
+        mutableStateOf(true)
     }
 
     Column(
@@ -82,29 +79,38 @@ fun ItemPost(
         }
 
         Row(
-            horizontalArrangement = Arrangement.spacedBy(8.dp)
+            horizontalArrangement = Arrangement.spacedBy(
+                space = 8.dp
+            )
         ) {
-            SubcomposeAsyncImage(
-                modifier = Modifier
-                    .width(100.dp)
-                    .height(100.dp),
-                model = ImageRequest.Builder(context = LocalContext.current)
-                    .data(item.thumbnail)
-                    .placeholder(R.drawable.image_placeholder)
-                    .crossfade(true)
-                    .build(),
-                contentDescription = null,
-                contentScale = ContentScale.Crop,
-                onError = { imageVisibility = Gone }
-            )
 
-            Text(
-                text = item.selftext,
-                style = bodySmall,
-                color = MaterialTheme.colorScheme.onSurface,
-                maxLines = 8,
-                overflow = TextOverflow.Ellipsis,
-            )
+            if (isHaveThumbnail) {
+                SubcomposeAsyncImage(
+                    modifier = Modifier
+                        .aspectRatio(1f)
+                        .weight(1f),
+                    model = ImageRequest.Builder(context = LocalContext.current)
+                        .data(item.thumbnail)
+                        .placeholder(R.drawable.image_placeholder)
+                        .crossfade(true)
+                        .build(),
+                    contentDescription = null,
+                    contentScale = ContentScale.Crop,
+                    onError = { isHaveThumbnail = false }
+                )
+            }
+
+            if (item.selftext.isNotEmpty()) {
+                Text(
+                    modifier = Modifier
+                        .weight(2f),
+                    text = item.selftext,
+                    style = bodySmall,
+                    color = MaterialTheme.colorScheme.onSurface,
+                    maxLines = 8,
+                    overflow = TextOverflow.Ellipsis,
+                )
+            }
         }
 
         Row(
