@@ -81,4 +81,10 @@ interface ApiService {
         @Header("Authorization") auth: String,
         @Query("id") id: String
     ): Call<SubscribeResponse>
+
+    @GET("by_id/{names}")
+    fun getSinglePost(
+        @Header("Authorization") auth: String,
+        @Path("names") names: String
+    ): Call<PostListing>
 }

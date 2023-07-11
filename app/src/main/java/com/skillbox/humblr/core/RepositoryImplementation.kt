@@ -7,6 +7,7 @@ import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import com.skillbox.humblr.entity.Access
 import com.skillbox.humblr.entity.Post
+import com.skillbox.humblr.entity.PostListing
 import com.skillbox.humblr.entity.Subreddit
 import com.skillbox.humblr.entity.SubscribeResponse
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -187,6 +188,13 @@ class RepositoryImplementation @Inject constructor(
 
     override suspend fun save(name: String): Response<SubscribeResponse> {
         return apiService.save(
+            "Bearer $_accessToken",
+            name
+        ).awaitResponse()
+    }
+
+    override suspend fun getSinglePost(name: String): Response<PostListing> {
+        return apiService.getSinglePost(
             "Bearer $_accessToken",
             name
         ).awaitResponse()

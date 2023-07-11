@@ -9,7 +9,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.res.painterResource
 import com.skillbox.humblr.R
@@ -18,13 +18,17 @@ import com.skillbox.humblr.theme.AppTheme
 
 @Composable
 fun LikeButton(
-    initState: Boolean
+    initState: Boolean,
+    onClick: (Boolean) -> Unit = {}
 ) {
 
-    var isLiked by remember { mutableStateOf(initState) }
+    var isLiked by rememberSaveable {
+        mutableStateOf(initState)
+    }
 
     IconButton(
         onClick = {
+            onClick(isLiked)
             isLiked = !isLiked
         }
     ) {

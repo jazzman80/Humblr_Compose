@@ -30,7 +30,7 @@ data class SearchScreen(val searchQuery: String) : AndroidScreen() {
 
         val viewModel = getViewModel<SearchViewModel>()
         val navigator = LocalNavigator.currentOrThrow
-        val subs = viewModel.repository.searchSubs(searchQuery).flow.collectAsLazyPagingItems()
+        val subs = viewModel.getSubs(searchQuery).collectAsLazyPagingItems()
 
         SearchScreenContent(
             query = searchQuery,

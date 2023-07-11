@@ -14,7 +14,6 @@ import cafe.adriel.voyager.hilt.getViewModel
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import com.skillbox.humblr.entity.Post
-import com.skillbox.humblr.entity.PostData
 import com.skillbox.humblr.entity.PostListPreviewProvider
 import com.skillbox.humblr.main.core.TopBar
 import com.skillbox.humblr.main.single_post.SinglePostScreen
@@ -58,7 +57,7 @@ fun PostsScreenContent(
     onRefreshButton: () -> Unit = {},
     onSave: (Boolean, String) -> Unit = { _, _ -> },
     onBack: () -> Unit = {},
-    onNavigate: (PostData) -> Unit = {}
+    onNavigate: (String) -> Unit = {}
 ) {
     Column(
         modifier = Modifier

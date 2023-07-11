@@ -4,13 +4,19 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -35,11 +41,14 @@ import com.skillbox.humblr.theme.labelLarge
 
 @Composable
 fun SinglePostCard(
-    modifier: Modifier = Modifier,
-    item: PostData
+    item: PostData,
+    onLike: (Boolean, String) -> Unit = { _, _ -> }
 ) {
+
+    var isImageVisible by remember { mutableStateOf(true) }
+
     Column(
-        modifier = modifier
+        modifier = Modifier
             .padding(all = 12.dp)
             .clip(
                 shape = MaterialTheme.shapes.medium
@@ -97,14 +106,31 @@ fun SinglePostCard(
             }
         }
 
-        SubcomposeAsyncImage(
-            model = item.preview?.images?.get(0)?.source?.url,
-            contentDescription = null,
-            contentScale = ContentScale.FillWidth,
-            loading = {
-                CircularProgressIndicator()
-            }
-        )
+
+        if (isImageVisible) {
+
+            val source = item.preview?.images?.get(0)?.source
+
+            SubcomposeAsyncImage(
+                modifier = Modifier
+                    .aspectRatio(
+                        (source?.width?.toFloat() ?: 1f) / (source?.height?.toFloat() ?: 1f)
+                    )
+                    .fillMaxWidth(),
+                model = source?.url,
+                contentDescription = null,
+                contentScale = ContentScale.FillWidth,
+                loading = {
+                    CircularProgressIndicator(
+                        modifier = Modifier
+                            .size(70.dp)
+                    )
+                },
+                onError = {
+                    isImageVisible = false
+                }
+            )
+        }
 
         Text(
             modifier = Modifier
@@ -152,7 +178,10 @@ fun SinglePostCard(
                 }
 
                 LikeButton(
-                    initState = item.saved
+                    initState = item.saved,
+                    onClick = {
+                        onLike(it, item.name)
+                    }
                 )
             }
         }

@@ -4,6 +4,7 @@ import android.net.Uri
 import androidx.paging.Pager
 import com.skillbox.humblr.entity.Access
 import com.skillbox.humblr.entity.Post
+import com.skillbox.humblr.entity.PostListing
 import com.skillbox.humblr.entity.Subreddit
 import com.skillbox.humblr.entity.SubscribeResponse
 import retrofit2.Response
@@ -24,6 +25,6 @@ interface Repository {
     suspend fun subscribe(fullName: String?): Response<SubscribeResponse>
     suspend fun unsave(name: String): Response<SubscribeResponse>
     suspend fun save(name: String): Response<SubscribeResponse>
-
+    suspend fun getSinglePost(name: String): Response<PostListing>
 
 }
