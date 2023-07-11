@@ -17,6 +17,7 @@ import com.skillbox.humblr.entity.Subreddit
 import com.skillbox.humblr.entity.SubredditListPreviewProvider
 import com.skillbox.humblr.main.core.TopBar
 import com.skillbox.humblr.main.core.list_subreddit.ListSubreddit
+import com.skillbox.humblr.main.posts.PostsScreen
 import com.skillbox.humblr.preview.ElementPreview
 import com.skillbox.humblr.preview.SystemUI
 import com.skillbox.humblr.theme.AppTheme
@@ -41,6 +42,9 @@ data class SearchScreen(val searchQuery: String) : AndroidScreen() {
             },
             onSubscribe = { isSubscribed, name ->
                 viewModel.subscribe(isSubscribed, name)
+            },
+            onNavigate = {
+                navigator.push(PostsScreen(it))
             }
         )
     }
@@ -52,7 +56,8 @@ fun SearchScreenContent(
     subs: LazyPagingItems<Subreddit>,
     onBack: () -> Unit = {},
     onRefresh: () -> Unit = {},
-    onSubscribe: (Boolean, String) -> Unit = { _, _ -> }
+    onSubscribe: (Boolean, String) -> Unit = { _, _ -> },
+    onNavigate: (String) -> Unit = {}
 ) {
     Column {
         TopBar(
@@ -62,7 +67,8 @@ fun SearchScreenContent(
         ListSubreddit(
             pagingItems = subs,
             onRefresh = onRefresh,
-            onSubscribe = onSubscribe
+            onSubscribe = onSubscribe,
+            onNavigate = onNavigate
         )
     }
 }

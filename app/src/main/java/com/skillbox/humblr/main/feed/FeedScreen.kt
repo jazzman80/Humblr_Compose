@@ -22,6 +22,7 @@ import cafe.adriel.voyager.navigator.currentOrThrow
 import com.skillbox.humblr.entity.Subreddit
 import com.skillbox.humblr.entity.SubredditListPreviewProvider
 import com.skillbox.humblr.main.core.list_subreddit.ListSubreddit
+import com.skillbox.humblr.main.posts.PostsScreen
 import com.skillbox.humblr.main.search.SearchScreen
 import com.skillbox.humblr.preview.ElementPreview
 import com.skillbox.humblr.preview.SystemUI
@@ -54,6 +55,9 @@ class FeedScreen : AndroidScreen() {
             onPopularSubsRefresh = {
                 viewModel.refreshToken()
                 popularSubs.refresh()
+            },
+            onNavigate = {
+                navigator.push(PostsScreen(it))
             }
         )
 
@@ -67,7 +71,8 @@ fun FeedScreenContent(
     onSearch: (String) -> Unit = {},
     onSubscribe: (Boolean, String) -> Unit = { _, _ -> },
     onNewSubsRefresh: () -> Unit = {},
-    onPopularSubsRefresh: () -> Unit = {}
+    onPopularSubsRefresh: () -> Unit = {},
+    onNavigate: (String) -> Unit = {}
 ) {
 
     var selectedTabId by rememberSaveable { mutableStateOf(0) }
@@ -92,13 +97,15 @@ fun FeedScreenContent(
                 ListSubreddit(
                     pagingItems = newSubs,
                     onSubscribe = onSubscribe,
-                    onRefresh = onNewSubsRefresh
+                    onRefresh = onNewSubsRefresh,
+                    onNavigate = onNavigate
                 )
             } else {
                 ListSubreddit(
                     pagingItems = popularSubs,
                     onSubscribe = onSubscribe,
-                    onRefresh = onPopularSubsRefresh
+                    onRefresh = onPopularSubsRefresh,
+                    onNavigate = onNavigate
                 )
             }
         }

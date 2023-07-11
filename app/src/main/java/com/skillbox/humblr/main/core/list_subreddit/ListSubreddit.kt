@@ -32,7 +32,8 @@ import kotlinx.coroutines.flow.MutableStateFlow
 fun ListSubreddit(
     pagingItems: LazyPagingItems<Subreddit>,
     onRefresh: () -> Unit = {},
-    onSubscribe: (Boolean, String) -> Unit = { _, _ -> }
+    onSubscribe: (Boolean, String) -> Unit = { _, _ -> },
+    onNavigate: (String) -> Unit = {}
 ) {
 
     val listState = rememberLazyListState()
@@ -47,7 +48,7 @@ fun ListSubreddit(
         LazyColumn(
             modifier = Modifier.fillMaxSize(),
             state = listState,
-            verticalArrangement = Arrangement.spacedBy(11.dp)
+            verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
 
             items(
@@ -61,6 +62,9 @@ fun ListSubreddit(
                         item = pagingItems[it]!!.data,
                         onSubscribe = { isSubscribed ->
                             onSubscribe(isSubscribed, pagingItems[it]!!.data.name)
+                        },
+                        onClick = {
+                            onNavigate(pagingItems[it]!!.data.title)
                         }
                     )
                 } else {

@@ -1,6 +1,7 @@
 package com.skillbox.humblr.main.core.list_subreddit
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
@@ -22,12 +23,16 @@ import com.skillbox.humblr.theme.labelLarge
 @Composable
 fun ItemSubreddit(
     item: SubredditData,
-    onSubscribe: (Boolean) -> Unit = {}
+    onSubscribe: (Boolean) -> Unit = {},
+    onClick: () -> Unit = {}
 ) {
 
     Column(
         modifier = Modifier
             .clip(shape = MaterialTheme.shapes.medium)
+            .clickable {
+                onClick()
+            }
             .background(color = MaterialTheme.colorScheme.surface)
             .padding(all = 12.dp)
     ) {

@@ -53,7 +53,6 @@ fun ItemPost(
 
     Column(
         modifier = Modifier
-            .padding(horizontal = 12.dp)
             .clip(MaterialTheme.shapes.medium)
             .clickable { navigateToPost() }
             .background(
