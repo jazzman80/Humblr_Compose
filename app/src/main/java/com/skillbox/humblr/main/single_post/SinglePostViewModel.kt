@@ -1,5 +1,8 @@
 package com.skillbox.humblr.main.single_post
 
+import android.content.Context
+import android.content.Intent
+import androidx.core.content.ContextCompat.startActivity
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -49,4 +52,18 @@ class SinglePostViewModel @Inject constructor(
             }
         }
     }
+
+    fun share(context: Context, permalink: String): Boolean {
+        val sendIntent: Intent = Intent().apply {
+            action = Intent.ACTION_SEND
+            putExtra(Intent.EXTRA_TEXT, "https://www.reddit.com$permalink")
+            type = "text/plain"
+        }
+
+        val shareIntent = Intent.createChooser(sendIntent, null)
+        startActivity(context, shareIntent, null)
+
+        return false
+    }
+
 }

@@ -18,7 +18,8 @@ data class PostData(
     val name: String = "",
     val created: Long = 0L,
     val subreddit: String = "",
-    val preview: PostPreview? = null
+    val preview: PostPreview? = null,
+    val permalink: String = ""
 )
 
 class PostDataPreviewProvider : PreviewParameterProvider<PostData> {

@@ -42,7 +42,8 @@ import com.skillbox.humblr.theme.labelLarge
 @Composable
 fun SinglePostCard(
     item: PostData,
-    onLike: (Boolean, String) -> Unit = { _, _ -> }
+    onLike: (Boolean, String) -> Unit = { _, _ -> },
+    onShare: () -> Unit = {}
 ) {
 
     var isImageVisible by remember { mutableStateOf(true) }
@@ -168,7 +169,7 @@ fun SinglePostCard(
             ) {
 
                 TextButton(
-                    onClick = { /*TODO*/ }
+                    onClick = { onShare() }
                 ) {
                     Text(
                         text = stringResource(id = R.string.share),

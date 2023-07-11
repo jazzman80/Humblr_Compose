@@ -9,6 +9,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import cafe.adriel.voyager.androidx.AndroidScreen
 import cafe.adriel.voyager.hilt.getViewModel
@@ -31,6 +32,7 @@ data class SinglePostScreen(
         val navigator = LocalNavigator.currentOrThrow
         val viewModel = getViewModel<SinglePostViewModel>()
         val item by viewModel.postData.observeAsState()
+        val context = LocalContext.current
 
         viewModel.getPost(name)
 
@@ -41,6 +43,9 @@ data class SinglePostScreen(
             },
             onLike = { isLiked, name ->
                 viewModel.save(isLiked, name)
+            },
+            onShare = {
+                viewModel.share(context, item?.permalink ?: "")
             }
         )
     }
@@ -50,7 +55,8 @@ data class SinglePostScreen(
 fun SinglePostScreenContent(
     item: PostData,
     onBack: () -> Unit = {},
-    onLike: (Boolean, String) -> Unit = { _, _ -> }
+    onLike: (Boolean, String) -> Unit = { _, _ -> },
+    onShare: () -> Unit = {}
 ) {
     Column(
         modifier = Modifier
@@ -68,7 +74,8 @@ fun SinglePostScreenContent(
         ) {
             SinglePostCard(
                 item = item,
-                onLike = onLike
+                onLike = onLike,
+                onShare = onShare
             )
         }
     }
