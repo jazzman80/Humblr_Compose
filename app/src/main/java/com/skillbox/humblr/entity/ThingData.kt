@@ -5,22 +5,22 @@ import com.google.gson.annotations.SerializedName
 data class ThingData(
     val id: String = "",
     val name: String = "",
-    val title: String?,
-    val author: String?,
-    val created: Long?,
-    val selftext: String?,
+    val title: String? = "",
+    val author: String? = "",
+    val created: Long? = 0L,
+    val selftext: String? = "",
 
     @SerializedName("num_comments")
-    val numComments: Int?,
+    val numComments: Int? = 0,
 
-    val saved: Boolean?,
-    val permalink: String?,
-    val body: String?,
+    val saved: Boolean? = false,
+    val permalink: String? = "",
+    val body: String? = "",
     //val subreddit: String?,
-    val preview: PostPreview?,
+    val preview: PostPreview? = PostPreview(),
 
     @SerializedName("icon_img")
-    val iconImg: String?
+    val iconImg: String? = ""
 ) {
 
     fun toPostDataDto(): PostDto {

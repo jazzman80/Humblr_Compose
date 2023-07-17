@@ -1,10 +1,9 @@
-package com.skillbox.humblr.main.core.list_subreddit
+package com.skillbox.humblr.main.comments
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.Button
@@ -22,23 +21,20 @@ import androidx.paging.PagingData
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.skillbox.humblr.R
-import com.skillbox.humblr.entity.Subreddit
-import com.skillbox.humblr.entity.SubredditListPreviewProvider
+import com.skillbox.humblr.entity.Thing
+import com.skillbox.humblr.fake_data.CommentListPreviewProvider
+import com.skillbox.humblr.main.core.comments.ItemComment
 import com.skillbox.humblr.preview.ElementPreview
 import com.skillbox.humblr.theme.AppTheme
 import kotlinx.coroutines.flow.MutableStateFlow
 
 @Composable
-fun ListSubreddit(
-    pagingItems: LazyPagingItems<Subreddit>,
-    onRefresh: () -> Unit = {},
-    onSubscribe: (Boolean, String) -> Unit = { _, _ -> },
-    onNavigate: (String) -> Unit = {}
+fun CommentsList(
+    pagingItems: LazyPagingItems<Thing>,
+    onRefresh: () -> Unit = {}
 ) {
-
     Box(
         modifier = Modifier
-            .padding(horizontal = 12.dp)
             .fillMaxSize(),
         contentAlignment = Alignment.Center
     ) {
@@ -48,7 +44,6 @@ fun ListSubreddit(
             state = rememberLazyListState(),
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
-
             items(
                 count = pagingItems.itemCount,
                 key = {
@@ -56,17 +51,12 @@ fun ListSubreddit(
                 }
             ) {
                 if (pagingItems[it] != null) {
-                    ItemSubreddit(
-                        item = pagingItems[it]!!.data,
-                        onSubscribe = { isSubscribed ->
-                            onSubscribe(isSubscribed, pagingItems[it]!!.data.name)
-                        },
-                        onClick = {
-                            onNavigate(pagingItems[it]!!.data.title)
-                        }
+
+                    // TODO загрузка аватарки комментатора
+
+                    ItemComment(
+                        item = pagingItems[it]!!.data.toCommentDto()
                     )
-                } else {
-                    //ItemSubredditPlaceholder()
                 }
             }
         }
@@ -90,31 +80,28 @@ fun ListSubreddit(
                 )
 
                 Button(
-                    onClick = {
-                        onRefresh()
-                    }
+                    onClick = onRefresh
                 ) {
                     Text(text = stringResource(id = R.string.refresh))
                 }
             }
         }
     }
+
 }
 
 @ElementPreview
 @Composable
-fun PreviewListSubreddit(
-    @PreviewParameter(SubredditListPreviewProvider::class) subsList: List<Subreddit>
+fun PreviewCommentsList(
+    @PreviewParameter(CommentListPreviewProvider::class) comments: List<Thing>
 ) {
-
-    val flow = MutableStateFlow(PagingData.from(subsList))
-    val lazyPagingItems = flow.collectAsLazyPagingItems()
-
     AppTheme {
-        ListSubreddit(
-            pagingItems = lazyPagingItems,
-            onSubscribe = { _, _ -> },
-            onRefresh = {}
+
+        val flow = MutableStateFlow(PagingData.from(comments))
+        val lazyPagingItems = flow.collectAsLazyPagingItems()
+
+        CommentsList(
+            pagingItems = lazyPagingItems
         )
     }
 }

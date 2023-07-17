@@ -164,6 +164,14 @@ class RepositoryImplementation @Inject constructor(
         }
     }
 
+    override fun getComments(article: String): Pager<String, Thing> {
+        return Pager(
+            PagingConfig(pageSize)
+        ) {
+            CommentsPagingSource(article, "Bearer $_accessToken", apiService, pageSize)
+        }
+    }
+
 
     override suspend fun unsubscribe(fullName: String?): Response<SubscribeResponse> {
         return apiService.subscribe(

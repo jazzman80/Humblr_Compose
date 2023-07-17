@@ -49,4 +49,5 @@
     </plurals>
     <string name="share">Share</string>
     <string name="show_all">Show all</string>
+    <string name="comments">Comments</string>
 </resources>

@@ -95,6 +95,7 @@ interface ApiService {
         @Header("Authorization") auth: String,
         @Path("article") article: String,
         @Query("limit") limit: Int = 1,
+        @Query("after") after: String? = null,
         @Query("raw_json") rawJson: Int = 1
     ): Call<List<Listing>>
 

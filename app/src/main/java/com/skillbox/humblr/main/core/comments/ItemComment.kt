@@ -1,5 +1,6 @@
 package com.skillbox.humblr.main.core.comments
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -18,10 +19,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.platform.LocalInspectionMode
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
+import com.skillbox.humblr.R
 import com.skillbox.humblr.entity.CommentDto
 import com.skillbox.humblr.entity.CommentPreviewProvider
 import com.skillbox.humblr.main.core.PublishedText
@@ -48,17 +52,29 @@ fun ItemComment(
             horizontalArrangement = Arrangement.spacedBy(6.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            AsyncImage(
-                model = avatar,
-                modifier = Modifier
-                    .clip(CircleShape)
-                    .size(30.dp),
-//                painter = painterResource(
-//                    id = R.drawable.sample_avatar
-//                ),
-                contentDescription = null,
 
+            if (LocalInspectionMode.current) {
+
+                Image(
+                    modifier = Modifier
+                        .clip(CircleShape)
+                        .size(30.dp),
+                    painter = painterResource(
+                        id = R.drawable.sample_avatar
+                    ),
+                    contentDescription = null
                 )
+
+            } else {
+
+                AsyncImage(
+                    model = avatar,
+                    modifier = Modifier
+                        .clip(CircleShape)
+                        .size(30.dp),
+                    contentDescription = null
+                )
+            }
 
             item.author?.let {
                 Text(

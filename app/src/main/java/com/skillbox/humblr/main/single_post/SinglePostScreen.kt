@@ -25,6 +25,7 @@ import com.skillbox.humblr.R
 import com.skillbox.humblr.entity.CommentDto
 import com.skillbox.humblr.entity.PostDataPreviewProvider
 import com.skillbox.humblr.entity.PostDto
+import com.skillbox.humblr.main.comments.CommentsScreen
 import com.skillbox.humblr.main.core.TopBar
 import com.skillbox.humblr.main.core.comments.ItemComment
 import com.skillbox.humblr.preview.ElementPreview
@@ -58,6 +59,9 @@ data class SinglePostScreen(
             },
             onShare = {
                 viewModel.share(context, post?.permalink ?: "")
+            },
+            onShowComments = {
+                navigator.push(CommentsScreen(post?.id ?: ""))
             }
         )
 
@@ -72,7 +76,8 @@ fun SinglePostScreenContent(
     comment: CommentDto,
     onBack: () -> Unit = {},
     onLike: (Boolean, String) -> Unit = { _, _ -> },
-    onShare: () -> Unit = {}
+    onShare: () -> Unit = {},
+    onShowComments: () -> Unit = {}
 ) {
     Column(
         modifier = Modifier
@@ -106,7 +111,9 @@ fun SinglePostScreenContent(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(horizontal = 30.dp, vertical = 10.dp),
-                    onClick = { /*TODO*/ }
+                    onClick = {
+                        onShowComments()
+                    }
                 ) {
                     Text(
                         text = stringResource(id = R.string.show_all)

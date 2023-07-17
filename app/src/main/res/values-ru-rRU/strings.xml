@@ -53,4 +53,5 @@
     </plurals>
     <string name="share">Поделиться</string>
     <string name="show_all">Показать все</string>
+    <string name="comments">Комментарии</string>
 </resources>

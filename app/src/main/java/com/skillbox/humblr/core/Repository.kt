@@ -22,6 +22,7 @@ interface Repository {
     fun getPopularSubs(): Pager<String, Subreddit>
     fun searchSubs(query: String): Pager<String, Subreddit>
     fun getPosts(title: String): Pager<String, Post>
+    fun getComments(article: String): Pager<String, Thing>
     suspend fun refreshToken()
     suspend fun unsubscribe(fullName: String?): Response<SubscribeResponse>
     suspend fun subscribe(fullName: String?): Response<SubscribeResponse>
