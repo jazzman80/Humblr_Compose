@@ -3,27 +3,36 @@ package com.skillbox.humblr.main.single_post
 import MainScreen
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.Button
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.PreviewParameter
+import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.androidx.AndroidScreen
 import cafe.adriel.voyager.hilt.getViewModel
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
-import com.skillbox.humblr.entity.PostData
+import com.skillbox.humblr.R
+import com.skillbox.humblr.entity.CommentDto
 import com.skillbox.humblr.entity.PostDataPreviewProvider
+import com.skillbox.humblr.entity.PostDto
 import com.skillbox.humblr.main.core.TopBar
+import com.skillbox.humblr.main.core.comments.ItemComment
 import com.skillbox.humblr.preview.ElementPreview
 import com.skillbox.humblr.preview.SystemUI
 import com.skillbox.humblr.theme.AppTheme
 
 data class SinglePostScreen(
-    val name: String
+    val id: String
 ) : AndroidScreen() {
 
     @Composable
@@ -31,13 +40,16 @@ data class SinglePostScreen(
 
         val navigator = LocalNavigator.currentOrThrow
         val viewModel = getViewModel<SinglePostViewModel>()
-        val item by viewModel.postData.observeAsState()
+
+        val post by viewModel.post.observeAsState()
+        val comment by viewModel.comment.observeAsState()
+        val avatar by viewModel.avatar.observeAsState()
         val context = LocalContext.current
 
-        viewModel.getPost(name)
-
         SinglePostScreenContent(
-            item = item ?: PostData(),
+            post = post,
+            avatar = avatar,
+            comment = comment ?: CommentDto(),
             onBack = {
                 navigator.pop()
             },
@@ -45,15 +57,19 @@ data class SinglePostScreen(
                 viewModel.save(isLiked, name)
             },
             onShare = {
-                viewModel.share(context, item?.permalink ?: "")
+                viewModel.share(context, post?.permalink ?: "")
             }
         )
+
+        viewModel.getPostWithComment(id)
     }
 }
 
 @Composable
 fun SinglePostScreenContent(
-    item: PostData,
+    post: PostDto?,
+    avatar: String?,
+    comment: CommentDto,
     onBack: () -> Unit = {},
     onLike: (Boolean, String) -> Unit = { _, _ -> },
     onShare: () -> Unit = {}
@@ -64,7 +80,7 @@ fun SinglePostScreenContent(
     ) {
 
         TopBar(
-            titleText = item.subreddit,
+            titleText = post?.subreddit ?: "",
             onBack = onBack
         )
 
@@ -73,10 +89,30 @@ fun SinglePostScreenContent(
                 .verticalScroll(rememberScrollState())
         ) {
             SinglePostCard(
-                item = item,
+                item = post ?: PostDto(),
                 onLike = onLike,
                 onShare = onShare
             )
+
+            if ((post?.numComments ?: 0) > 0) {
+                ItemComment(
+                    item = comment,
+                    avatar = avatar
+                )
+            }
+
+            if ((post?.numComments ?: 0) > 1) {
+                Button(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 30.dp, vertical = 10.dp),
+                    onClick = { /*TODO*/ }
+                ) {
+                    Text(
+                        text = stringResource(id = R.string.show_all)
+                    )
+                }
+            }
         }
     }
 }
@@ -84,13 +120,15 @@ fun SinglePostScreenContent(
 @ElementPreview
 @Composable
 fun PreviewSinglePostScreen(
-    @PreviewParameter(PostDataPreviewProvider::class) postData: PostData
+    @PreviewParameter(PostDataPreviewProvider::class) post: PostDto
 ) {
     AppTheme {
         SystemUI {
             MainScreen {
                 SinglePostScreenContent(
-                    item = postData
+                    post = post,
+                    avatar = "",
+                    comment = CommentDto()
                 )
             }
         }

@@ -48,4 +48,5 @@
         <item quantity="other"> comments</item>
     </plurals>
     <string name="share">Share</string>
+    <string name="show_all">Show all</string>
 </resources>

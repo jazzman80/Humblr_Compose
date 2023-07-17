@@ -28,8 +28,8 @@ import androidx.compose.ui.unit.dp
 import coil.compose.SubcomposeAsyncImage
 import coil.request.ImageRequest
 import com.skillbox.humblr.R
-import com.skillbox.humblr.entity.PostData
 import com.skillbox.humblr.entity.PostDataPreviewProvider
+import com.skillbox.humblr.entity.PostDto
 import com.skillbox.humblr.main.core.Counter
 import com.skillbox.humblr.main.core.list_subreddit.SubscribeButton
 import com.skillbox.humblr.preview.ElementPreview
@@ -39,7 +39,7 @@ import com.skillbox.humblr.theme.labelLarge
 
 @Composable
 fun ItemPost(
-    item: PostData,
+    item: PostDto,
     onSave: (Boolean) -> Unit = {},
     onNavigate: () -> Unit = {}
 ) {
@@ -66,14 +66,14 @@ fun ItemPost(
             Text(
                 modifier = Modifier
                     .weight(1f),
-                text = item.title,
+                text = item.title ?: "",
                 style = labelLarge,
                 color = MaterialTheme.colorScheme.onSurface
             )
 
             SubscribeButton(
                 onSubscribe = onSave,
-                initSubscribe = item.saved
+                initSubscribe = item.saved ?: false //TODO скрывать кнопку при null
             )
 
         }
@@ -100,7 +100,8 @@ fun ItemPost(
                 )
             }
 
-            if (item.selftext.isNotEmpty()) {
+            // TODO скрывать текст, если null
+            if (item.selftext!!.isNotEmpty()) {
                 Text(
                     modifier = Modifier
                         .weight(2f),
@@ -121,7 +122,7 @@ fun ItemPost(
             Text(
                 modifier = Modifier
                     .weight(1f),
-                text = item.author,
+                text = item.author ?: "", //TODO переделать представление
                 style = bodySmall,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
@@ -133,7 +134,7 @@ fun ItemPost(
                 horizontalArrangement = Arrangement.spacedBy(3.dp)
             ) {
                 Counter(
-                    value = item.numComments,
+                    value = item.numComments ?: 0, //TODO скрывать элемент если null
                     color = MaterialTheme.colorScheme.primary
                 )
 
@@ -151,11 +152,11 @@ fun ItemPost(
 @ElementPreview
 @Composable
 fun PreviewItemPost(
-    @PreviewParameter(PostDataPreviewProvider::class) postData: PostData
+    @PreviewParameter(PostDataPreviewProvider::class) postDataDto: PostDto
 ) {
     AppTheme {
         ItemPost(
-            item = postData
+            item = postDataDto
         )
     }
 }

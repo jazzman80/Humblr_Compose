@@ -64,7 +64,7 @@ fun PostList(
                             onSave(isSaved, pagingItems[it]!!.data.name)
                         },
                         onNavigate = {
-                            onNavigate(pagingItems[it]!!.data.name)
+                            onNavigate(pagingItems[it]!!.data.id)
                         }
                     )
                 } else {

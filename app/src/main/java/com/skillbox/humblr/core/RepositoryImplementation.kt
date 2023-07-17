@@ -6,10 +6,12 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import com.skillbox.humblr.entity.Access
+import com.skillbox.humblr.entity.Listing
 import com.skillbox.humblr.entity.Post
 import com.skillbox.humblr.entity.PostListing
 import com.skillbox.humblr.entity.Subreddit
 import com.skillbox.humblr.entity.SubscribeResponse
+import com.skillbox.humblr.entity.Thing
 import dagger.hilt.android.qualifiers.ApplicationContext
 import retrofit2.Response
 import retrofit2.awaitResponse
@@ -197,6 +199,22 @@ class RepositoryImplementation @Inject constructor(
         return apiService.getSinglePost(
             "Bearer $_accessToken",
             name
+        ).awaitResponse()
+    }
+
+    override suspend fun getPostWithComment(
+        article: String
+    ): Response<List<Listing>> {
+        return apiService.getPostWithComment(
+            "Bearer $_accessToken",
+            article
+        ).awaitResponse()
+    }
+
+    override suspend fun getUser(username: String): Response<Thing> {
+        return apiService.getUser(
+            "Bearer $_accessToken",
+            username
         ).awaitResponse()
     }
 

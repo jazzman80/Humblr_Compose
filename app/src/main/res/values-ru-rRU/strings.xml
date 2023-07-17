@@ -52,4 +52,5 @@
         <item quantity="many"> комментариев</item>
     </plurals>
     <string name="share">Поделиться</string>
+    <string name="show_all">Показать все</string>
 </resources>

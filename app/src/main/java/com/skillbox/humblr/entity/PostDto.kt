@@ -4,28 +4,28 @@ import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import com.google.gson.annotations.SerializedName
 import java.time.Instant
 
-data class PostData(
+data class PostDto(
     val id: String = "",
-    val title: String = "",
-    val author: String = "",
+    val title: String? = null,
+    val author: String? = null,
 
     @SerializedName("num_comments")
-    val numComments: Int = 0,
+    val numComments: Int? = null,
 
     val thumbnail: String = "",
-    val selftext: String = "",
-    val saved: Boolean = false,
+    val selftext: String? = null,
+    val saved: Boolean? = null,
     val name: String = "",
-    val created: Long = 0L,
-    val subreddit: String = "",
+    val created: Long? = null,
+    val subreddit: String? = null,
     val preview: PostPreview? = null,
-    val permalink: String = ""
+    val permalink: String? = null
 )
 
-class PostDataPreviewProvider : PreviewParameterProvider<PostData> {
+class PostDataPreviewProvider : PreviewParameterProvider<PostDto> {
 
     override val values = sequenceOf(
-        PostData(
+        PostDto(
             id = "id",
             title = "Короткий или длинный пост: как выбрать оптимальный объём текста под " +
                     "свою аудиторию?",
@@ -48,7 +48,7 @@ class PostDataPreviewProvider : PreviewParameterProvider<PostData> {
             created = Instant.now().epochSecond - 23154,
             subreddit = "Длинные посты"
         ),
-        PostData(
+        PostDto(
             id = "id",
             title = "Короткий или длинный пост?",
             author = "ПользовательССамымДлиннымНикНэймом",
@@ -61,7 +61,8 @@ class PostDataPreviewProvider : PreviewParameterProvider<PostData> {
             name = "",
             created = Instant.now().epochSecond - 230154,
             subreddit = "Длинные посты"
-        )
+        ),
+        PostDto()
     )
 }
 
@@ -70,7 +71,7 @@ class PostListPreviewProvider : PreviewParameterProvider<List<Post>> {
     override val values = sequenceOf(
         listOf(
             Post(
-                PostData(
+                PostDto(
                     id = "1",
                     title = "Короткий или длинный пост: как выбрать оптимальный объём текста " +
                             "под свою аудиторию?",
@@ -95,7 +96,7 @@ class PostListPreviewProvider : PreviewParameterProvider<List<Post>> {
                 )
             ),
             Post(
-                PostData(
+                PostDto(
                     id = "2",
                     title = "Короткий или длинный пост?",
                     author = "ПользовательССамымДлиннымНикНэймом",
@@ -111,7 +112,7 @@ class PostListPreviewProvider : PreviewParameterProvider<List<Post>> {
                 )
             ),
             Post(
-                PostData(
+                PostDto(
                     id = "3",
                     title = "Художник Денис Жбанков и его монстры",
                     author = "TheDogsDream",
@@ -128,7 +129,7 @@ class PostListPreviewProvider : PreviewParameterProvider<List<Post>> {
                 )
             ),
             Post(
-                PostData(
+                PostDto(
                     id = "4",
                     title = "10 примеров наихудшего использования компьютерной графики в кино за последние года",
                     author = "KinoGeek",

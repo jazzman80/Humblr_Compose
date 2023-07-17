@@ -1,10 +1,12 @@
 package com.skillbox.humblr.core
 
 import com.skillbox.humblr.entity.Access
+import com.skillbox.humblr.entity.Listing
 import com.skillbox.humblr.entity.PostListing
 import com.skillbox.humblr.entity.Refresh
 import com.skillbox.humblr.entity.SubsListing
 import com.skillbox.humblr.entity.SubscribeResponse
+import com.skillbox.humblr.entity.Thing
 import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.Header
@@ -87,4 +89,19 @@ interface ApiService {
         @Header("Authorization") auth: String,
         @Path("names") names: String
     ): Call<PostListing>
+
+    @GET("comments/{article}")
+    fun getPostWithComment(
+        @Header("Authorization") auth: String,
+        @Path("article") article: String,
+        @Query("limit") limit: Int = 1,
+        @Query("raw_json") rawJson: Int = 1
+    ): Call<List<Listing>>
+
+    @GET("user/{username}/about")
+    fun getUser(
+        @Header("Authorization") auth: String,
+        @Path("username") username: String,
+        @Query("raw_json") rawJson: Int = 1
+    ): Call<Thing>
 }

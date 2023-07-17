@@ -21,6 +21,7 @@ import com.skillbox.humblr.preview.ElementPreview
 import com.skillbox.humblr.preview.SystemUI
 import com.skillbox.humblr.theme.AppTheme
 import kotlinx.coroutines.flow.MutableStateFlow
+import java.net.URLEncoder
 
 data class PostsScreen(val title: String) : AndroidScreen() {
 
@@ -28,7 +29,7 @@ data class PostsScreen(val title: String) : AndroidScreen() {
     override fun Content() {
         val navigator = LocalNavigator.currentOrThrow
         val viewModel = getViewModel<PostsViewModel>()
-        val posts = viewModel.postFlow(title).collectAsLazyPagingItems()
+        val posts = viewModel.postFlow(URLEncoder.encode(title)).collectAsLazyPagingItems()
 
         PostsScreenContent(
             title = title,

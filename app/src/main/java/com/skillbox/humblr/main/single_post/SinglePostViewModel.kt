@@ -8,7 +8,8 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.skillbox.humblr.core.Repository
-import com.skillbox.humblr.entity.PostData
+import com.skillbox.humblr.entity.CommentDto
+import com.skillbox.humblr.entity.PostDto
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -22,17 +23,43 @@ class SinglePostViewModel @Inject constructor(
         refreshToken()
     }
 
-    val postData: LiveData<PostData>
-        get() = _postData
-    private val _postData = MutableLiveData<PostData>()
+    val post: LiveData<PostDto>
+        get() = _post
+    private val _post = MutableLiveData<PostDto>()
 
-    fun getPost(name: String) {
+    val comment: LiveData<CommentDto>
+        get() = _comment
+    private val _comment = MutableLiveData<CommentDto>()
+
+    val avatar: LiveData<String>
+        get() = _avatar
+    private val _avatar = MutableLiveData<String>()
+
+
+    fun getPostWithComment(article: String) {
         viewModelScope.launch {
+            val result = repository.getPostWithComment(article)
 
-            val response = repository.getSinglePost(name)
+            if (result.isSuccessful) {
 
-            if (response.isSuccessful) {
-                _postData.value = response.body()?.data?.children?.get(0)?.data
+                result.body()?.first()?.data?.children?.first()?.data?.toPostDataDto()
+                    .let { newPost ->
+                        _post.value = newPost
+
+                        if (newPost!!.numComments != null && newPost.numComments!! > 0) {
+                            result.body()?.get(1)?.data?.children?.first()?.data?.toCommentDto()
+                                .let { comment ->
+                                    _comment.value = comment
+
+                                    _avatar.value = repository.getUser(comment?.author ?: "")
+                                        .body()?.data?.toAccountDto()?.iconImg
+                                }
+                        } else {
+                            _comment.value = CommentDto()
+                        }
+
+
+                    }
             }
         }
     }

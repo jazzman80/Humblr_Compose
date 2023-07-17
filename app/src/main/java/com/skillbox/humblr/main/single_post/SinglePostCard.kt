@@ -4,7 +4,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -28,8 +27,8 @@ import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import coil.compose.SubcomposeAsyncImage
 import com.skillbox.humblr.R
-import com.skillbox.humblr.entity.PostData
 import com.skillbox.humblr.entity.PostDataPreviewProvider
+import com.skillbox.humblr.entity.PostDto
 import com.skillbox.humblr.main.core.Counter
 import com.skillbox.humblr.main.core.LikeButton
 import com.skillbox.humblr.main.core.PublishedText
@@ -41,7 +40,7 @@ import com.skillbox.humblr.theme.labelLarge
 
 @Composable
 fun SinglePostCard(
-    item: PostData,
+    item: PostDto,
     onLike: (Boolean, String) -> Unit = { _, _ -> },
     onShare: () -> Unit = {}
 ) {
@@ -63,13 +62,16 @@ fun SinglePostCard(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
 
-        Text(
-            modifier = Modifier
-                .fillMaxWidth(),
-            text = item.title,
-            color = MaterialTheme.colorScheme.onSurface,
-            style = labelLarge
-        )
+        item.title?.let {
+            Text(
+                modifier = Modifier
+                    .fillMaxWidth(),
+                text = it,
+                color = MaterialTheme.colorScheme.onSurface,
+                style = labelLarge
+            )
+        }
+
 
         Row(
             verticalAlignment = Alignment.CenterVertically,
@@ -80,43 +82,52 @@ fun SinglePostCard(
                 modifier = Modifier
                     .weight(1f)
             ) {
-                SubscribeButton(
-                    onSubscribe = {},
-                    initSubscribe = false
-                )
 
-                Text(
-                    text = item.author,
-                    color = MaterialTheme.colorScheme.primary,
-                    style = labelLarge,
-                    overflow = TextOverflow.Ellipsis,
-                    maxLines = 1
-                )
+                item.author?.let {
+                    SubscribeButton(
+                        onSubscribe = {
+                            //TODO
+                        },
+                        initSubscribe = false
+                    )
+
+                    Text(
+                        text = it,
+                        color = MaterialTheme.colorScheme.primary,
+                        style = labelLarge,
+                        overflow = TextOverflow.Ellipsis,
+                        maxLines = 1
+                    )
+                }
+
             }
 
-            Row {
-                Text(
-                    text = stringResource(id = R.string.published) + " ",
-                    color = MaterialTheme.colorScheme.outline,
-                    style = bodySmall
-                )
+            item.created?.let {
+                Row {
+                    Text(
+                        text = stringResource(id = R.string.published) + " ",
+                        color = MaterialTheme.colorScheme.outline,
+                        style = bodySmall
+                    )
 
-                PublishedText(
-                    publishTime = item.created
-                )
+                    PublishedText(
+                        publishTime = it
+                    )
+                }
             }
+
         }
 
 
-        if (isImageVisible) {
+//        if (isImageVisible) {
 
-            val source = item.preview?.images?.get(0)?.source
+        val source = item.preview?.images?.first()?.source
 
             SubcomposeAsyncImage(
                 modifier = Modifier
-                    .aspectRatio(
-                        (source?.width?.toFloat() ?: 1f) / (source?.height?.toFloat() ?: 1f)
-                    )
+//                    .aspectRatio(
+//                        (source?.width?.toFloat() ?: 1f) / (source?.height?.toFloat() ?: 1f)
+//                    )
                     .fillMaxWidth(),
                 model = source?.url,
                 contentDescription = null,
@@ -126,20 +137,20 @@ fun SinglePostCard(
                         modifier = Modifier
                             .size(70.dp)
                     )
-                },
-                onError = {
-                    isImageVisible = false
                 }
+            )
+//        }
+
+        item.selftext?.let {
+            Text(
+                modifier = Modifier
+                    .fillMaxWidth(),
+                text = it,
+                color = MaterialTheme.colorScheme.onSurface,
+                style = bodySmall
             )
         }
 
-        Text(
-            modifier = Modifier
-                .fillMaxWidth(),
-            text = item.selftext,
-            color = MaterialTheme.colorScheme.onSurface,
-            style = bodySmall
-        )
 
         Row(
             verticalAlignment = Alignment.CenterVertically,
@@ -149,41 +160,50 @@ fun SinglePostCard(
             Row(
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Counter(
-                    value = item.numComments,
-                    style = bodySmall
-                )
 
-                Text(
-                    text = " " + pluralStringResource(
-                        id = R.plurals.comments,
-                        count = if (item.numComments < 1000) item.numComments else 1000
-                    ),
-                    color = MaterialTheme.colorScheme.outline,
-                    style = bodySmall
-                )
+                item.numComments?.let {
+                    Counter(
+                        value = it,
+                        style = bodySmall
+                    )
+
+                    Text(
+                        text = " " + pluralStringResource(
+                            id = R.plurals.comments,
+                            count = if (it < 1000) it else 1000
+                        ),
+                        color = MaterialTheme.colorScheme.outline,
+                        style = bodySmall
+                    )
+                }
+
             }
 
             Row(
                 verticalAlignment = Alignment.CenterVertically
             ) {
 
-                TextButton(
-                    onClick = { onShare() }
-                ) {
-                    Text(
-                        text = stringResource(id = R.string.share),
-                        color = MaterialTheme.colorScheme.outline,
-                        style = bodySmall,
+                item.permalink?.let {
+                    TextButton(
+                        onClick = { onShare() }
+                    ) {
+                        Text(
+                            text = stringResource(id = R.string.share),
+                            color = MaterialTheme.colorScheme.outline,
+                            style = bodySmall,
+                        )
+                    }
+                }
+
+                item.saved?.let { isSaved ->
+                    LikeButton(
+                        initState = isSaved,
+                        onClick = {
+                            onLike(it, item.name)
+                        }
                     )
                 }
 
-                LikeButton(
-                    initState = item.saved,
-                    onClick = {
-                        onLike(it, item.name)
-                    }
-                )
             }
         }
 
@@ -193,12 +213,12 @@ fun SinglePostCard(
 @ElementPreview
 @Composable
 fun PreviewSinglePostCard(
-    @PreviewParameter(PostDataPreviewProvider::class) postData: PostData
+    @PreviewParameter(PostDataPreviewProvider::class) post: PostDto
 ) {
     AppTheme {
 
         SinglePostCard(
-            item = postData
+            item = post
         )
 
     }

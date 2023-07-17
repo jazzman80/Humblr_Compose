@@ -3,10 +3,12 @@ package com.skillbox.humblr.core
 import android.net.Uri
 import androidx.paging.Pager
 import com.skillbox.humblr.entity.Access
+import com.skillbox.humblr.entity.Listing
 import com.skillbox.humblr.entity.Post
 import com.skillbox.humblr.entity.PostListing
 import com.skillbox.humblr.entity.Subreddit
 import com.skillbox.humblr.entity.SubscribeResponse
+import com.skillbox.humblr.entity.Thing
 import retrofit2.Response
 
 interface Repository {
@@ -26,5 +28,7 @@ interface Repository {
     suspend fun unsave(name: String): Response<SubscribeResponse>
     suspend fun save(name: String): Response<SubscribeResponse>
     suspend fun getSinglePost(name: String): Response<PostListing>
+    suspend fun getPostWithComment(article: String): Response<List<Listing>>
+    suspend fun getUser(username: String): Response<Thing>
 
 }
