@@ -22,7 +22,7 @@ interface Repository {
     fun getPopularSubs(): Pager<String, Subreddit>
     fun searchSubs(query: String): Pager<String, Subreddit>
     fun getPosts(title: String): Pager<String, Post>
-    fun getComments(article: String): Pager<String, Thing>
+    //fun getComments(article: String): Pager<String, Thing>
     suspend fun refreshToken()
     suspend fun unsubscribe(fullName: String?): Response<SubscribeResponse>
     suspend fun subscribe(fullName: String?): Response<SubscribeResponse>
@@ -30,6 +30,7 @@ interface Repository {
     suspend fun save(name: String): Response<SubscribeResponse>
     suspend fun getSinglePost(name: String): Response<PostListing>
     suspend fun getPostWithComment(article: String): Response<List<Listing>>
+    suspend fun getComments(article: String): Response<List<Listing>>
     suspend fun getUser(username: String): Response<Thing>
 
 }

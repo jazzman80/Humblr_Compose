@@ -164,13 +164,13 @@ class RepositoryImplementation @Inject constructor(
         }
     }
 
-    override fun getComments(article: String): Pager<String, Thing> {
-        return Pager(
-            PagingConfig(pageSize)
-        ) {
-            CommentsPagingSource(article, "Bearer $_accessToken", apiService, pageSize)
-        }
-    }
+//    override fun getComments(article: String): Pager<String, Thing> {
+//        return Pager(
+//            PagingConfig(pageSize)
+//        ) {
+//            CommentsPagingSource(article, "Bearer $_accessToken", apiService, pageSize)
+//        }
+//    }
 
 
     override suspend fun unsubscribe(fullName: String?): Response<SubscribeResponse> {
@@ -216,6 +216,16 @@ class RepositoryImplementation @Inject constructor(
         return apiService.getPostWithComment(
             "Bearer $_accessToken",
             article
+        ).awaitResponse()
+    }
+
+    override suspend fun getComments(
+        article: String
+    ): Response<List<Listing>> {
+        return apiService.getPostWithComment(
+            auth = "Bearer $_accessToken",
+            article = article,
+            limit = 100
         ).awaitResponse()
     }
 
