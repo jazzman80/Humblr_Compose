@@ -36,8 +36,7 @@ import com.skillbox.humblr.theme.labelLarge
 
 @Composable
 fun ItemComment(
-    item: CommentDto = CommentDto(),
-    avatar: String? = null
+    item: CommentDto = CommentDto()
 ) {
     Column(
         modifier = Modifier
@@ -68,7 +67,7 @@ fun ItemComment(
             } else {
 
                 AsyncImage(
-                    model = avatar,
+                    model = item.avatar,
                     modifier = Modifier
                         .clip(CircleShape)
                         .size(30.dp),

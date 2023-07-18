@@ -44,12 +44,10 @@ data class SinglePostScreen(
 
         val post by viewModel.post.observeAsState()
         val comment by viewModel.comment.observeAsState()
-        val avatar by viewModel.avatar.observeAsState()
         val context = LocalContext.current
 
         SinglePostScreenContent(
             post = post,
-            avatar = avatar,
             comment = comment ?: CommentDto(),
             onBack = {
                 navigator.pop()
@@ -72,7 +70,6 @@ data class SinglePostScreen(
 @Composable
 fun SinglePostScreenContent(
     post: PostDto?,
-    avatar: String?,
     comment: CommentDto,
     onBack: () -> Unit = {},
     onLike: (Boolean, String) -> Unit = { _, _ -> },
@@ -101,8 +98,7 @@ fun SinglePostScreenContent(
 
             if ((post?.numComments ?: 0) > 0) {
                 ItemComment(
-                    item = comment,
-                    avatar = avatar
+                    item = comment
                 )
             }
 
@@ -134,7 +130,6 @@ fun PreviewSinglePostScreen(
             MainScreen {
                 SinglePostScreenContent(
                     post = post,
-                    avatar = "",
                     comment = CommentDto()
                 )
             }

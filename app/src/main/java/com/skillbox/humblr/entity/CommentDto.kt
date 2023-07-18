@@ -8,7 +8,8 @@ data class CommentDto(
     val name: String = "",
     val author: String? = null,
     val created: Long? = null,
-    val body: String? = null
+    val body: String? = null,
+    val avatar: String? = null
 )
 
 class CommentPreviewProvider : PreviewParameterProvider<CommentDto> {

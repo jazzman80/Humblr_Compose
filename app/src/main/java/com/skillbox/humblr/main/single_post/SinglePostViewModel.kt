@@ -31,9 +31,9 @@ class SinglePostViewModel @Inject constructor(
         get() = _comment
     private val _comment = MutableLiveData<CommentDto>()
 
-    val avatar: LiveData<String>
-        get() = _avatar
-    private val _avatar = MutableLiveData<String>()
+//    val avatar: LiveData<String>
+//        get() = _avatar
+//    private val _avatar = MutableLiveData<String>()
 
 
     fun getPostWithComment(article: String) {
@@ -49,10 +49,11 @@ class SinglePostViewModel @Inject constructor(
                         if (newPost!!.numComments != null && newPost.numComments!! > 0) {
                             result.body()?.get(1)?.data?.children?.first()?.data?.toCommentDto()
                                 .let { comment ->
-                                    _comment.value = comment
-
-                                    _avatar.value = repository.getUser(comment?.author ?: "")
+                                    val avatar = repository.getUser(comment?.author ?: "")
                                         .body()?.data?.toAccountDto()?.iconImg
+
+                                    val newComment = comment!!.copy(avatar = avatar)
+                                    _comment.value = newComment
                                 }
                         } else {
                             _comment.value = CommentDto()

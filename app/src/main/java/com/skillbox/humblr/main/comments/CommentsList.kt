@@ -31,8 +31,10 @@ import kotlinx.coroutines.flow.MutableStateFlow
 @Composable
 fun CommentsList(
     pagingItems: LazyPagingItems<Thing>,
+    list: List<Thing>? = null,
     onRefresh: () -> Unit = {}
 ) {
+
     Box(
         modifier = Modifier
             .fillMaxSize(),
@@ -59,6 +61,10 @@ fun CommentsList(
                     )
                 }
             }
+
+//            items(list.size){
+//
+//            }
         }
 
         if (pagingItems.loadState.refresh is LoadState.NotLoading && pagingItems.itemCount == 0) {
