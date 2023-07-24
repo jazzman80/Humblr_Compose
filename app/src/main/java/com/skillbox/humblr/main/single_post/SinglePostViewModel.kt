@@ -36,18 +36,18 @@ class SinglePostViewModel @Inject constructor(
 //    private val _avatar = MutableLiveData<String>()
 
 
-    fun getPostWithComment(article: String) {
-        viewModelScope.launch {
-            val result = repository.getPostWithComment(article)
+    suspend fun getPostWithComment(article: String) {
+//        viewModelScope.launch {
+        val result = repository.getPostWithComment(article)
 
-            if (result.isSuccessful) {
+        if (result.isSuccessful) {
 
-                result.body()?.first()?.data?.children?.first()?.data?.toPostDataDto()
-                    .let { newPost ->
-                        _post.value = newPost
+            result.body()?.first()?.data?.children?.first()?.data?.toPostDataDto()
+                .let { newPost ->
+                    _post.value = newPost
 
-                        if (newPost!!.numComments != null && newPost.numComments!! > 0) {
-                            result.body()?.get(1)?.data?.children?.first()?.data?.toCommentDto()
+                    if (newPost!!.numComments != null && newPost.numComments!! > 0) {
+                        result.body()?.get(1)?.data?.children?.first()?.data?.toCommentDto()
                                 .let { comment ->
                                     val avatar = repository.getUser(comment?.author ?: "")
                                         .body()?.data?.toAccountDto()?.iconImg
@@ -62,7 +62,7 @@ class SinglePostViewModel @Inject constructor(
 
                     }
             }
-        }
+//        }
     }
 
     fun refreshToken() {
@@ -92,6 +92,12 @@ class SinglePostViewModel @Inject constructor(
         startActivity(context, shareIntent, null)
 
         return false
+    }
+
+    fun download(comment: CommentDto) {
+        viewModelScope.launch {
+            repository.download(comment)
+        }
     }
 
 }

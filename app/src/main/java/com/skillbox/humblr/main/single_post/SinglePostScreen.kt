@@ -10,6 +10,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
@@ -60,10 +61,15 @@ data class SinglePostScreen(
             },
             onShowComments = {
                 navigator.push(CommentsScreen(post?.id ?: ""))
+            },
+            onDownload = {
+                viewModel.download(it)
             }
         )
 
-        viewModel.getPostWithComment(id)
+        LaunchedEffect(key1 = true) {
+            viewModel.getPostWithComment(id)
+        }
     }
 }
 
@@ -74,7 +80,8 @@ fun SinglePostScreenContent(
     onBack: () -> Unit = {},
     onLike: (Boolean, String) -> Unit = { _, _ -> },
     onShare: () -> Unit = {},
-    onShowComments: () -> Unit = {}
+    onShowComments: () -> Unit = {},
+    onDownload: (CommentDto) -> Unit = {}
 ) {
     Column(
         modifier = Modifier
@@ -98,7 +105,10 @@ fun SinglePostScreenContent(
 
             if ((post?.numComments ?: 0) > 0) {
                 ItemComment(
-                    item = comment
+                    item = comment,
+                    onDownload = {
+                        onDownload(comment)
+                    }
                 )
             }
 

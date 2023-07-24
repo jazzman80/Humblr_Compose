@@ -88,4 +88,10 @@ dependencies {
     implementation("cafe.adriel.voyager:voyager-androidx:1.0.0-rc06")
     implementation("cafe.adriel.voyager:voyager-tab-navigator:1.0.0-rc06")
 
+    // Room
+    implementation "androidx.room:room-runtime:2.5.2"
+    implementation "androidx.room:room-ktx:2.5.2"
+    annotationProcessor "androidx.room:room-compiler:2.5.2"
+    kapt "androidx.room:room-compiler:2.5.2"
+
 }

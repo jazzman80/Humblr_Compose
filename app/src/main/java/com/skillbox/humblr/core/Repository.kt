@@ -3,6 +3,7 @@ package com.skillbox.humblr.core
 import android.net.Uri
 import androidx.paging.Pager
 import com.skillbox.humblr.entity.Access
+import com.skillbox.humblr.entity.CommentDto
 import com.skillbox.humblr.entity.Listing
 import com.skillbox.humblr.entity.Post
 import com.skillbox.humblr.entity.PostListing
@@ -22,7 +23,8 @@ interface Repository {
     fun getPopularSubs(): Pager<String, Subreddit>
     fun searchSubs(query: String): Pager<String, Subreddit>
     fun getPosts(title: String): Pager<String, Post>
-    //fun getComments(article: String): Pager<String, Thing>
+
+    //    fun getComments(article: String): Pager<String, Thing>
     suspend fun refreshToken()
     suspend fun unsubscribe(fullName: String?): Response<SubscribeResponse>
     suspend fun subscribe(fullName: String?): Response<SubscribeResponse>
@@ -31,6 +33,8 @@ interface Repository {
     suspend fun getSinglePost(name: String): Response<PostListing>
     suspend fun getPostWithComment(article: String): Response<List<Listing>>
     suspend fun getComments(article: String): Response<List<Listing>>
+    suspend fun getMoreComments(article: String): Response<Listing>
     suspend fun getUser(username: String): Response<Thing>
+    suspend fun download(comment: CommentDto)
 
 }

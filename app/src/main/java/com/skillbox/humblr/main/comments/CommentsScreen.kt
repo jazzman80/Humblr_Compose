@@ -4,8 +4,10 @@ import MainScreen
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.PreviewParameter
@@ -20,6 +22,7 @@ import com.skillbox.humblr.main.core.TopBar
 import com.skillbox.humblr.preview.ElementPreview
 import com.skillbox.humblr.preview.SystemUI
 import com.skillbox.humblr.theme.AppTheme
+import kotlinx.coroutines.launch
 
 class CommentsScreen(
     private val article: String
@@ -30,15 +33,23 @@ class CommentsScreen(
 
         val navigator = LocalNavigator.currentOrThrow
         val viewModel = getViewModel<CommentsViewModel>()
-        //val comments = viewModel.getCommentsFlow(article).collectAsLazyPagingItems()
         val comments by viewModel.comments.observeAsState()
 
-        viewModel.getComments(article)
+        LaunchedEffect(true) {
+            viewModel.getComments(article)
+        }
+
+        val scope = rememberCoroutineScope()
 
         CommentsScreenContent(
             comments = comments,
             onBack = {
                 navigator.pop()
+            },
+            onDownload = {
+                scope.launch {
+                    viewModel.download(it)
+                }
             }
         )
     }
@@ -47,9 +58,9 @@ class CommentsScreen(
 
 @Composable
 fun CommentsScreenContent(
-    //items: LazyPagingItems<Thing>,
     comments: List<CommentDto>?,
-    onBack: () -> Unit = {}
+    onBack: () -> Unit = {},
+    onDownload: (CommentDto) -> Unit = {}
 ) {
 
     Column(
@@ -63,8 +74,10 @@ fun CommentsScreenContent(
         )
 
         CommentsList(
-            comments = comments
+            comments = comments,
+            onDownload = onDownload
         )
+
     }
 }
 
@@ -73,9 +86,6 @@ fun CommentsScreenContent(
 fun PreviewCommentsScreen(
     @PreviewParameter(CommentListPreviewProvider::class) comments: List<CommentDto>
 ) {
-
-//    val flow = MutableStateFlow(PagingData.from(comments))
-//    val lazyPagingItems = flow.collectAsLazyPagingItems()
 
     AppTheme {
         SystemUI {

@@ -99,6 +99,12 @@ interface ApiService {
         @Query("raw_json") rawJson: Int = 1
     ): Call<List<Listing>>
 
+    @GET("/api/morechildren")
+    fun getMoreComments(
+        @Header("Authorization") auth: String,
+        @Query("link_id") linkId: String
+    ): Call<Listing>
+
     @GET("user/{username}/about")
     fun getUser(
         @Header("Authorization") auth: String,

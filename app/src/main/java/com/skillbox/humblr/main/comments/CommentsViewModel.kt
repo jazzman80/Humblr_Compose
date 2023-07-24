@@ -15,10 +15,6 @@ class CommentsViewModel @Inject constructor(
     private val repository: Repository
 ) : ViewModel() {
 
-//    fun getCommentsFlow(article: String): Flow<PagingData<Thing>> {
-//        return repository.getComments(article).flow.cachedIn(viewModelScope)
-//    }
-
     val comments: LiveData<List<CommentDto>>
         get() = _comments
     private val _comments = MutableLiveData<List<CommentDto>>()
@@ -27,48 +23,69 @@ class CommentsViewModel @Inject constructor(
         refreshToken()
     }
 
-    fun getComments(article: String) {
-        viewModelScope.launch {
-            val result = repository.getComments(article)
+    suspend fun getComments(article: String) {
 
-            if (result.isSuccessful) {
-                val things = result.body()?.get(1)?.data?.children
+        val result = repository.getComments(article)
 
-                val newComments = mutableListOf<CommentDto>()
-                val commentsWithAvatars = mutableListOf<CommentDto>()
+        if (result.isSuccessful) {
+            val things = result.body()?.get(1)?.data?.children
 
-                if (things != null) {
-                    for (thing in things) {
-                        newComments.add(thing.data.toCommentDto())
-                    }
+            val newComments = mutableListOf<CommentDto>()
+            val commentsWithAvatars = mutableListOf<CommentDto>()
+
+            if (things != null) {
+                for (thing in things) {
+                    newComments.add(thing.data.toCommentDto())
                 }
+            }
 
-                for (comment in newComments) {
+            var preloadedAvatars = 0
 
-                    val avatarResult = repository.getUser(comment.author ?: "")
+            if (newComments.size < 5) {
+                preloadedAvatars = newComments.size
+            } else {
+                preloadedAvatars = 5
+            }
 
-                    if (avatarResult.isSuccessful) {
 
-                        val avatar = avatarResult.body()?.data?.toAccountDto()?.iconImg
+            repeat(preloadedAvatars) {
 
-                        val commentWithAvatar = comment.copy(avatar = avatar)
+                val comment = newComments[it]
 
-                        commentsWithAvatars.add(commentWithAvatar)
+                val avatarResult = repository.getUser(comment.author ?: "")
 
-                    } else {
-                        commentsWithAvatars.add(comment)
-                    }
+                if (avatarResult.isSuccessful) {
+                    val avatar = avatarResult.body()?.data?.toAccountDto()?.iconImg
+                    newComments[it] = comment.copy(avatar = avatar)
                 }
+            }
 
-                _comments.value = commentsWithAvatars
+            _comments.value = newComments
+
+            repeat(newComments.size - preloadedAvatars) {
+
+                val comment = newComments[it + preloadedAvatars]
+
+                val avatarResult = repository.getUser(comment.author ?: "")
+
+                if (avatarResult.isSuccessful) {
+                    val avatar = avatarResult.body()?.data?.toAccountDto()?.iconImg
+                    newComments[it + preloadedAvatars] = comment.copy(avatar = avatar)
+                    _comments.value = newComments
+                }
             }
         }
     }
+
 
     private fun refreshToken() {
         viewModelScope.launch {
             repository.refreshToken()
         }
+    }
+
+    suspend fun download(comment: CommentDto) {
+        repository.download(comment)
     }
 
 }

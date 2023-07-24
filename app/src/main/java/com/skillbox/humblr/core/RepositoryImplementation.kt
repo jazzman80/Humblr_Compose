@@ -5,7 +5,9 @@ import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
+import com.skillbox.humblr.database.CommentDao
 import com.skillbox.humblr.entity.Access
+import com.skillbox.humblr.entity.CommentDto
 import com.skillbox.humblr.entity.Listing
 import com.skillbox.humblr.entity.Post
 import com.skillbox.humblr.entity.PostListing
@@ -21,7 +23,8 @@ import javax.inject.Inject
 
 class RepositoryImplementation @Inject constructor(
     @ApplicationContext private val appContext: Context,
-    private val apiService: ApiService
+    private val apiService: ApiService,
+    private val commentDao: CommentDao
 ) : Repository {
 
     private val preferenceFileKey = "PREFERENCE_FILE_KEY"
@@ -168,7 +171,7 @@ class RepositoryImplementation @Inject constructor(
 //        return Pager(
 //            PagingConfig(pageSize)
 //        ) {
-//            CommentsPagingSource(article, "Bearer $_accessToken", apiService, pageSize)
+//            CommentsPagingSource(article, "Bearer $_accessToken", apiService, 5)
 //        }
 //    }
 
@@ -225,15 +228,29 @@ class RepositoryImplementation @Inject constructor(
         return apiService.getPostWithComment(
             auth = "Bearer $_accessToken",
             article = article,
-            limit = 100
+            limit = 50000
         ).awaitResponse()
     }
+
+    override suspend fun getMoreComments(
+        article: String
+    ): Response<Listing> {
+        return apiService.getMoreComments(
+            auth = "Bearer $_accessToken",
+            linkId = article,
+        ).awaitResponse()
+    }
+
 
     override suspend fun getUser(username: String): Response<Thing> {
         return apiService.getUser(
             "Bearer $_accessToken",
             username
         ).awaitResponse()
+    }
+
+    override suspend fun download(comment: CommentDto) {
+        commentDao.insert(comment)
     }
 
     private fun saveToken() {
@@ -248,5 +265,4 @@ class RepositoryImplementation @Inject constructor(
         edit.putLong(expiresInKey, expiresIn).apply()
         edit.clear()
     }
-
 }

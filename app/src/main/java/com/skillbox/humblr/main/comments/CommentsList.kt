@@ -18,10 +18,12 @@ import com.skillbox.humblr.theme.AppTheme
 
 @Composable
 fun CommentsList(
-//    pagingItems: LazyPagingItems<Thing>,
     comments: List<CommentDto>? = null,
+    onDownload: (CommentDto) -> Unit = {},
     onRefresh: () -> Unit = {}
 ) {
+
+    val listState = rememberLazyListState()
 
     Box(
         modifier = Modifier
@@ -31,55 +33,20 @@ fun CommentsList(
 
         LazyColumn(
             modifier = Modifier.fillMaxSize(),
-            state = rememberLazyListState(),
+            state = listState,
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
-//            items(
-//                count = pagingItems.itemCount,
-//                key = {
-//                    pagingItems[it]?.data?.id ?: ""
-//                }
-//            ) {
-//                if (pagingItems[it] != null) {
-//
-//                    ItemComment(
-//                        item = pagingItems[it]!!.data.toCommentDto()
-//                    )
-//                }
-//            }
-
             items(comments?.size ?: 0) {
                 ItemComment(
-                    item = comments!![it]
+                    item = comments!![it],
+                    onDownload = {
+                        onDownload(comments[it])
+                    }
                 )
             }
+
         }
 
-//        if (pagingItems.loadState.refresh is LoadState.NotLoading && pagingItems.itemCount == 0) {
-//            Text(
-//                text = stringResource(id = R.string.nothing_found),
-//                textAlign = TextAlign.Center
-//            )
-//        }
-//
-//        if (pagingItems.loadState.refresh is LoadState.Loading) {
-//            CircularProgressIndicator()
-//        }
-//
-//        if (pagingItems.loadState.refresh is LoadState.Error) {
-//            Column {
-//                Text(
-//                    text = stringResource(id = R.string.network_error),
-//                    textAlign = TextAlign.Center
-//                )
-//
-//                Button(
-//                    onClick = onRefresh
-//                ) {
-//                    Text(text = stringResource(id = R.string.refresh))
-//                }
-//            }
-//        }
     }
 
 }
@@ -91,11 +58,7 @@ fun PreviewCommentsList(
 ) {
     AppTheme {
 
-//        val flow = MutableStateFlow(PagingData.from(comments))
-//        val lazyPagingItems = flow.collectAsLazyPagingItems()
-
         CommentsList(
-//            pagingItems = lazyPagingItems,
             comments = comments
         )
     }

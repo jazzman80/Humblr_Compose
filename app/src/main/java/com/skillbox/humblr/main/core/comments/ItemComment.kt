@@ -2,6 +2,7 @@ package com.skillbox.humblr.main.core.comments
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
@@ -13,6 +14,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Divider
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -21,6 +23,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
@@ -36,7 +39,8 @@ import com.skillbox.humblr.theme.labelLarge
 
 @Composable
 fun ItemComment(
-    item: CommentDto = CommentDto()
+    item: CommentDto = CommentDto(),
+    onDownload: () -> Unit = {}
 ) {
     Column(
         modifier = Modifier
@@ -116,6 +120,33 @@ fun ItemComment(
                     color = MaterialTheme.colorScheme.onSurface
                 )
             }
+        }
+
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(3.dp),
+            modifier = Modifier
+                .clickable {
+                    onDownload()
+                }
+                .padding(
+                    start = 30.dp,
+                    top = 6.dp
+                )
+        ) {
+            Icon(
+                painter = painterResource(id = R.drawable.ic_dowload),
+                contentDescription = null,
+                tint = MaterialTheme.colorScheme.outline
+            )
+
+            Text(
+                text = stringResource(
+                    id = R.string.download,
+                ),
+                style = bodySmall,
+                color = MaterialTheme.colorScheme.outline
+            )
         }
 
     }
