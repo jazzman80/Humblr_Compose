@@ -119,6 +119,12 @@ fun ItemComment(
                     style = bodySmall,
                     color = MaterialTheme.colorScheme.onSurface
                 )
+
+                Text(
+                    text = it,
+                    style = bodySmall,
+                    color = MaterialTheme.colorScheme.onSurface
+                )
             }
         }
 
