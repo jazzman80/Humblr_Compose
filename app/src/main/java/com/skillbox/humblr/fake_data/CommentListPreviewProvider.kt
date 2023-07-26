@@ -2,6 +2,10 @@ package com.skillbox.humblr.fake_data
 
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import com.skillbox.humblr.entity.CommentDto
+import com.skillbox.humblr.entity.Listing
+import com.skillbox.humblr.entity.ListingData
+import com.skillbox.humblr.entity.Thing
+import com.skillbox.humblr.entity.ThingData
 import java.time.Instant
 
 class CommentListPreviewProvider : PreviewParameterProvider<List<CommentDto>> {
@@ -13,7 +17,21 @@ class CommentListPreviewProvider : PreviewParameterProvider<List<CommentDto>> {
                 id = "0",
                 author = "АлексейН",
                 created = Instant.now().epochSecond - 587L,
-                body = "Горы, море, прекрасный вид – ребята, мы в Дагестане! У каждого должны быть 15 минут борьбы с режимом в день"
+                body = "Горы, море, прекрасный вид – ребята, мы в Дагестане! У каждого должны быть 15 минут борьбы с режимом в день",
+                replies = Listing(
+                    data = ListingData(
+                        after = null,
+                        children = listOf(
+                            Thing(
+                                ThingData(
+                                    author = "ПользовательССамымДлиннымНикнеймом",
+                                    created = Instant.now().epochSecond - 12478L,
+                                    body = "Шесть или пять полов напридумывали. Трансформеры, транс… Я даже не понимаю, что это такое!"
+                                )
+                            )
+                        )
+                    )
+                )
             ),
 
             CommentDto(

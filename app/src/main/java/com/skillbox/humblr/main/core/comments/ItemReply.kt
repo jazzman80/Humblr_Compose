@@ -2,74 +2,55 @@ package com.skillbox.humblr.main.core.comments
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Divider
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import com.skillbox.humblr.R
 import com.skillbox.humblr.entity.CommentDto
 import com.skillbox.humblr.entity.CommentPreviewProvider
-import com.skillbox.humblr.main.core.DownloadButton
-import com.skillbox.humblr.main.core.LikeButton
 import com.skillbox.humblr.main.core.PublishedText
 import com.skillbox.humblr.preview.ElementPreview
 import com.skillbox.humblr.theme.AppTheme
 import com.skillbox.humblr.theme.bodySmall
 import com.skillbox.humblr.theme.labelLarge
-import kotlinx.coroutines.launch
 
 @Composable
-fun ItemComment(
+fun ItemReply(
     item: CommentDto = CommentDto(),
-    onDownload: () -> Unit = {},
-    onLiked: (Boolean) -> Unit = {},
-) {
-
-    val viewModel = hiltViewModel<ItemCommentViewModel>()
-    val scope = rememberCoroutineScope()
-
-    ItemCommentContent(
-        item = item,
-        onLiked = {
-            scope.launch {
-                viewModel.like(it, item.name)
-            }
-        })
-
-}
-
-@Composable
-fun ItemCommentContent(
-    item: CommentDto = CommentDto(), onDownload: () -> Unit = {}, onLiked: (Boolean) -> Unit = {}
+    onDownload: () -> Unit = {}
 ) {
     Column(
         modifier = Modifier
-            .padding(horizontal = 12.dp)
-            .clip(shape = MaterialTheme.shapes.medium)
             .background(color = MaterialTheme.colorScheme.surface)
-            .padding(all = 12.dp)
+            .padding(
+                start = 32.dp,
+                top = 12.dp,
+                end = 12.dp,
+                bottom = 12.dp
+            )
     ) {
 
         Row(
@@ -83,9 +64,11 @@ fun ItemCommentContent(
                 Image(
                     modifier = Modifier
                         .clip(CircleShape)
-                        .size(30.dp), painter = painterResource(
+                        .size(30.dp),
+                    painter = painterResource(
                         id = R.drawable.sample_avatar
-                    ), contentDescription = null
+                    ),
+                    contentDescription = null
                 )
 
             } else {
@@ -101,7 +84,8 @@ fun ItemCommentContent(
 
             item.author?.let {
                 Text(
-                    modifier = Modifier.weight(1f),
+                    modifier = Modifier
+                        .weight(1f),
                     text = it,
                     style = labelLarge,
                     color = MaterialTheme.colorScheme.primary,
@@ -110,17 +94,20 @@ fun ItemCommentContent(
                 )
             }
 
+
             item.created?.let {
                 PublishedText(
                     publishTime = it,
                 )
             }
 
+
         }
 
         item.body?.let {
             Row(
-                modifier = Modifier.height(IntrinsicSize.Min)
+                modifier = Modifier
+                    .height(IntrinsicSize.Min)
             ) {
 
                 Divider(
@@ -131,7 +118,9 @@ fun ItemCommentContent(
                 )
 
                 Text(
-                    text = it, style = bodySmall, color = MaterialTheme.colorScheme.onSurface
+                    text = it,
+                    style = bodySmall,
+                    color = MaterialTheme.colorScheme.onSurface
                 )
 
 
@@ -139,38 +128,42 @@ fun ItemCommentContent(
         }
 
         Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(3.dp),
             modifier = Modifier
+                .clickable {
+                    onDownload()
+                }
                 .padding(
-                    start = 30.dp
+                    start = 30.dp,
+                    top = 6.dp
                 )
-                .fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
         ) {
-
-            DownloadButton(
-                onDownload = onDownload
+            Icon(
+                painter = painterResource(id = R.drawable.ic_dowload),
+                contentDescription = null,
+                tint = MaterialTheme.colorScheme.outline
             )
 
-            LikeButton(
-                initState = item.saved ?: false, onClick = onLiked
+            Text(
+                text = stringResource(
+                    id = R.string.download,
+                ),
+                style = bodySmall,
+                color = MaterialTheme.colorScheme.outline
             )
         }
-
-        ReplyList(
-            comments = item.replies?.data?.toCommentsList()
-        )
 
     }
 }
 
 @ElementPreview
 @Composable
-fun ItemCommentPreview(
+fun ItemReplyPreview(
     @PreviewParameter(CommentPreviewProvider::class) comment: CommentDto
 ) {
     AppTheme {
-        ItemCommentContent(
+        ItemReply(
             item = comment
         )
     }

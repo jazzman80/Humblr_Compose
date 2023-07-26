@@ -1,6 +1,8 @@
 package com.skillbox.humblr.entity
 
+import com.google.gson.annotations.JsonAdapter
 import com.google.gson.annotations.SerializedName
+import com.skillbox.humblr.core.EmptyStringAsNullTypeAdapter
 
 data class ThingData(
     val id: String = "",
@@ -20,7 +22,10 @@ data class ThingData(
     val preview: PostPreview? = PostPreview(),
 
     @SerializedName("icon_img")
-    val iconImg: String? = ""
+    val iconImg: String? = "",
+
+    @JsonAdapter(EmptyStringAsNullTypeAdapter::class)
+    val replies: Listing? = null
 ) {
 
     fun toPostDataDto(): PostDto {
@@ -45,7 +50,9 @@ data class ThingData(
             name = name,
             author = author,
             body = body,
-            created = created
+            created = created,
+            replies = replies,
+            saved = saved
         )
     }
 
