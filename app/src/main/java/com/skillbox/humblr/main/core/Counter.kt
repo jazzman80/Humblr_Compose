@@ -33,7 +33,7 @@ fun Counter(
         } else {
             String.format("%.1f", kValue)
         }
-        formatValue + "K"
+        formatValue + "k"
     }
 
     Text(

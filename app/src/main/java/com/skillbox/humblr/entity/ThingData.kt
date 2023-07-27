@@ -15,7 +15,7 @@ data class ThingData(
     @SerializedName("num_comments")
     val numComments: Int? = 0,
 
-    val saved: Boolean? = false,
+    val saved: Boolean? = null,
     val permalink: String? = "",
     val body: String? = "",
     //val subreddit: String?,
@@ -25,7 +25,10 @@ data class ThingData(
     val iconImg: String? = "",
 
     @JsonAdapter(EmptyStringAsNullTypeAdapter::class)
-    val replies: Listing? = null
+    val replies: Listing? = null,
+
+    val score: Int? = null,
+    val likes: Boolean? = null
 ) {
 
     fun toPostDataDto(): PostDto {
@@ -52,7 +55,9 @@ data class ThingData(
             body = body,
             created = created,
             replies = replies,
-            saved = saved
+            saved = saved,
+            score = score,
+            likes = likes
         )
     }
 

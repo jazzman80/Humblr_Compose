@@ -94,4 +94,7 @@ dependencies {
     annotationProcessor "androidx.room:room-compiler:2.5.2"
     kapt "androidx.room:room-compiler:2.5.2"
 
+    // Koin for Android
+    implementation "io.insert-koin:koin-androidx-compose:3.4.5"
+
 }

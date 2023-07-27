@@ -111,4 +111,11 @@ interface ApiService {
         @Path("username") username: String,
         @Query("raw_json") rawJson: Int = 1
     ): Call<Thing>
+
+    @POST("/api/vote")
+    fun vote(
+        @Header("Authorization") auth: String,
+        @Query("dir") dir: Int,
+        @Query("id") id: String
+    ): Call<SubscribeResponse>
 }

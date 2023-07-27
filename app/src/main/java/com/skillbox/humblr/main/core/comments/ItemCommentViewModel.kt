@@ -2,11 +2,8 @@ package com.skillbox.humblr.main.core.comments
 
 import androidx.lifecycle.ViewModel
 import com.skillbox.humblr.core.Repository
-import dagger.hilt.android.lifecycle.HiltViewModel
-import javax.inject.Inject
 
-@HiltViewModel
-class ItemCommentViewModel @Inject constructor(
+class ItemCommentViewModel(
     private val repository: Repository
 ) : ViewModel() {
 
@@ -16,6 +13,10 @@ class ItemCommentViewModel @Inject constructor(
         } else {
             repository.save(name)
         }
+    }
+
+    suspend fun vote(voteDirection: Int, name: String) {
+        repository.vote(voteDirection, name)
     }
 
 }

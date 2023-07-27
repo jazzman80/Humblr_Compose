@@ -34,7 +34,13 @@ data class CommentDto(
     val replies: Listing? = null,
 
     @ColumnInfo(name = "saved")
-    val saved: Boolean? = false
+    val saved: Boolean? = null,
+
+    @ColumnInfo(name = "score")
+    val score: Int? = null,
+
+    @ColumnInfo(name = "likes")
+    val likes: Boolean? = null
 )
 
 class CommentPreviewProvider : PreviewParameterProvider<CommentDto> {
@@ -57,7 +63,8 @@ class CommentPreviewProvider : PreviewParameterProvider<CommentDto> {
                         )
                     )
                 )
-            )
+            ),
+            score = 95
         ),
         CommentDto(
             author = "ПользовательССамымДлиннымНикнеймом",

@@ -36,5 +36,6 @@ interface Repository {
     suspend fun getMoreComments(article: String): Response<Listing>
     suspend fun getUser(username: String): Response<Thing>
     suspend fun download(comment: CommentDto)
+    suspend fun vote(voteDirection: Int, name: String): Response<SubscribeResponse>
 
 }

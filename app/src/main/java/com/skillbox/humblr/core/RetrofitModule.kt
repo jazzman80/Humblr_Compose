@@ -29,4 +29,6 @@ object RetrofitModule {
             .build()
             .create()
     }
+
+    val api: ApiService = provideApiService()
 }

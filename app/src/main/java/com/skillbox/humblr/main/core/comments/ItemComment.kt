@@ -26,7 +26,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import com.skillbox.humblr.R
 import com.skillbox.humblr.entity.CommentDto
@@ -34,20 +33,22 @@ import com.skillbox.humblr.entity.CommentPreviewProvider
 import com.skillbox.humblr.main.core.DownloadButton
 import com.skillbox.humblr.main.core.LikeButton
 import com.skillbox.humblr.main.core.PublishedText
+import com.skillbox.humblr.main.core.vote.VoteCheck
 import com.skillbox.humblr.preview.ElementPreview
 import com.skillbox.humblr.theme.AppTheme
 import com.skillbox.humblr.theme.bodySmall
 import com.skillbox.humblr.theme.labelLarge
 import kotlinx.coroutines.launch
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun ItemComment(
     item: CommentDto = CommentDto(),
     onDownload: () -> Unit = {},
     onLiked: (Boolean) -> Unit = {},
+    viewModel: ItemCommentViewModel = koinViewModel()
 ) {
 
-    val viewModel = hiltViewModel<ItemCommentViewModel>()
     val scope = rememberCoroutineScope()
 
     ItemCommentContent(
@@ -56,13 +57,22 @@ fun ItemComment(
             scope.launch {
                 viewModel.like(it, item.name)
             }
-        })
+        },
+        onVote = { voteDirection ->
+            scope.launch {
+                viewModel.vote(voteDirection, item.name)
+            }
+        }
+    )
 
 }
 
 @Composable
 fun ItemCommentContent(
-    item: CommentDto = CommentDto(), onDownload: () -> Unit = {}, onLiked: (Boolean) -> Unit = {}
+    item: CommentDto = CommentDto(),
+    onDownload: () -> Unit = {},
+    onLiked: (Boolean) -> Unit = {},
+    onVote: (Int) -> Unit = {}
 ) {
     Column(
         modifier = Modifier
@@ -131,7 +141,9 @@ fun ItemCommentContent(
                 )
 
                 Text(
-                    text = it, style = bodySmall, color = MaterialTheme.colorScheme.onSurface
+                    text = it,
+                    style = bodySmall,
+                    color = MaterialTheme.colorScheme.onSurface
                 )
 
 
@@ -148,12 +160,19 @@ fun ItemCommentContent(
             verticalAlignment = Alignment.CenterVertically
         ) {
 
+            VoteCheck(
+                votes = item.score ?: 0,
+                onVote = onVote,
+                likes = item.likes
+            )
+
             DownloadButton(
                 onDownload = onDownload
             )
 
             LikeButton(
-                initState = item.saved ?: false, onClick = onLiked
+                initState = item.saved ?: false,
+                onClick = onLiked
             )
         }
 

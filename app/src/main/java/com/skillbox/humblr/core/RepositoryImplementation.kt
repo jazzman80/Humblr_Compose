@@ -42,7 +42,7 @@ class RepositoryImplementation @Inject constructor(
     private var state = "state"
     private val redirectUri = "com.skillboxpractice.humblr://humblr"
     private val duration = "permanent"
-    private val scope = "read subscribe save"
+    private val scope = "read subscribe save vote"
     private val authString = Base64.getEncoder().encodeToString("$clientId:".toByteArray())
 
     private var _accessToken = ""
@@ -251,6 +251,14 @@ class RepositoryImplementation @Inject constructor(
 
     override suspend fun download(comment: CommentDto) {
         commentDao.insert(comment)
+    }
+
+    override suspend fun vote(voteDirection: Int, name: String): Response<SubscribeResponse> {
+        return apiService.vote(
+            auth = "Bearer $_accessToken",
+            dir = voteDirection,
+            id = name
+        ).awaitResponse()
     }
 
     private fun saveToken() {
