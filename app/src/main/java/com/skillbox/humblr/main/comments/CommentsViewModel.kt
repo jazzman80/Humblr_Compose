@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.skillbox.humblr.core.LoadingState
 import com.skillbox.humblr.core.Repository
 import com.skillbox.humblr.entity.CommentDto
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -19,11 +20,15 @@ class CommentsViewModel @Inject constructor(
         get() = _comments
     private val _comments = MutableLiveData<List<CommentDto>>()
 
-    init {
-        refreshToken()
-    }
+    val loadingState: LiveData<LoadingState>
+        get() = _loadingState
+    private val _loadingState = MutableLiveData(LoadingState.LOADING)
 
     suspend fun getComments(article: String) {
+
+        _loadingState.value = LoadingState.LOADING
+
+        refreshToken()
 
         val result = repository.getComments(article)
 
@@ -74,6 +79,10 @@ class CommentsViewModel @Inject constructor(
                     _comments.value = newComments
                 }
             }
+
+            _loadingState.value = LoadingState.SUCCESS
+        } else {
+            _loadingState.value = LoadingState.ERROR
         }
     }
 
