@@ -83,7 +83,9 @@ fun ListSubreddit(
         }
 
         if (pagingItems.loadState.refresh is LoadState.Error) {
-            Column {
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
                 Text(
                     text = stringResource(id = R.string.network_error),
                     textAlign = TextAlign.Center
