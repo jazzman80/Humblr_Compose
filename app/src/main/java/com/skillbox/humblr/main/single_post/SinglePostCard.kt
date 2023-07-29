@@ -123,22 +123,22 @@ fun SinglePostCard(
 
         val source = item.preview?.images?.first()?.source
 
-            SubcomposeAsyncImage(
-                modifier = Modifier
+        SubcomposeAsyncImage(
+            // modifier = Modifier
 //                    .aspectRatio(
 //                        (source?.width?.toFloat() ?: 1f) / (source?.height?.toFloat() ?: 1f)
 //                    )
-                    .fillMaxWidth(),
-                model = source?.url,
-                contentDescription = null,
-                contentScale = ContentScale.FillWidth,
-                loading = {
-                    CircularProgressIndicator(
-                        modifier = Modifier
-                            .size(70.dp)
-                    )
-                }
-            )
+            // .fillMaxWidth(),
+            model = source?.url,
+            contentDescription = null,
+            contentScale = ContentScale.FillWidth,
+            loading = {
+                CircularProgressIndicator(
+                    modifier = Modifier
+                        .size(70.dp)
+                )
+            }
+        )
 //        }
 
         item.selftext?.let {
