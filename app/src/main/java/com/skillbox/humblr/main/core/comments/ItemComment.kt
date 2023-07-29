@@ -105,7 +105,10 @@ fun ItemCommentContent(
                     modifier = Modifier
                         .clip(CircleShape)
                         .size(30.dp),
-                    contentDescription = null
+                    contentDescription = null,
+                    placeholder = painterResource(
+                        id = R.drawable.avatar_placeholder
+                    )
                 )
             }
 
