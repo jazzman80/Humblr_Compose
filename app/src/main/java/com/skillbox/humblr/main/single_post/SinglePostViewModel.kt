@@ -11,12 +11,9 @@ import com.skillbox.humblr.core.LoadingState
 import com.skillbox.humblr.core.Repository
 import com.skillbox.humblr.entity.CommentDto
 import com.skillbox.humblr.entity.PostDto
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
-@HiltViewModel
-class SinglePostViewModel @Inject constructor(
+class SinglePostViewModel(
     private val repository: Repository
 ) : ViewModel() {
 

@@ -16,7 +16,6 @@ import androidx.paging.PagingData
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import cafe.adriel.voyager.androidx.AndroidScreen
-import cafe.adriel.voyager.hilt.getViewModel
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import com.skillbox.humblr.entity.Subreddit
@@ -28,6 +27,7 @@ import com.skillbox.humblr.preview.ElementPreview
 import com.skillbox.humblr.preview.SystemUI
 import com.skillbox.humblr.theme.AppTheme
 import kotlinx.coroutines.flow.MutableStateFlow
+import org.koin.androidx.compose.koinViewModel
 
 class FeedScreen : AndroidScreen() {
 
@@ -35,7 +35,7 @@ class FeedScreen : AndroidScreen() {
     override fun Content() {
 
         val navigator = LocalNavigator.currentOrThrow
-        val viewModel = getViewModel<FeedViewModel>()
+        val viewModel = koinViewModel<FeedViewModel>()
         val newSubs = viewModel.newSubsFlow.collectAsLazyPagingItems()
         val popularSubs = viewModel.popularSubsFlow.collectAsLazyPagingItems()
 

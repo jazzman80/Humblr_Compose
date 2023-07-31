@@ -6,13 +6,10 @@ import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import com.skillbox.humblr.core.Repository
 import com.skillbox.humblr.entity.Post
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
-@HiltViewModel
-class PostsViewModel @Inject constructor(
+class PostsViewModel(
     private val repository: Repository
 ) : ViewModel() {
 

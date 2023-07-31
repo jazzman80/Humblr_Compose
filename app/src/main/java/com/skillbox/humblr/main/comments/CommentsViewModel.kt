@@ -7,12 +7,10 @@ import androidx.lifecycle.viewModelScope
 import com.skillbox.humblr.core.LoadingState
 import com.skillbox.humblr.core.Repository
 import com.skillbox.humblr.entity.CommentDto
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
-@HiltViewModel
-class CommentsViewModel @Inject constructor(
+
+class CommentsViewModel(
     private val repository: Repository
 ) : ViewModel() {
 

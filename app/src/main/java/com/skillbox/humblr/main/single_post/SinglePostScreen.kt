@@ -22,7 +22,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.androidx.AndroidScreen
-import cafe.adriel.voyager.hilt.getViewModel
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import com.skillbox.humblr.R
@@ -38,6 +37,7 @@ import com.skillbox.humblr.preview.ElementPreview
 import com.skillbox.humblr.preview.SystemUI
 import com.skillbox.humblr.theme.AppTheme
 import kotlinx.coroutines.launch
+import org.koin.androidx.compose.koinViewModel
 
 data class SinglePostScreen(
     val id: String
@@ -47,7 +47,7 @@ data class SinglePostScreen(
     override fun Content() {
 
         val navigator = LocalNavigator.currentOrThrow
-        val viewModel = getViewModel<SinglePostViewModel>()
+        val viewModel = koinViewModel<SinglePostViewModel>()
         val scope = rememberCoroutineScope()
 
         val post by viewModel.post.observeAsState()

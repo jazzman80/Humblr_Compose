@@ -13,7 +13,7 @@ import com.skillbox.humblr.main.MainActivity
 import com.skillbox.humblr.theme.AppTheme
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
-import javax.inject.Inject
+import org.koin.android.ext.android.inject
 
 // Управляет авторизацией пользователя
 // Переход на активити основного приложения
@@ -21,8 +21,9 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class AuthActivity : ComponentActivity() {
 
-    @Inject
-    lateinit var repository: Repository
+    //@Inject
+//    var repository: Repository = get()
+    val repository: Repository by inject()
     private lateinit var errorToast: Toast
 
     override fun onCreate(savedInstanceState: Bundle?) {

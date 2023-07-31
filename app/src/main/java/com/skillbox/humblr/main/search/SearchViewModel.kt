@@ -5,13 +5,10 @@ import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import com.skillbox.humblr.core.Repository
 import com.skillbox.humblr.entity.Subreddit
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
-@HiltViewModel
-class SearchViewModel @Inject constructor(
+class SearchViewModel(
     private val repository: Repository
 ) : ViewModel() {
 

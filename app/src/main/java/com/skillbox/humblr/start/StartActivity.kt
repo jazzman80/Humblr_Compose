@@ -8,13 +8,14 @@ import com.skillbox.humblr.core.Repository
 import com.skillbox.humblr.main.MainActivity
 import com.skillbox.humblr.onboard.OnboardActivity
 import dagger.hilt.android.AndroidEntryPoint
-import javax.inject.Inject
+import org.koin.android.ext.android.inject
 
 @AndroidEntryPoint
-class StartActivity: ComponentActivity() {
+class StartActivity : ComponentActivity() {
 
-    @Inject
-    lateinit var repository: Repository
+    //    @Inject
+//    lateinit var repository: Repository
+    val repository: Repository by inject()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

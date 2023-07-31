@@ -9,7 +9,6 @@ import androidx.paging.PagingData
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import cafe.adriel.voyager.androidx.AndroidScreen
-import cafe.adriel.voyager.hilt.getViewModel
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import com.skillbox.humblr.R
@@ -22,13 +21,14 @@ import com.skillbox.humblr.preview.ElementPreview
 import com.skillbox.humblr.preview.SystemUI
 import com.skillbox.humblr.theme.AppTheme
 import kotlinx.coroutines.flow.MutableStateFlow
+import org.koin.androidx.compose.koinViewModel
 
 data class SearchScreen(val searchQuery: String) : AndroidScreen() {
 
     @Composable
     override fun Content() {
 
-        val viewModel = getViewModel<SearchViewModel>()
+        val viewModel = koinViewModel<SearchViewModel>()
         val navigator = LocalNavigator.currentOrThrow
         val subs = viewModel.getSubs(searchQuery).collectAsLazyPagingItems()
 

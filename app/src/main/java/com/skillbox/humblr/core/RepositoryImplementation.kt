@@ -14,15 +14,13 @@ import com.skillbox.humblr.entity.PostListing
 import com.skillbox.humblr.entity.Subreddit
 import com.skillbox.humblr.entity.SubscribeResponse
 import com.skillbox.humblr.entity.Thing
-import dagger.hilt.android.qualifiers.ApplicationContext
 import retrofit2.Response
 import retrofit2.awaitResponse
 import java.time.Instant
 import java.util.Base64
-import javax.inject.Inject
 
-class RepositoryImplementation @Inject constructor(
-    @ApplicationContext private val appContext: Context,
+class RepositoryImplementation(
+    private val appContext: Context,
     private val apiService: ApiService,
     private val commentDao: CommentDao
 ) : Repository {
