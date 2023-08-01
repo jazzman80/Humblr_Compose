@@ -38,7 +38,6 @@ fun ListSubreddit(
 
     Box(
         modifier = Modifier
-            .padding(horizontal = 12.dp)
             .fillMaxSize(),
         contentAlignment = Alignment.Center
     ) {

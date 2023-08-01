@@ -51,4 +51,7 @@
     <string name="show_all">Show all</string>
     <string name="comments">Comments</string>
     <string name="download">Download</string>
+    <string name="subreddits">Subreddits</string>
+    <string name="all">All</string>
+    <string name="saved">Saved</string>
 </resources>

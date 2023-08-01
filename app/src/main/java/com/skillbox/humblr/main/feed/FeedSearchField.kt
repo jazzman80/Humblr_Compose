@@ -49,11 +49,6 @@ fun FeedSearchField(
     ) {
         Row(
             modifier = Modifier
-                .padding(
-                    top = 12.dp,
-                    start = 12.dp,
-                    end = 12.dp
-                )
                 .border(
                     width = 2.dp,
                     color = MaterialTheme.colorScheme.primary,

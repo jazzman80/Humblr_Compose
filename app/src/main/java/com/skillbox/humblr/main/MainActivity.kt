@@ -10,7 +10,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import cafe.adriel.voyager.navigator.tab.CurrentTab
 import cafe.adriel.voyager.navigator.tab.TabNavigator
-import com.skillbox.humblr.main.favorites.FavoritesScreen
+import com.skillbox.humblr.main.favorites.FavoritesTab
 import com.skillbox.humblr.main.navigation.HomeTab
 import com.skillbox.humblr.main.profile.ProfileScreen
 import com.skillbox.humblr.theme.AppTheme
@@ -30,7 +30,7 @@ class MainActivity : ComponentActivity() {
 
                     when (selectedTabId) {
                         0 -> navigator.current = HomeTab
-                        1 -> navigator.current = FavoritesScreen
+                        1 -> navigator.current = FavoritesTab
                         else -> navigator.current = ProfileScreen
                     }
 
