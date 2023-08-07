@@ -7,6 +7,10 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.PreviewParameter
@@ -16,28 +20,41 @@ import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import cafe.adriel.voyager.androidx.AndroidScreen
 import com.skillbox.humblr.R
+import com.skillbox.humblr.entity.CommentDto
 import com.skillbox.humblr.entity.Subreddit
 import com.skillbox.humblr.entity.SubredditListPreviewProvider
+import com.skillbox.humblr.main.comments.CommentsList
 import com.skillbox.humblr.main.core.list_subreddit.ListSubreddit
 import com.skillbox.humblr.preview.ElementPreview
 import com.skillbox.humblr.preview.SystemUI
 import com.skillbox.humblr.theme.AppTheme
 import kotlinx.coroutines.flow.MutableStateFlow
+import org.koin.androidx.compose.koinViewModel
 
 class FavoritesScreen : AndroidScreen() {
 
     @Composable
     override fun Content() {
-//        FavoritesScreenContent(
-//            subreddits = null
-//        )
+
+        val viewModel = koinViewModel<FavoritesViewModel>()
+        val subreddits = viewModel.subsFlow.collectAsLazyPagingItems()
+        val favoriteComments = viewModel.favoriteComments.collectAsLazyPagingItems()
+
+        FavoritesScreenContent(
+            subreddits = subreddits,
+            favoriteComments = favoriteComments
+        )
     }
 }
 
 @Composable
 fun FavoritesScreenContent(
-    subreddits: LazyPagingItems<Subreddit>
+    subreddits: LazyPagingItems<Subreddit>,
+    favoriteComments: LazyPagingItems<CommentDto>
 ) {
+
+    var isSubsSelected by remember { mutableStateOf(true) }
+
 
     Column(
         modifier = Modifier
@@ -50,19 +67,32 @@ fun FavoritesScreenContent(
     ) {
         FavoritesSelector(
             firstItemTitle = stringResource(id = R.string.subreddits),
-            secondItemTitle = stringResource(id = R.string.comments)
+            secondItemTitle = stringResource(id = R.string.comments),
+            onFirstItemSelected = {
+                isSubsSelected = true
+            },
+            onSecondItemSelected = {
+                isSubsSelected = false
+            }
         )
 
         FavoritesSelector(
             firstItemTitle = stringResource(id = R.string.all),
-            secondItemTitle = stringResource(id = R.string.saved)
+            secondItemTitle = stringResource(id = R.string.saved),
+            isActive = !isSubsSelected
         )
 
         Spacer(modifier = Modifier.height(5.dp))
 
-        ListSubreddit(
-            pagingItems = subreddits
-        )
+        if (isSubsSelected) {
+            ListSubreddit(
+                pagingItems = subreddits
+            )
+        } else {
+            CommentsList(
+                lazyComments = favoriteComments
+            )
+        }
     }
 }
 
@@ -78,9 +108,9 @@ fun PreviewFavoritesScreen(
     AppTheme {
         SystemUI {
             MainScreen {
-                FavoritesScreenContent(
-                    subreddits = lazyPagingItems
-                )
+//                FavoritesScreenContent(
+////                    subreddits = lazyPagingItems
+//                )
             }
         }
     }

@@ -42,41 +42,41 @@ class CommentsViewModel(
                 }
             }
 
-            var preloadedAvatars = 0
-
-            if (newComments.size < 5) {
-                preloadedAvatars = newComments.size
-            } else {
-                preloadedAvatars = 5
-            }
-
-
-            repeat(preloadedAvatars) {
-
-                val comment = newComments[it]
-
-                val avatarResult = repository.getUser(comment.author ?: "")
-
-                if (avatarResult.isSuccessful) {
-                    val avatar = avatarResult.body()?.data?.toAccountDto()?.iconImg
-                    newComments[it] = comment.copy(avatar = avatar)
-                }
-            }
+//            var preloadedAvatars = 0
+//
+//            if (newComments.size < 5) {
+//                preloadedAvatars = newComments.size
+//            } else {
+//                preloadedAvatars = 5
+//            }
+//
+//
+//            repeat(preloadedAvatars) {
+//
+//                val comment = newComments[it]
+//
+//                val avatarResult = repository.getUser(comment.author ?: "")
+//
+//                if (avatarResult.isSuccessful) {
+//                    val avatar = avatarResult.body()?.data?.toAccountDto()?.iconImg
+//                    newComments[it] = comment.copy(avatar = avatar)
+//                }
+//            }
 
             _comments.value = newComments
 
-            repeat(newComments.size - preloadedAvatars) {
-
-                val comment = newComments[it + preloadedAvatars]
-
-                val avatarResult = repository.getUser(comment.author ?: "")
-
-                if (avatarResult.isSuccessful) {
-                    val avatar = avatarResult.body()?.data?.toAccountDto()?.iconImg
-                    newComments[it + preloadedAvatars] = comment.copy(avatar = avatar)
-                    _comments.value = newComments
-                }
-            }
+//            repeat(newComments.size - preloadedAvatars) {
+//
+//                val comment = newComments[it + preloadedAvatars]
+//
+//                val avatarResult = repository.getUser(comment.author ?: "")
+//
+//                if (avatarResult.isSuccessful) {
+//                    val avatar = avatarResult.body()?.data?.toAccountDto()?.iconImg
+//                    newComments[it + preloadedAvatars] = comment.copy(avatar = avatar)
+//                    _comments.value = newComments
+//                }
+//            }
 
             _loadingState.value = LoadingState.SUCCESS
         } else {

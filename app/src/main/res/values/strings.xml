@@ -54,4 +54,10 @@
     <string name="subreddits">Subreddits</string>
     <string name="all">All</string>
     <string name="saved">Saved</string>
+    <string name="friend_list">Friend list</string>
+    <string name="clear_saved">Clear saved</string>
+    <string name="exit">Exit</string>
+    <string name="total_karma">Total karma</string>
+    <string name="comment_karma">Comment karma</string>
+    <string name="delete_saved_message">All saved data has been deleted</string>
 </resources>

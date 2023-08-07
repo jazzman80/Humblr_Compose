@@ -2,6 +2,7 @@ package com.skillbox.humblr.core
 
 import com.skillbox.humblr.entity.Access
 import com.skillbox.humblr.entity.Listing
+import com.skillbox.humblr.entity.MeDto
 import com.skillbox.humblr.entity.PostListing
 import com.skillbox.humblr.entity.Refresh
 import com.skillbox.humblr.entity.SubsListing
@@ -54,6 +55,13 @@ interface ApiService {
         @Query("after") after: String?,
         @Query("limit") limit: Int,
         @Query("q") query: String
+    ): Call<SubsListing>
+
+    @GET("/subreddits/mine/subscriber")
+    fun getFavoriteSubs(
+        @Header("Authorization") auth: String,
+        @Query("after") after: String?,
+        @Query("limit") limit: Int,
     ): Call<SubsListing>
 
     @POST("api/subscribe")
@@ -112,10 +120,24 @@ interface ApiService {
         @Query("raw_json") rawJson: Int = 1
     ): Call<Thing>
 
+    @GET("user/{username}/saved")
+    fun getSavedComments(
+        @Header("Authorization") auth: String,
+        @Path("username") username: String,
+        @Query("limit") limit: Int = 1,
+        @Query("after") after: String? = null,
+        @Query("raw_json") rawJson: Int = 1
+    ): Call<Listing>
+
     @POST("/api/vote")
     fun vote(
         @Header("Authorization") auth: String,
         @Query("dir") dir: Int,
         @Query("id") id: String
     ): Call<SubscribeResponse>
+
+    @GET("/api/v1/me")
+    fun getMe(
+        @Header("Authorization") auth: String
+    ): Call<MeDto>
 }

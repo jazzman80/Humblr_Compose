@@ -97,4 +97,8 @@ dependencies {
     // Koin for Android
     implementation "io.insert-koin:koin-androidx-compose:3.4.5"
 
+    // Landscapist
+    implementation "com.github.skydoves:landscapist-bom:2.2.5"
+    implementation "com.github.skydoves:landscapist-coil"
+    implementation "com.github.skydoves:landscapist-placeholder"
 }

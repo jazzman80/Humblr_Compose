@@ -1,35 +1,34 @@
-package com.skillbox.humblr.core
+package com.skillbox.humblr.core.PagingSources
 
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
+import com.skillbox.humblr.core.ApiService
 import com.skillbox.humblr.entity.Subreddit
 import retrofit2.awaitResponse
 
-class SearchSubsPagingSource(
+class NewSubsPagingSource(
     private val auth: String,
     private val apiService: ApiService,
-    private val limit: Int,
-    private val query: String
+    private val limit: Int
 ) : PagingSource<String, Subreddit>() {
 
     override suspend fun load(params: LoadParams<String>): LoadResult<String, Subreddit> {
 
         try {
-            val result = apiService.searchSubs(
+            val result = apiService.getNewSubs(
                 auth,
                 params.key,
-                limit,
-                query
+                limit
             ).awaitResponse()
 
-            if (result.isSuccessful) {
-                return LoadResult.Page(
+            return if (result.isSuccessful) {
+                LoadResult.Page(
                     data = result.body()!!.data.children,
                     prevKey = null,
                     nextKey = result.body()!!.data.after
                 )
             } else {
-                return LoadResult.Error(throw Exception())
+                LoadResult.Error(throw Exception())
             }
         } catch (e: Exception) {
             return LoadResult.Error(e)

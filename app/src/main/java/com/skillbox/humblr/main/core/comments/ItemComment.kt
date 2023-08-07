@@ -17,6 +17,7 @@ import androidx.compose.material3.Divider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -45,11 +46,16 @@ import org.koin.androidx.compose.koinViewModel
 fun ItemComment(
     item: CommentDto = CommentDto(),
     onDownload: () -> Unit = {},
-    onLiked: (Boolean) -> Unit = {},
-    viewModel: ItemCommentViewModel = koinViewModel()
+    onLiked: (Boolean) -> Unit = {}
 ) {
 
     val scope = rememberCoroutineScope()
+    val viewModel = koinViewModel<ItemCommentViewModel>()
+    var avatar: String? = null
+
+    LaunchedEffect(true) {
+        avatar = viewModel.getAvatar(item.author ?: "")
+    }
 
     ItemCommentContent(
         item = item,
@@ -62,7 +68,13 @@ fun ItemComment(
             scope.launch {
                 viewModel.vote(voteDirection, item.name)
             }
-        }
+        },
+        onDownload = { comment ->
+            scope.launch {
+                viewModel.download(comment)
+            }
+        },
+        avatar = avatar
     )
 
 }
@@ -70,9 +82,10 @@ fun ItemComment(
 @Composable
 fun ItemCommentContent(
     item: CommentDto = CommentDto(),
-    onDownload: () -> Unit = {},
+    onDownload: (CommentDto) -> Unit = {},
     onLiked: (Boolean) -> Unit = {},
-    onVote: (Int) -> Unit = {}
+    onVote: (Int) -> Unit = {},
+    avatar: String? = null
 ) {
     Column(
         modifier = Modifier
@@ -101,7 +114,7 @@ fun ItemCommentContent(
             } else {
 
                 AsyncImage(
-                    model = item.avatar,
+                    model = avatar,
                     modifier = Modifier
                         .clip(CircleShape)
                         .size(30.dp),
@@ -170,7 +183,9 @@ fun ItemCommentContent(
             )
 
             DownloadButton(
-                onDownload = onDownload
+                onDownload = {
+                    onDownload(item)
+                }
             )
 
             LikeButton(

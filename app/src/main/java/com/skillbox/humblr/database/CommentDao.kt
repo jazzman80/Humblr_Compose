@@ -3,6 +3,7 @@ package com.skillbox.humblr.database
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
+import androidx.room.Query
 import com.skillbox.humblr.entity.CommentDto
 
 @Dao
@@ -14,8 +15,8 @@ interface CommentDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(comment: CommentDto)
 
-//    @Delete
-//    fun delete(user: User)
+    @Query("DELETE FROM comments")
+    suspend fun clearTable()
 //
 //    @Update
 //    fun update(user: User)

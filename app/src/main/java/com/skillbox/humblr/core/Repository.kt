@@ -5,6 +5,7 @@ import androidx.paging.Pager
 import com.skillbox.humblr.entity.Access
 import com.skillbox.humblr.entity.CommentDto
 import com.skillbox.humblr.entity.Listing
+import com.skillbox.humblr.entity.MeDto
 import com.skillbox.humblr.entity.Post
 import com.skillbox.humblr.entity.PostListing
 import com.skillbox.humblr.entity.Subreddit
@@ -16,6 +17,7 @@ interface Repository {
 
     val accessToken: String
     val isOnboardDone: Boolean
+    val me: MeDto
     fun onboardDone()
     fun composeUrl(): Uri?
     suspend fun getAccessToken(authCode: String): Response<Access>
@@ -23,6 +25,8 @@ interface Repository {
     fun getPopularSubs(): Pager<String, Subreddit>
     fun searchSubs(query: String): Pager<String, Subreddit>
     fun getPosts(title: String): Pager<String, Post>
+    fun getFavoriteSubs(): Pager<String, Subreddit>
+    fun getSavedComments(): Pager<String, CommentDto>
 
     //    fun getComments(article: String): Pager<String, Thing>
     suspend fun refreshToken()
@@ -36,6 +40,8 @@ interface Repository {
     suspend fun getMoreComments(article: String): Response<Listing>
     suspend fun getUser(username: String): Response<Thing>
     suspend fun download(comment: CommentDto)
+    suspend fun clearDownloaded()
     suspend fun vote(voteDirection: Int, name: String): Response<SubscribeResponse>
-
+    suspend fun getUsername()
+    suspend fun exit()
 }

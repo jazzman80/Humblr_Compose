@@ -1,32 +1,31 @@
-package com.skillbox.humblr.core
+package com.skillbox.humblr.core.PagingSources
 
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
-import com.skillbox.humblr.entity.Thing
+import com.skillbox.humblr.core.ApiService
+import com.skillbox.humblr.entity.Subreddit
 import retrofit2.awaitResponse
 
-class CommentsPagingSource(
-    private val article: String,
+class FavoriteSubsPagingSource(
     private val auth: String,
     private val apiService: ApiService,
     private val limit: Int
-) : PagingSource<String, Thing>() {
+) : PagingSource<String, Subreddit>() {
 
-    override suspend fun load(params: LoadParams<String>): LoadResult<String, Thing> {
+    override suspend fun load(params: LoadParams<String>): LoadResult<String, Subreddit> {
 
         try {
-            val result = apiService.getPostWithComment(
-                article = article,
-                auth = auth,
-                after = params.key,
-                limit = limit
+            val result = apiService.getFavoriteSubs(
+                auth,
+                params.key,
+                limit
             ).awaitResponse()
 
             return if (result.isSuccessful) {
                 LoadResult.Page(
-                    data = result.body()!![1].data.children,
+                    data = result.body()!!.data.children,
                     prevKey = null,
-                    nextKey = result.body()!![1].data.after
+                    nextKey = result.body()!!.data.after
                 )
             } else {
                 LoadResult.Error(throw Exception())
@@ -36,7 +35,7 @@ class CommentsPagingSource(
         }
     }
 
-    override fun getRefreshKey(state: PagingState<String, Thing>): String? {
+    override fun getRefreshKey(state: PagingState<String, Subreddit>): String? {
         return state.anchorPosition?.let { state.closestItemToPosition(it)?.data!!.id }
     }
 }

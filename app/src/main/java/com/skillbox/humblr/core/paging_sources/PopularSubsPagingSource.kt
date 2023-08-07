@@ -1,7 +1,8 @@
-package com.skillbox.humblr.core
+package com.skillbox.humblr.core.PagingSources
 
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
+import com.skillbox.humblr.core.ApiService
 import com.skillbox.humblr.entity.Subreddit
 import retrofit2.awaitResponse
 

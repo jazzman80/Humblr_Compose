@@ -10,6 +10,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
+import androidx.paging.compose.LazyPagingItems
 import com.skillbox.humblr.entity.CommentDto
 import com.skillbox.humblr.fake_data.CommentListPreviewProvider
 import com.skillbox.humblr.main.core.comments.ItemComment
@@ -19,6 +20,7 @@ import com.skillbox.humblr.theme.AppTheme
 @Composable
 fun CommentsList(
     comments: List<CommentDto>? = null,
+    lazyComments: LazyPagingItems<CommentDto>? = null,
     onDownload: (CommentDto) -> Unit = {},
     onRefresh: () -> Unit = {}
 ) {
@@ -36,13 +38,33 @@ fun CommentsList(
             state = listState,
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
-            items(comments?.size ?: 0) {
-                ItemComment(
-                    item = comments!![it],
-                    onDownload = {
-                        onDownload(comments[it])
+            if (comments != null) {
+                items(comments.size) {
+                    ItemComment(
+                        item = comments[it],
+                        onDownload = {
+                            onDownload(comments[it])
+                        }
+                    )
+                }
+            } else if (lazyComments != null) {
+                items(
+                    count = lazyComments.itemCount,
+                    key = {
+                        lazyComments[it]?.id ?: ""
                     }
-                )
+                ) {
+                    if (lazyComments[it] != null) {
+                        ItemComment(
+                            item = lazyComments[it]!!,
+                            onDownload = {
+                                onDownload(lazyComments[it]!!)
+                            }
+                        )
+                    } else {
+                        //ItemSubredditPlaceholder()
+                    }
+                }
             }
 
         }

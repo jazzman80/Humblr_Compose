@@ -1,15 +1,13 @@
 package com.skillbox.humblr.main.profile
 
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.style.TextAlign
+import cafe.adriel.voyager.navigator.Navigator
 import cafe.adriel.voyager.navigator.tab.Tab
 import cafe.adriel.voyager.navigator.tab.TabOptions
+import com.skillbox.humblr.main.profile.me.MeScreen
 
-object ProfileScreen : Tab {
+object ProfileTab : Tab {
     override val options: TabOptions
         @Composable
         get() {
@@ -23,11 +21,7 @@ object ProfileScreen : Tab {
 
     @Composable
     override fun Content() {
-        Text(
-            text = "Profile Screen",
-            modifier = Modifier.fillMaxSize(),
-            textAlign = TextAlign.Center
-        )
+        Navigator(MeScreen())
     }
 
 }

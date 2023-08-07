@@ -67,4 +67,5 @@ data class ThingData(
             iconImg = iconImg
         )
     }
+
 }
