@@ -1,4 +1,4 @@
-package com.skillbox.humblr.core.PagingSources
+package com.skillbox.humblr.core.paging_sources
 
 import androidx.paging.PagingSource
 import androidx.paging.PagingState

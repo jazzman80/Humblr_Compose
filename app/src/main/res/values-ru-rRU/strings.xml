@@ -64,4 +64,6 @@
     <string name="total_karma">Общая карма</string>
     <string name="comment_karma">Карма комментариев</string>
     <string name="delete_saved_message">Все сохраненные данные были удалены</string>
+    <string name="subscribe">Подписаться</string>
+    <string name="in_friend_list">В друзьях</string>
 </resources>

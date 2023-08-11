@@ -2,6 +2,7 @@ package com.skillbox.humblr.main.core.comments
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
@@ -27,6 +28,8 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
+import cafe.adriel.voyager.navigator.LocalNavigator
+import cafe.adriel.voyager.navigator.currentOrThrow
 import coil.compose.AsyncImage
 import com.skillbox.humblr.R
 import com.skillbox.humblr.entity.CommentDto
@@ -35,6 +38,7 @@ import com.skillbox.humblr.main.core.DownloadButton
 import com.skillbox.humblr.main.core.LikeButton
 import com.skillbox.humblr.main.core.PublishedText
 import com.skillbox.humblr.main.core.vote.VoteCheck
+import com.skillbox.humblr.main.user.UserScreen
 import com.skillbox.humblr.preview.ElementPreview
 import com.skillbox.humblr.theme.AppTheme
 import com.skillbox.humblr.theme.bodySmall
@@ -52,6 +56,7 @@ fun ItemComment(
     val scope = rememberCoroutineScope()
     val viewModel = koinViewModel<ItemCommentViewModel>()
     var avatar: String? = null
+    val navigator = LocalNavigator.currentOrThrow
 
     LaunchedEffect(true) {
         avatar = viewModel.getAvatar(item.author ?: "")
@@ -74,7 +79,10 @@ fun ItemComment(
                 viewModel.download(comment)
             }
         },
-        avatar = avatar
+        avatar = avatar,
+        onAuthorClick = {
+            navigator.push(UserScreen(item.author ?: ""))
+        }
     )
 
 }
@@ -85,7 +93,8 @@ fun ItemCommentContent(
     onDownload: (CommentDto) -> Unit = {},
     onLiked: (Boolean) -> Unit = {},
     onVote: (Int) -> Unit = {},
-    avatar: String? = null
+    avatar: String? = null,
+    onAuthorClick: () -> Unit = {}
 ) {
     Column(
         modifier = Modifier
@@ -127,7 +136,11 @@ fun ItemCommentContent(
 
             item.author?.let {
                 Text(
-                    modifier = Modifier.weight(1f),
+                    modifier = Modifier
+                        .clickable {
+                            onAuthorClick()
+                        }
+                        .weight(1f),
                     text = it,
                     style = labelLarge,
                     color = MaterialTheme.colorScheme.primary,

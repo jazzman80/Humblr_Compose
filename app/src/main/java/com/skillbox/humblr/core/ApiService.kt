@@ -1,6 +1,8 @@
 package com.skillbox.humblr.core
 
 import com.skillbox.humblr.entity.Access
+import com.skillbox.humblr.entity.EmptyResponse
+import com.skillbox.humblr.entity.FriendCallBody
 import com.skillbox.humblr.entity.Listing
 import com.skillbox.humblr.entity.MeDto
 import com.skillbox.humblr.entity.PostListing
@@ -9,9 +11,12 @@ import com.skillbox.humblr.entity.SubsListing
 import com.skillbox.humblr.entity.SubscribeResponse
 import com.skillbox.humblr.entity.Thing
 import retrofit2.Call
+import retrofit2.http.Body
+import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.Header
 import retrofit2.http.POST
+import retrofit2.http.PUT
 import retrofit2.http.Path
 import retrofit2.http.Query
 import retrofit2.http.Url
@@ -129,6 +134,15 @@ interface ApiService {
         @Query("raw_json") rawJson: Int = 1
     ): Call<Listing>
 
+    @GET("user/{username}/comments")
+    fun getUserComments(
+        @Header("Authorization") auth: String,
+        @Path("username") username: String,
+        @Query("limit") limit: Int = 1,
+        @Query("after") after: String? = null,
+        @Query("raw_json") rawJson: Int = 1
+    ): Call<Listing>
+
     @POST("/api/vote")
     fun vote(
         @Header("Authorization") auth: String,
@@ -140,4 +154,19 @@ interface ApiService {
     fun getMe(
         @Header("Authorization") auth: String
     ): Call<MeDto>
+
+    @PUT("/api/v1/me/friends/{username}")
+    fun becomeFriends(
+        @Header("Authorization") auth: String,
+        @Path("username") username: String,
+        @Query("raw_json") rawJson: Int = 1,
+        @Body body: FriendCallBody
+    ): Call<EmptyResponse>
+
+    @DELETE("/api/v1/me/friends/{username}")
+    fun stopBeingFriends(
+        @Header("Authorization") auth: String,
+        @Path("username") username: String,
+        @Query("raw_json") rawJson: Int = 1
+    ): Call<EmptyResponse>
 }

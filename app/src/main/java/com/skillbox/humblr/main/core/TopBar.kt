@@ -15,6 +15,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import cafe.adriel.voyager.navigator.LocalNavigator
 import com.skillbox.humblr.R
 import com.skillbox.humblr.preview.ElementPreview
 import com.skillbox.humblr.theme.AppTheme
@@ -25,6 +26,8 @@ fun TopBar(
     titleText: String = "",
     onBack: () -> Unit = {}
 ) {
+
+    val navigator = LocalNavigator.current
 
     Row(
         modifier = Modifier
@@ -37,7 +40,9 @@ fun TopBar(
         Icon(
             modifier = Modifier
                 .clip(CircleShape)
-                .clickable { onBack() }
+                .clickable {
+                    navigator?.pop()
+                }
                 .padding(all = 14.dp),
             painter = painterResource(id = R.drawable.ic_back),
             contentDescription = null,

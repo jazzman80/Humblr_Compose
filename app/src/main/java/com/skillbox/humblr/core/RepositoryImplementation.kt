@@ -10,9 +10,12 @@ import com.skillbox.humblr.core.PagingSources.NewSubsPagingSource
 import com.skillbox.humblr.core.PagingSources.PopularSubsPagingSource
 import com.skillbox.humblr.core.PagingSources.SearchSubsPagingSource
 import com.skillbox.humblr.core.paging_sources.SavedCommentsPagingSource
+import com.skillbox.humblr.core.paging_sources.UserCommentsPagingSource
 import com.skillbox.humblr.database.CommentDao
 import com.skillbox.humblr.entity.Access
 import com.skillbox.humblr.entity.CommentDto
+import com.skillbox.humblr.entity.EmptyResponse
+import com.skillbox.humblr.entity.FriendCallBody
 import com.skillbox.humblr.entity.Listing
 import com.skillbox.humblr.entity.MeDto
 import com.skillbox.humblr.entity.Post
@@ -188,6 +191,14 @@ class RepositoryImplementation(
         }
     }
 
+    override fun getUserComments(username: String): Pager<String, CommentDto> {
+        return Pager(
+            PagingConfig(pageSize)
+        ) {
+            UserCommentsPagingSource(username, "Bearer $_accessToken", apiService, pageSize)
+        }
+    }
+
 //    override fun getComments(article: String): Pager<String, Thing> {
 //        return Pager(
 //            PagingConfig(pageSize)
@@ -306,6 +317,21 @@ class RepositoryImplementation(
         edit.remove(refreshTokenKey).apply()
         edit.remove(expiresInKey).apply()
         edit.clear()
+    }
+
+    override suspend fun becomeFriends(username: String): Response<EmptyResponse> {
+        return apiService.becomeFriends(
+            auth = "Bearer $_accessToken",
+            username = username,
+            body = FriendCallBody()
+        ).awaitResponse()
+    }
+
+    override suspend fun stopBeingFriends(username: String): Response<EmptyResponse> {
+        return apiService.stopBeingFriends(
+            auth = "Bearer $_accessToken",
+            username = username
+        ).awaitResponse()
     }
 
     private fun saveToken() {

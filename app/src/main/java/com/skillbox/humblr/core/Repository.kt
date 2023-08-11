@@ -4,6 +4,7 @@ import android.net.Uri
 import androidx.paging.Pager
 import com.skillbox.humblr.entity.Access
 import com.skillbox.humblr.entity.CommentDto
+import com.skillbox.humblr.entity.EmptyResponse
 import com.skillbox.humblr.entity.Listing
 import com.skillbox.humblr.entity.MeDto
 import com.skillbox.humblr.entity.Post
@@ -27,6 +28,7 @@ interface Repository {
     fun getPosts(title: String): Pager<String, Post>
     fun getFavoriteSubs(): Pager<String, Subreddit>
     fun getSavedComments(): Pager<String, CommentDto>
+    fun getUserComments(username: String): Pager<String, CommentDto>
 
     //    fun getComments(article: String): Pager<String, Thing>
     suspend fun refreshToken()
@@ -44,4 +46,6 @@ interface Repository {
     suspend fun vote(voteDirection: Int, name: String): Response<SubscribeResponse>
     suspend fun getUsername()
     suspend fun exit()
+    suspend fun becomeFriends(username: String): Response<EmptyResponse>
+    suspend fun stopBeingFriends(username: String): Response<EmptyResponse>
 }

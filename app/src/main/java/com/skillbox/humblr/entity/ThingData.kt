@@ -28,7 +28,10 @@ data class ThingData(
     val replies: Listing? = null,
 
     val score: Int? = null,
-    val likes: Boolean? = null
+    val likes: Boolean? = null,
+
+    @SerializedName("is_friend")
+    val isFriend: Boolean? = null
 ) {
 
     fun toPostDataDto(): PostDto {
@@ -65,6 +68,14 @@ data class ThingData(
         return AccountDto(
             id = id,
             iconImg = iconImg
+        )
+    }
+
+    fun toUserDto(): UserDto {
+        return UserDto(
+            name = name,
+            iconImg = iconImg ?: "",
+            isFriend = isFriend ?: false
         )
     }
 
