@@ -10,6 +10,7 @@ import com.skillbox.humblr.entity.Refresh
 import com.skillbox.humblr.entity.SubsListing
 import com.skillbox.humblr.entity.SubscribeResponse
 import com.skillbox.humblr.entity.Thing
+import com.skillbox.humblr.entity.UserListDto
 import retrofit2.Call
 import retrofit2.http.Body
 import retrofit2.http.DELETE
@@ -169,4 +170,9 @@ interface ApiService {
         @Path("username") username: String,
         @Query("raw_json") rawJson: Int = 1
     ): Call<EmptyResponse>
+
+    @GET("api/v1/me/friends")
+    fun getFriendList(
+        @Header("Authorization") auth: String
+    ): Call<UserListDto>
 }

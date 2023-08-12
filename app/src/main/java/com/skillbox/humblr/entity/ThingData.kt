@@ -75,7 +75,8 @@ data class ThingData(
         return UserDto(
             name = name,
             iconImg = iconImg ?: "",
-            isFriend = isFriend ?: false
+            isFriend = isFriend ?: false,
+            id = id
         )
     }
 

@@ -57,7 +57,7 @@ class CommentsScreen(
                     viewModel.download(it)
                 }
             },
-            loadingState = loadingState,
+            loadingState = loadingState ?: LoadingState.LOADING,
             onRefresh = {
                 scope.launch {
                     viewModel.getComments(article)
@@ -73,7 +73,7 @@ fun CommentsScreenContent(
     comments: List<CommentDto>?,
     onBack: () -> Unit = {},
     onDownload: (CommentDto) -> Unit = {},
-    loadingState: LoadingState? = LoadingState.LOADING,
+    loadingState: LoadingState = LoadingState.LOADING,
     onRefresh: () -> Unit = {}
 ) {
 

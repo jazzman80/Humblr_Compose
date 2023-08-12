@@ -62,4 +62,5 @@
     <string name="delete_saved_message">All saved data has been deleted</string>
     <string name="subscribe">Subscribe</string>
     <string name="in_friend_list">In friend list</string>
+    <string name="error_message">Information is not available</string>
 </resources>

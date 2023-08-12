@@ -66,4 +66,5 @@
     <string name="delete_saved_message">Все сохраненные данные были удалены</string>
     <string name="subscribe">Подписаться</string>
     <string name="in_friend_list">В друзьях</string>
+    <string name="error_message">Информация недоступна</string>
 </resources>

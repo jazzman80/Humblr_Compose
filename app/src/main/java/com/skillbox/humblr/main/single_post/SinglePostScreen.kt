@@ -153,7 +153,7 @@ fun SinglePostScreenContent(
                 contentAlignment = Alignment.Center
             ) {
                 LoadIndicator(
-                    loadingState = loadingState,
+                    loadingState = loadingState ?: LoadingState.LOADING,
                     onRefresh = onRefresh
                 )
             }

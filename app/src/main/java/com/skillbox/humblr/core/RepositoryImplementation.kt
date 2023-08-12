@@ -23,6 +23,7 @@ import com.skillbox.humblr.entity.PostListing
 import com.skillbox.humblr.entity.Subreddit
 import com.skillbox.humblr.entity.SubscribeResponse
 import com.skillbox.humblr.entity.Thing
+import com.skillbox.humblr.entity.UserListDto
 import retrofit2.Response
 import retrofit2.awaitResponse
 import java.time.Instant
@@ -331,6 +332,12 @@ class RepositoryImplementation(
         return apiService.stopBeingFriends(
             auth = "Bearer $_accessToken",
             username = username
+        ).awaitResponse()
+    }
+
+    override suspend fun getFriends(): Response<UserListDto> {
+        return apiService.getFriendList(
+            auth = "Bearer $_accessToken"
         ).awaitResponse()
     }
 

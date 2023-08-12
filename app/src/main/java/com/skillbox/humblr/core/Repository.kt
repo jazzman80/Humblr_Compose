@@ -12,6 +12,7 @@ import com.skillbox.humblr.entity.PostListing
 import com.skillbox.humblr.entity.Subreddit
 import com.skillbox.humblr.entity.SubscribeResponse
 import com.skillbox.humblr.entity.Thing
+import com.skillbox.humblr.entity.UserListDto
 import retrofit2.Response
 
 interface Repository {
@@ -48,4 +49,5 @@ interface Repository {
     suspend fun exit()
     suspend fun becomeFriends(username: String): Response<EmptyResponse>
     suspend fun stopBeingFriends(username: String): Response<EmptyResponse>
+    suspend fun getFriends(): Response<UserListDto>
 }
