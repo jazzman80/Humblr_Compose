@@ -44,6 +44,7 @@ interface Repository {
     suspend fun getUser(username: String): Response<Thing>
     suspend fun download(comment: CommentDto)
     suspend fun clearDownloaded()
+    suspend fun getAllComments(): List<CommentDto>
     suspend fun vote(voteDirection: Int, name: String): Response<SubscribeResponse>
     suspend fun getUsername()
     suspend fun exit()

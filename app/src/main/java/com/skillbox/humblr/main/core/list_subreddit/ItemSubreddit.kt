@@ -30,12 +30,11 @@ fun ItemSubreddit(
     Column(
         modifier = Modifier
             .clip(shape = MaterialTheme.shapes.medium)
-            .clickable {
-                onClick()
-            }
+            .clickable { onClick() }
             .background(color = MaterialTheme.colorScheme.surface)
-            .padding(all = 12.dp)
-    ) {
+            .padding(all = 12.dp),
+
+        ) {
         Row(
             verticalAlignment = Alignment.CenterVertically
         ) {
@@ -72,7 +71,7 @@ fun PreviewItemSubreddit(
 ) {
     AppTheme {
         ItemSubreddit(
-            subData
+            item = subData
         )
     }
 }

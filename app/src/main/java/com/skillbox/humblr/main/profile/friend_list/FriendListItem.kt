@@ -89,7 +89,8 @@ fun FriendListItemContent(
             SUCCESS -> {
                 Avatar(
                     size = 65.dp,
-                    imageModel = { iconImg }
+//                    imageModel = { iconImg }
+                    model = iconImg
                 )
 
                 FramedText(

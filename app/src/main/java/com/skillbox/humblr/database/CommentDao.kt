@@ -9,8 +9,8 @@ import com.skillbox.humblr.entity.CommentDto
 @Dao
 interface CommentDao {
 
-//    @Query("SELECT * FROM user")
-//    fun selectAll(): List<User>
+    @Query("SELECT * FROM comments")
+    suspend fun selectAll(): List<CommentDto>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(comment: CommentDto)

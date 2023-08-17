@@ -1,7 +1,9 @@
 package com.skillbox.humblr.entity
 
+import androidx.annotation.Keep
 import com.google.gson.annotations.SerializedName
 
+@Keep
 data class Access(
 
     @SerializedName("access_token")

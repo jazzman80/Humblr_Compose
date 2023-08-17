@@ -40,6 +40,12 @@ fun FeedSearchField(
     }
 
     BasicTextField(
+        modifier = Modifier
+            .padding(
+                top = 12.dp,
+                start = 12.dp,
+                end = 12.dp
+            ),
         value = searchText,
         onValueChange = {
             searchText = it

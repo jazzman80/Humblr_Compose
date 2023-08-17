@@ -17,7 +17,7 @@ data class CommentDto(
     val created: Long? = null,
     val body: String? = null,
     val avatar: String? = null,
-    val replies: Listing? = null,
+//    val replies: Listing? = null,
     val saved: Boolean? = null,
     val score: Int? = null,
     val likes: Boolean? = null
@@ -30,20 +30,20 @@ class CommentPreviewProvider : PreviewParameterProvider<CommentDto> {
             author = "АлексейН",
             created = Instant.now().epochSecond - 587L,
             body = "Горы, море, прекрасный вид – ребята, мы в Дагестане! У каждого должны быть 15 минут борьбы с режимом в день",
-            replies = Listing(
-                data = ListingData(
-                    after = null,
-                    children = listOf(
-                        Thing(
-                            ThingData(
-                                author = "ПользовательССамымДлиннымНикнеймом",
-                                created = Instant.now().epochSecond - 12478L,
-                                body = "Шесть или пять полов напридумывали. Трансформеры, транс… Я даже не понимаю, что это такое!"
-                            )
-                        )
-                    )
-                )
-            ),
+//            replies = Listing(
+//                data = ListingData(
+//                    after = null,
+//                    children = listOf(
+//                        Thing(
+//                            ThingData(
+//                                author = "ПользовательССамымДлиннымНикнеймом",
+//                                created = Instant.now().epochSecond - 12478L,
+//                                body = "Шесть или пять полов напридумывали. Трансформеры, транс… Я даже не понимаю, что это такое!"
+//                            )
+//                        )
+//                    )
+//                )
+//            ),
             score = 95
         ),
         CommentDto(

@@ -5,10 +5,10 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -41,27 +41,42 @@ class FeedScreen : AndroidScreen() {
         val viewModel = koinViewModel<FeedViewModel>()
         val newSubs = viewModel.newSubsFlow.collectAsLazyPagingItems()
         val popularSubs = viewModel.popularSubsFlow.collectAsLazyPagingItems()
+        val onSubscribe: (Boolean, String) -> Unit = remember {
+            { isSubscribed, name ->
+                viewModel.subscribe(isSubscribed, name)
+            }
+        }
+        val onNavigate: (String) -> Unit = remember {
+            {
+                navigator.push(PostsScreen(it))
+            }
+        }
+        val onSearch: (String) -> Unit = remember {
+            {
+                navigator.push(SearchScreen(it))
+            }
+        }
+        val onNewSubsRefresh = remember {
+            {
+                viewModel.refreshToken()
+                newSubs.refresh()
+            }
+        }
+        val onPopularSubsRefresh = remember {
+            {
+                viewModel.refreshToken()
+                popularSubs.refresh()
+            }
+        }
 
         FeedScreenContent(
             newSubs = newSubs,
             popularSubs = popularSubs,
-            onSearch = {
-                navigator.push(SearchScreen(it))
-            },
-            onSubscribe = { isSubscribed, name ->
-                viewModel.subscribe(isSubscribed, name)
-            },
-            onNewSubsRefresh = {
-                viewModel.refreshToken()
-                newSubs.refresh()
-            },
-            onPopularSubsRefresh = {
-                viewModel.refreshToken()
-                popularSubs.refresh()
-            },
-            onNavigate = {
-                navigator.push(PostsScreen(it))
-            }
+            onSearch = onSearch,
+            onSubscribe = onSubscribe,
+            onNewSubsRefresh = onNewSubsRefresh,
+            onPopularSubsRefresh = onPopularSubsRefresh,
+            onNavigate = onNavigate
         )
 
     }
@@ -81,12 +96,6 @@ fun FeedScreenContent(
     var selectedTabId by rememberSaveable { mutableStateOf(0) }
 
     Column(
-        modifier = Modifier
-            .padding(
-                top = 12.dp,
-                start = 12.dp,
-                end = 12.dp
-            ),
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         FeedSearchField(
@@ -94,7 +103,14 @@ fun FeedScreenContent(
         )
         FeedTabs(
             selectedTabId = selectedTabId,
-            onTabSelect = { selectedTabId = it }
+            onTabSelect = {
+                selectedTabId = it
+                if (it == 0) {
+                    onPopularSubsRefresh()
+                } else {
+                    onNewSubsRefresh()
+                }
+            }
         )
         Box(
             modifier = Modifier

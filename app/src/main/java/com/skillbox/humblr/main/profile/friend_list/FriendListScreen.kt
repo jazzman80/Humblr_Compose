@@ -12,6 +12,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import cafe.adriel.voyager.androidx.AndroidScreen
+import cafe.adriel.voyager.navigator.LocalNavigator
+import cafe.adriel.voyager.navigator.currentOrThrow
 import com.skillbox.humblr.R
 import com.skillbox.humblr.core.LoadingState
 import com.skillbox.humblr.core.LoadingState.ERROR
@@ -31,6 +33,7 @@ class FriendListScreen : AndroidScreen() {
     @Composable
     override fun Content() {
 
+        val navigator = LocalNavigator.currentOrThrow
         val repository = koinInject<Repository>()
         var friendList by remember {
             mutableStateOf<List<String>>(listOf())
@@ -61,7 +64,10 @@ class FriendListScreen : AndroidScreen() {
 
         FriendListScreenContent(
             friendList = friendList,
-            loadingState = loadingState
+            loadingState = loadingState,
+            onBack = {
+                navigator.pop()
+            }
         )
     }
 }
@@ -69,11 +75,13 @@ class FriendListScreen : AndroidScreen() {
 @Composable
 fun FriendListScreenContent(
     friendList: List<String>,
-    loadingState: LoadingState = LOADING
+    loadingState: LoadingState = LOADING,
+    onBack: () -> Unit = {}
 ) {
     Column(modifier = Modifier.fillMaxSize()) {
         TopBar(
-            titleText = stringResource(id = R.string.friend_list)
+            titleText = stringResource(id = R.string.friend_list),
+            onBack = onBack
         )
 
         if (loadingState == SUCCESS) {

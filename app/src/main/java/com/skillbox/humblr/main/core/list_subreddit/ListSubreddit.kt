@@ -17,7 +17,9 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
-import androidx.paging.LoadState
+import androidx.paging.LoadState.Error
+import androidx.paging.LoadState.Loading
+import androidx.paging.LoadState.NotLoading
 import androidx.paging.PagingData
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
@@ -38,64 +40,72 @@ fun ListSubreddit(
 
     Box(
         modifier = Modifier
+            .padding(horizontal = 12.dp)
             .fillMaxSize(),
         contentAlignment = Alignment.Center
     ) {
 
-        LazyColumn(
-            modifier = Modifier.fillMaxSize(),
-            state = rememberLazyListState(),
-            verticalArrangement = Arrangement.spacedBy(12.dp)
-        ) {
+        when (pagingItems.loadState.refresh) {
+            is NotLoading -> {
+                LazyColumn(
+                    modifier = Modifier.fillMaxSize(),
+                    state = rememberLazyListState(),
+                    verticalArrangement = Arrangement.spacedBy(12.dp)
+                ) {
 
-            items(
-                count = pagingItems.itemCount,
-                key = {
-                    pagingItems[it]?.data?.id ?: ""
-                }
-            ) {
-                if (pagingItems[it] != null) {
-                    ItemSubreddit(
-                        item = pagingItems[it]!!.data,
-                        onSubscribe = { isSubscribed ->
-                            onSubscribe(isSubscribed, pagingItems[it]!!.data.name)
+                    items(
+                        count = pagingItems.itemCount,
+                        contentType = { pagingItems[it]?.data },
+                        key = {
+                            pagingItems[it]?.data?.id ?: ""
                         },
-                        onClick = {
-                            onNavigate(pagingItems[it]!!.data.title)
+                        itemContent = {
+                            if (pagingItems[it] != null) {
+                                ItemSubreddit(
+                                    item = pagingItems[it]!!.data,
+                                    onSubscribe = { isSubscribed ->
+                                        onSubscribe(isSubscribed, pagingItems[it]!!.data.name)
+                                    },
+                                    onClick = {
+                                        onNavigate(pagingItems[it]!!.data.title)
+                                    }
+                                )
+
+                            }
                         }
                     )
-                } else {
-                    //ItemSubredditPlaceholder()
+
+                    if (pagingItems.itemCount == 0) {
+                        item {
+                            Text(
+                                text = stringResource(id = R.string.nothing_found),
+                                textAlign = TextAlign.Center
+                            )
+                        }
+                    }
                 }
             }
-        }
 
-        if (pagingItems.loadState.refresh is LoadState.NotLoading && pagingItems.itemCount == 0) {
-            Text(
-                text = stringResource(id = R.string.nothing_found),
-                textAlign = TextAlign.Center
-            )
-        }
+            is Loading -> {
+                CircularProgressIndicator()
+            }
 
-        if (pagingItems.loadState.refresh is LoadState.Loading) {
-            CircularProgressIndicator()
-        }
-
-        if (pagingItems.loadState.refresh is LoadState.Error) {
-            Column(
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                Text(
-                    text = stringResource(id = R.string.network_error),
-                    textAlign = TextAlign.Center
-                )
-
-                Button(
-                    onClick = {
-                        onRefresh()
-                    }
+            is Error -> {
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    Text(text = stringResource(id = R.string.refresh))
+                    Text(
+                        text = stringResource(id = R.string.network_error),
+                        textAlign = TextAlign.Center
+                    )
+
+                    Button(
+                        onClick = {
+                            onRefresh()
+                        }
+                    ) {
+                        Text(text = stringResource(id = R.string.refresh))
+                    }
                 }
             }
         }

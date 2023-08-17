@@ -41,6 +41,16 @@ fun FriendList(
                 FriendListItem(items[it])
             }
         }
+
+//        items.forEach {
+//            item{
+//                if (LocalInspectionMode.current) {
+//                    FriendListItemContent(it)
+//                } else {
+//                    FriendListItem(it)
+//                }
+//            }
+//        }
     }
 }
 

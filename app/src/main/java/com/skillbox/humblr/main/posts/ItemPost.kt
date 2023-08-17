@@ -73,7 +73,7 @@ fun ItemPost(
 
             SubscribeButton(
                 onSubscribe = onSave,
-                initSubscribe = item.saved ?: false //TODO скрывать кнопку при null
+                initSubscribe = item.saved ?: false
             )
 
         }
@@ -100,7 +100,6 @@ fun ItemPost(
                 )
             }
 
-            // TODO скрывать текст, если null
             if (item.selftext!!.isNotEmpty()) {
                 Text(
                     modifier = Modifier
@@ -122,7 +121,7 @@ fun ItemPost(
             Text(
                 modifier = Modifier
                     .weight(1f),
-                text = item.author ?: "", //TODO переделать представление
+                text = item.author ?: "",
                 style = bodySmall,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
@@ -134,7 +133,7 @@ fun ItemPost(
                 horizontalArrangement = Arrangement.spacedBy(3.dp)
             ) {
                 Counter(
-                    value = item.numComments ?: 0, //TODO скрывать элемент если null
+                    value = item.numComments ?: 0,
                     color = MaterialTheme.colorScheme.primary
                 )
 

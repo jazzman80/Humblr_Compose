@@ -1,8 +1,10 @@
 package com.skillbox.humblr.entity
 
+import androidx.annotation.Keep
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import com.google.gson.annotations.SerializedName
 
+@Keep
 data class MeDto(
     val name: String,
 

@@ -30,6 +30,8 @@ import androidx.compose.ui.unit.dp
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import cafe.adriel.voyager.androidx.AndroidScreen
+import cafe.adriel.voyager.navigator.LocalNavigator
+import cafe.adriel.voyager.navigator.currentOrThrow
 import com.skillbox.humblr.R
 import com.skillbox.humblr.core.LoadingState
 import com.skillbox.humblr.core.LoadingState.ERROR
@@ -60,6 +62,7 @@ data class UserScreen(
     @Composable
     override fun Content() {
 
+        val navigator = LocalNavigator.currentOrThrow
         val repository = koinInject<Repository>()
         val scope = rememberCoroutineScope()
         val userComments = repository.getUserComments(username).flow.collectAsLazyPagingItems()
@@ -98,7 +101,10 @@ data class UserScreen(
             scope.launch {
                 repository.stopBeingFriends(username)
             }
-        }, isSubscribed = isSubscribed, userComments = userComments, loadingState = loadingState
+        }, isSubscribed = isSubscribed, userComments = userComments, loadingState = loadingState,
+            onBack = {
+                navigator.pop()
+            }
         )
     }
 
@@ -112,7 +118,8 @@ fun UserScreenContent(
     showAll: () -> Unit = {},
     isSubscribed: Boolean = false,
     userComments: LazyPagingItems<CommentDto>? = null,
-    loadingState: LoadingState = LOADING
+    loadingState: LoadingState = LOADING,
+    onBack: () -> Unit = {}
 ) {
 
     Column(
@@ -120,7 +127,8 @@ fun UserScreenContent(
     ) {
 
         TopBar(
-            titleText = user?.name ?: ""
+            titleText = user?.name ?: "",
+            onBack = onBack
         )
 
         if (loadingState == SUCCESS) {

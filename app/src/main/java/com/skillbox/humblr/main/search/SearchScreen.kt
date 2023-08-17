@@ -3,6 +3,7 @@ package com.skillbox.humblr.main.search
 import MainScreen
 import androidx.compose.foundation.layout.Column
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.paging.PagingData
@@ -31,21 +32,35 @@ data class SearchScreen(val searchQuery: String) : AndroidScreen() {
         val viewModel = koinViewModel<SearchViewModel>()
         val navigator = LocalNavigator.currentOrThrow
         val subs = viewModel.getSubs(searchQuery).collectAsLazyPagingItems()
+        val onBack: () -> Unit = remember {
+            {
+                navigator.pop()
+            }
+        }
+        val onRefresh: () -> Unit = remember {
+            {
+                viewModel.refreshToken()
+                subs.refresh()
+            }
+        }
+        val onSubscribe: (Boolean, String) -> Unit = remember {
+            { isSubscribed, name ->
+                viewModel.subscribe(isSubscribed, name)
+            }
+        }
+        val onNavigate: (String) -> Unit = remember {
+            {
+                navigator.push(PostsScreen(it))
+            }
+        }
 
         SearchScreenContent(
             query = searchQuery,
             subs = subs,
-            onBack = { navigator.pop() },
-            onRefresh = {
-                viewModel.refreshToken()
-                subs.refresh()
-            },
-            onSubscribe = { isSubscribed, name ->
-                viewModel.subscribe(isSubscribed, name)
-            },
-            onNavigate = {
-                navigator.push(PostsScreen(it))
-            }
+            onBack = onBack,
+            onRefresh = onRefresh,
+            onSubscribe = onSubscribe,
+            onNavigate = onNavigate
         )
     }
 }

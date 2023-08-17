@@ -2,7 +2,7 @@ plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
     id 'kotlin-kapt'
-    id 'com.google.dagger.hilt.android'
+//    id 'com.google.dagger.hilt.android'
 }
 
 android {
@@ -21,8 +21,10 @@ android {
 
     buildTypes {
         release {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            shrinkResources true
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+//, 'retrofit2.pro'
         }
     }
     compileOptions {
@@ -63,9 +65,9 @@ dependencies {
     implementation 'androidx.hilt:hilt-navigation-compose:1.0.0'
     implementation 'androidx.compose.runtime:runtime-livedata'
 
-    // Hilt
-    implementation "com.google.dagger:hilt-android:2.44"
-    kapt "com.google.dagger:hilt-compiler:2.44"
+//    // Hilt
+//    implementation "com.google.dagger:hilt-android:2.44"
+//    kapt "com.google.dagger:hilt-compiler:2.44"
 
     // Retrofit - GSON
     implementation 'com.squareup.retrofit2:retrofit:2.9.0'
@@ -79,6 +81,10 @@ dependencies {
 
     // Coil
     implementation "io.coil-kt:coil-compose:2.4.0"
+
+    //Glide
+    implementation 'com.github.bumptech.glide:glide:4.14.2'
+    implementation "com.github.bumptech.glide:compose:1.0.0-alpha.1"
 
     // Navigator
     implementation("cafe.adriel.voyager:voyager-navigator:1.0.0-rc06")

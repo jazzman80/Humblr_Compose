@@ -11,14 +11,12 @@ import com.skillbox.humblr.R
 import com.skillbox.humblr.core.Repository
 import com.skillbox.humblr.main.MainActivity
 import com.skillbox.humblr.theme.AppTheme
-import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
 
 // Управляет авторизацией пользователя
 // Переход на активити основного приложения
 
-@AndroidEntryPoint
 class AuthActivity : ComponentActivity() {
 
     //@Inject

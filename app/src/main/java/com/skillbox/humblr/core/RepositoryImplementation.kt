@@ -46,6 +46,10 @@ class RepositoryImplementation(
     private val responseType = "code"
     private val pageSize = 25
     override lateinit var me: MeDto
+    private val pagingConfig = PagingConfig(
+        pageSize = pageSize,
+        enablePlaceholders = true
+    )
 
     // TODO Реализовать state - при запросе токена генерируется случайная строка и при получении токена проверяется соответствие
     private var state = "state"
@@ -145,7 +149,7 @@ class RepositoryImplementation(
 
     override fun getNewSubs(): Pager<String, Subreddit> {
         return Pager(
-            PagingConfig(pageSize)
+            pagingConfig
         ) {
             NewSubsPagingSource("Bearer $_accessToken", apiService, pageSize)
         }
@@ -154,7 +158,7 @@ class RepositoryImplementation(
 
     override fun getPopularSubs(): Pager<String, Subreddit> {
         return Pager(
-            PagingConfig(pageSize)
+            pagingConfig
         ) {
             PopularSubsPagingSource("Bearer $_accessToken", apiService, pageSize)
         }
@@ -162,7 +166,7 @@ class RepositoryImplementation(
 
     override fun searchSubs(query: String): Pager<String, Subreddit> {
         return Pager(
-            PagingConfig(pageSize)
+            pagingConfig
         ) {
             SearchSubsPagingSource("Bearer $_accessToken", apiService, pageSize, query)
         }
@@ -170,7 +174,7 @@ class RepositoryImplementation(
 
     override fun getPosts(title: String): Pager<String, Post> {
         return Pager(
-            PagingConfig(pageSize)
+            pagingConfig
         ) {
             PostPagingSource("Bearer $_accessToken", apiService, pageSize, title)
         }
@@ -178,7 +182,7 @@ class RepositoryImplementation(
 
     override fun getFavoriteSubs(): Pager<String, Subreddit> {
         return Pager(
-            PagingConfig(pageSize)
+            pagingConfig
         ) {
             FavoriteSubsPagingSource("Bearer $_accessToken", apiService, pageSize)
         }
@@ -186,7 +190,7 @@ class RepositoryImplementation(
 
     override fun getSavedComments(): Pager<String, CommentDto> {
         return Pager(
-            PagingConfig(pageSize)
+            pagingConfig
         ) {
             SavedCommentsPagingSource(me.name, "Bearer $_accessToken", apiService, pageSize)
         }
@@ -194,7 +198,7 @@ class RepositoryImplementation(
 
     override fun getUserComments(username: String): Pager<String, CommentDto> {
         return Pager(
-            PagingConfig(pageSize)
+            pagingConfig
         ) {
             UserCommentsPagingSource(username, "Bearer $_accessToken", apiService, pageSize)
         }
@@ -288,6 +292,10 @@ class RepositoryImplementation(
 
     override suspend fun clearDownloaded() {
         commentDao.clearTable()
+    }
+
+    override suspend fun getAllComments(): List<CommentDto> {
+        return commentDao.selectAll()
     }
 
     override suspend fun vote(voteDirection: Int, name: String): Response<SubscribeResponse> {

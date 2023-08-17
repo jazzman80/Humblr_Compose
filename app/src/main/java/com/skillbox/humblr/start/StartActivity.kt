@@ -7,10 +7,8 @@ import com.skillbox.humblr.auth.AuthActivity
 import com.skillbox.humblr.core.Repository
 import com.skillbox.humblr.main.MainActivity
 import com.skillbox.humblr.onboard.OnboardActivity
-import dagger.hilt.android.AndroidEntryPoint
 import org.koin.android.ext.android.inject
 
-@AndroidEntryPoint
 class StartActivity : ComponentActivity() {
 
     //    @Inject
